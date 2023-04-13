@@ -47,6 +47,8 @@ lsp.set_preferences({
 
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
+  lsp.default_keymaps({buffer = bufnr})
+  lsp.buffer_autoformat()
 
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
@@ -60,8 +62,27 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
+lsp.format_on_save({
+  format_opts = {
+    timeout_ms = 10000,
+  },
+  servers = {
+    ['null-ls'] = {'javascript', 'typescript'},
+  }
+})
+
 lsp.setup()
 
 vim.diagnostic.config({
     virtual_text = true
+})
+
+local null_ls = require('null-ls')
+
+null_ls.setup({
+  sources = {
+    -- Replace these with the tools you have installed
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.diagnostics.eslint,
+  }
 })
