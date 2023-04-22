@@ -85,16 +85,6 @@ _G.packer_plugins = {
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
-  ["cellular-automaton.nvim"] = {
-    loaded = true,
-    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/cellular-automaton.nvim",
-    url = "https://github.com/eandrju/cellular-automaton.nvim"
-  },
-  ["cloak.nvim"] = {
-    loaded = true,
-    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/cloak.nvim",
-    url = "https://github.com/laytan/cloak.nvim"
-  },
   ["cmdline.nvim"] = {
     loaded = true,
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/cmdline.nvim",
@@ -140,6 +130,12 @@ _G.packer_plugins = {
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/friendly-snippets",
     url = "https://github.com/rafamadriz/friendly-snippets"
   },
+  ["git-worktree.nvim"] = {
+    config = { "\27LJ\2\2>\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\17git-worktree\frequire\0" },
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/git-worktree.nvim",
+    url = "https://github.com/ThePrimeagen/git-worktree.nvim"
+  },
   harpoon = {
     loaded = true,
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/harpoon",
@@ -175,6 +171,11 @@ _G.packer_plugins = {
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/neodev.nvim",
     url = "https://github.com/folke/neodev.nvim"
   },
+  neovim = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/neovim",
+    url = "https://github.com/rose-pine/neovim"
+  },
   ["null-ls.nvim"] = {
     loaded = true,
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/null-ls.nvim",
@@ -185,10 +186,46 @@ _G.packer_plugins = {
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-cmp",
     url = "https://github.com/hrsh7th/nvim-cmp"
   },
+  ["nvim-dap"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-dap",
+    url = "https://github.com/mfussenegger/nvim-dap"
+  },
+  ["nvim-dap-go"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-dap-go",
+    url = "https://github.com/leoluz/nvim-dap-go"
+  },
+  ["nvim-dap-python"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-dap-python",
+    url = "https://github.com/mfussenegger/nvim-dap-python"
+  },
+  ["nvim-dap-ui"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
+    url = "https://github.com/rcarriga/nvim-dap-ui"
+  },
+  ["nvim-dap-virtual-text"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-dap-virtual-text",
+    url = "https://github.com/theHamsta/nvim-dap-virtual-text"
+  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
+  },
+  ["nvim-neoclip.lua"] = {
+    config = { "\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fneoclip\frequire\0" },
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
+    url = "https://github.com/AckslD/nvim-neoclip.lua"
+  },
+  ["nvim-notify"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-notify",
+    url = "https://github.com/rcarriga/nvim-notify"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -201,10 +238,14 @@ _G.packer_plugins = {
     url = "https://github.com/nvim-treesitter/nvim-treesitter-context"
   },
   ["nvim-web-devicons"] = {
-    loaded = false,
-    needs_bufread = false,
-    path = "/home/cesar/.local/share/nvim/site/pack/packer/opt/nvim-web-devicons",
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
     url = "https://github.com/nvim-tree/nvim-web-devicons"
+  },
+  ["one-small-step-for-vimkind"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/one-small-step-for-vimkind",
+    url = "https://github.com/jbyuki/one-small-step-for-vimkind"
   },
   ["packer.nvim"] = {
     loaded = true,
@@ -231,11 +272,45 @@ _G.packer_plugins = {
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/refactoring.nvim",
     url = "https://github.com/theprimeagen/refactoring.nvim"
   },
-  ["rose-pine"] = {
-    config = { "\27LJ\2\0029\0\0\2\0\3\0\0056\0\0\0009\0\1\0'\1\2\0B\0\2\1K\0\1\0\26colorscheme rose-pine\bcmd\bvim\0" },
+  ["sqlite.lua"] = {
     loaded = true,
-    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/rose-pine",
-    url = "https://github.com/rose-pine/neovim"
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/sqlite.lua",
+    url = "https://github.com/kkharji/sqlite.lua"
+  },
+  ["telescope-dap.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-dap.nvim",
+    url = "https://github.com/nvim-telescope/telescope-dap.nvim"
+  },
+  ["telescope-file-browser.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-file-browser.nvim",
+    url = "https://github.com/nvim-telescope/telescope-file-browser.nvim"
+  },
+  ["telescope-frecency.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-frecency.nvim",
+    url = "https://github.com/nvim-telescope/telescope-frecency.nvim"
+  },
+  ["telescope-fzf-native.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",
+    url = "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
+  },
+  ["telescope-hop.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-hop.nvim",
+    url = "https://github.com/nvim-telescope/telescope-hop.nvim"
+  },
+  ["telescope-smart-history.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-smart-history.nvim",
+    url = "https://github.com/nvim-telescope/telescope-smart-history.nvim"
+  },
+  ["telescope-ui-select.nvim"] = {
+    loaded = true,
+    path = "/home/cesar/.local/share/nvim/site/pack/packer/start/telescope-ui-select.nvim",
+    url = "https://github.com/nvim-telescope/telescope-ui-select.nvim"
   },
   ["telescope.nvim"] = {
     loaded = true,
@@ -243,7 +318,7 @@ _G.packer_plugins = {
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
   ["trouble.nvim"] = {
-    config = { "\27LJ\2\2C\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\nicons\1\nsetup\ftrouble\frequire\0" },
+    config = { "\27LJ\2\2C\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\nicons\2\nsetup\ftrouble\frequire\0" },
     loaded = true,
     path = "/home/cesar/.local/share/nvim/site/pack/packer/start/trouble.nvim",
     url = "https://github.com/folke/trouble.nvim"
@@ -270,14 +345,18 @@ time([[Defining packer_plugins]], false)
 time([[Config for Comment.nvim]], true)
 try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
 time([[Config for Comment.nvim]], false)
+-- Config for: git-worktree.nvim
+time([[Config for git-worktree.nvim]], true)
+try_loadstring("\27LJ\2\2>\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\17git-worktree\frequire\0", "config", "git-worktree.nvim")
+time([[Config for git-worktree.nvim]], false)
+-- Config for: nvim-neoclip.lua
+time([[Config for nvim-neoclip.lua]], true)
+try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fneoclip\frequire\0", "config", "nvim-neoclip.lua")
+time([[Config for nvim-neoclip.lua]], false)
 -- Config for: trouble.nvim
 time([[Config for trouble.nvim]], true)
-try_loadstring("\27LJ\2\2C\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\nicons\1\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
+try_loadstring("\27LJ\2\2C\0\0\2\0\4\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0005\1\3\0B\0\2\1K\0\1\0\1\0\1\nicons\2\nsetup\ftrouble\frequire\0", "config", "trouble.nvim")
 time([[Config for trouble.nvim]], false)
--- Config for: rose-pine
-time([[Config for rose-pine]], true)
-try_loadstring("\27LJ\2\0029\0\0\2\0\3\0\0056\0\0\0009\0\1\0'\1\2\0B\0\2\1K\0\1\0\26colorscheme rose-pine\bcmd\bvim\0", "config", "rose-pine")
-time([[Config for rose-pine]], false)
 
 _G._packer.inside_compile = false
 if _G._packer.needs_bufread == true then

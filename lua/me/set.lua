@@ -1,5 +1,6 @@
 vim.opt.nu = true
 vim.opt.relativenumber = true
+vim.opt.fillchars = {eob=' '}
 
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
@@ -28,5 +29,6 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
 
-vim.opt.laststatus = 3
 vim.opt.cmdheight = 0
+vim.opt.laststatus = 3
+vim.opt.showcmdloc = 'statusline'
