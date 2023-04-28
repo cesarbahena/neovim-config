@@ -3,4 +3,3 @@ return {
   { 'j-hui/fidget.nvim',     config = true },
   { 'vzze/cmdline.nvim' },
 }
-
