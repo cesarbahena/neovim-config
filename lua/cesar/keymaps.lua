@@ -1,77 +1,65 @@
+vim.keymap.set('n', '<leader>p', '<cmd>Explore<CR><CR>')
+
 local utils = require(User..'.utils')
 
-local map = function(lhs, rhs, desc)
-  vim.keymap.set('', lhs, rhs, { desc = desc })
-end
-
-local nmap = function(lhs, rhs, desc)
-  vim.keymap.set('n', lhs, rhs, { desc = desc })
-end
-
-local vmap = function(lhs, rhs, desc)
-  vim.keymap.set('v', lhs, rhs, { desc = desc })
-end
-
-local imap = function(lhs, rhs, desc)
-  vim.keymap.set('i', lhs, rhs, { desc = desc })
-end
-
-utils.chain_remap(
-  {
-    [''] = {
-      {'c','s'},
-      {'C','ss'},
-      {'j','n','\\'},
-      {'<C-d>zz','N','|'},
-      {'b','k','e','w','h','m','M'},
-      {'B','K'},
-      {'<C-u>zz','E','W','H'},
-    },
+utils.remap{
+  [''] = {
+    { '<cmd>lua Switch_to_keyboard("qwerty")<CR>', { colemak = '<leader><leader>q' }, 'Switch keyboard' },
+    { '<cmd>lua Switch_to_keyboard("colemak")<CR>', { qwerty = '<leader><leader>q' }, 'Switch keyboard' },
+    { 'c', 's', 'Substitute (same as change)' },
+    { 'C', 'ss', 'Substitute to eol (same as change)' },
+    { 'j', { colemak = 'n', qwerty = 'j' }, 'Next line' },
+    { '<C-d>zz', { colemak = 'N', qwerty = 'J' }, 'Scroll to Next page' },
+    { 'k', { colemak = 'e', qwerty = 'k' }, 'prEv line'},
+    { '<C-u>zz', { colemak = 'E', qwerty = 'K' }, 'Scroll to prEv line' },
+    { 'b', { colemak = 'k', qwerty = 'b'}, 'bacK one word' },
+    { 'B', { colemak = 'K', qwerty = 'B'}, 'bacK one WORD' },
+    { 'e', 'w', 'Word (rest of it)' },
+    { 'E', 'W', 'WORD (rest of it)' },
+    { 'w', { colemak = 'h', qwerty = 'n' }, 'Hop to next word' },
+    { 'W', { colemak = 'H', qwerty = 'N' }, 'Hop to next WORD' },
+    { 'h', { colemak = 'm', qwerty = 'h' }, 'Left (Colemak DH)' },
+    { 'm', 'j', 'Mark' },
+    { '', '\\', 'Next match' },
+    { '', '|', 'Next match' },
+    { '<C-o>', { colemak = '<C-u>', qwerty = '<C-i>' }, 'Undo last jump' },
+    { '<C-i>', { colemak = '<C-y>', qwerty = '<C-o>' }, 'Redo last jump' },
+    {':', '<CR>', 'Cmdline mode'},
   },
-  {
-    s = 'Substitute (same as change)',
-    ss = 'Substitute to eol (same as change)',
-    n = 'Next line',
-    N = 'Scroll to Next page',
-    e = 'prEv line',
-    E = 'Scroll to prEv line',
-    k = 'bacK one word',
-    K = 'bacK one WORD',
-    w = 'Word (rest of it)',
-    W = 'WORD (rest of it)',
-    h = 'Hop to next word',
-    H = 'Hop to next WORD',
-    m = 'Left (Colemak DH)',
-    M = 'Mark',
-    ['\\'] = 'Next match',
-    ['|'] = 'Next match',
+  n = {
+    { 'dd', 'D', 'Delete line' },
+    { 'D', 'dd', 'Delete to eol' },
+    { 'yy', 'y$', 'Yank to eol' },
+    { 'Yp', 'c', 'Copy down' },
+    { ':m +<CR>==', { colemak = '<M-n>', qwerty = '<M-j>' }, 'Move line down' },
+    { ':m -2<CR>==', { colemak = '<M-e>', qwerty = '<M-k>' }, 'Move line up' },
+    { 'mzJ`z', { colemak = 'J', qwerty = 'M' }, 'Join/Merge lines (pretty)' },
+    { 'mzgJ`z', { colemak = 'gJ', qwerty = 'M' }, 'Join/Merge lines (raw)' },
+    -- { '<leader><leader>x', utils.execute_file, 'Execute file' },
+    { '@@', 'Q', 'Repeat macro' },
   },
-  { '<C-u>zz' }
-)
-
-imap('<C-e>', '<Esc>')
-map('<CR>', ':')
-nmap('Q', '@@')
-nmap('<leader><leader>x', function()
-  vim.cmd('wa')
-  vim.cmd('so')
-end)
-vmap('p', '"_dP', 'Paste (keeping the register)')
-
--- Line management
-nmap('c', 'Yp', 'Copy down')    -- Duplicate line
-vmap('c', "yj'>p", 'Copy down') -- Duplicate paragraph
-vmap('<M-n>', ":m '>+<CR>gv=gv")
-vmap('<M-e>', ":m '<-2<CR>gv=gv")
-nmap('<M-n>', ':m +<CR>==')
-nmap('<M-e>', ':m -2<CR>==')
-nmap('J', 'mzJ`z')
-nmap('gJ', 'mzgJ`z')
-map('<leader>p', '<cmd>Explore<CR><CR>')
-
-nmap('D', 'dd')
-nmap('dd', 'D')
-nmap('yy', 'y$')
+  i = {
+    { '<Esc>', { colemak = '<C-e>', qwerty = '<C-k>' }, 'Escape to Normal mode' },
+    { '<C-o>h', { colemak = '<M-m>', qwerty = '<M-h>' }, 'Left' },
+    { '<C-o>l', { colemak = '<M-l>', qwerty = '<M-l>' }, 'Right' },
+    { '<C-o>b', { colemak = '<M-k>', qwerty = '<M-b>' }, 'bacK one word' },
+    { '<C-o>w', { colemak = '<M-h>', qwerty = '<M-n>' }, 'Hop to next word' },
+    { '<C-o>e', '<M-w>', 'Word (end of it)' },
+    { '<BS>', { colemak = '<M-e>', qwerty = '<M-k>' }, 'Backspace' },
+    { '<C-w>', '<M-u>', 'Undo word' },
+    { '<Esc>%%a', { colemak = '<M-n>', qwerty = '<M-j>' }, 'Next (afer parentheses)' },
+    { '<C-o>l,<space>', '<M-,>', 'Comma after string' },
+  },
+  v = {
+    { "y'>", 'y', 'Yank (keep the position' },
+    { '"_dP', 'p', 'Paste (keeping the register)' },
+    { "yj'>p", 'c', 'Copy down' },
+    { ":m '>+<CR>gv=gv", { colemak = '<M-n>', qwerty = '<M-j>' }, 'Move line down' },
+    { ":m '<-2<CR>gv=gv", { colemak = '<M-e>', qwerty = '<M-k>' }, 'Move line up' },
+    { '<gv', '<', 'Deindent (keep selection)' },
+    { '>gv', '>', 'Indent (keep selection)' },
+  },
+}
 
 local digits = {'m','k','h',',','n','e','i','l','u','y'}
 
@@ -92,24 +80,3 @@ utils.map_numpad{
   j = 0,
   m = 9,
 }
-
--- Motions in Insert mode
-utils.imap{
-  [''] = {
-    {'<C-u>zz', '<Nop>'},
-    {'<C-u>', '<C-o>', 'Undo last jump'},
-    {'<C-y>', '<C-i>', 'Redo last jump'},
-  },
-  i = {
-    {'<M-m>', '<C-o>h', 'Left (Colemak DH)'},
-    {'<M-l>', '<C-o>l', 'Right'},
-    {'<M-k>', '<C-o>b', 'bacK one word'},
-    {'<M-h>', '<C-o>w', 'Hop to next word'},
-    {'<M-w>', '<C-o>e', 'Word (end of it)'},
-    {'<M-e>', '<BS>', 'Backspace'},
-    {'<M-u>', '<C-w>', 'Undo word'},
-    {'<M-n>', '<Esc>%%a', 'Next (afer parentheses)'},
-    {'<M-,>', '<C-o>l,<space>', 'Comma after string'},
-  }
-}
-

@@ -1,12 +1,12 @@
 return {
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 
-      'nvim-tree/nvim-web-devicons' 
+    dependencies = {
+      'nvim-tree/nvim-web-devicons'
     },
     config = function()
       local lualine = require('lualine')
-      
+
       -- Color table for highlights
       -- stylua: ignore
       local colors = {
@@ -22,7 +22,7 @@ return {
         blue     = '#51afef',
         red      = '#ec5f67',
       }
-      
+
       local conditions = {
         buffer_not_empty = function()
           return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
@@ -36,7 +36,7 @@ return {
           return gitdir and #gitdir > 0 and #gitdir < #filepath
         end,
       }
-      
+
       -- Config
       local config = {
         options = {
@@ -71,17 +71,17 @@ return {
           lualine_x = {},
         },
       }
-      
+
       -- Inserts a component in lualine_c at left section
       local function ins_left(component)
         table.insert(config.sections.lualine_c, component)
       end
-      
+
       -- Inserts a component in lualine_x at right section
       local function ins_right(component)
         table.insert(config.sections.lualine_x, component)
       end
-      
+
       ins_left {
         function()
           return ' '
@@ -89,7 +89,7 @@ return {
         color = { fg = colors.blue },      -- Sets highlighting of component
         padding = { left = 0, right = 1 }, -- We don't need space before this
       }
-      
+
       ins_left {
         -- mode component
         function()
@@ -124,13 +124,13 @@ return {
         end,
         padding = { right = 1 },
       }
-      
+
       ins_left {
         'filename',
         cond = conditions.buffer_not_empty,
         color = { gui = 'bold' },
       }
-      
+
       -- Insert mid section. You can make any number of sections in neovim :)
       -- for lualine it's any number greater then 2
       ins_left {
@@ -143,23 +143,23 @@ return {
           color_info = { fg = colors.cyan },
         },
       }
-      
+
       ins_left {
         function()
           return '%='
         end,
       }
-      
+
       ins_left {
         'branch',
         icon = '',
         color = { fg = colors.violet, gui = 'bold' },
       }
-      
+
       ins_left {
         'diff',
         -- Is it me or the symbol for modified us really weird
-        symbols = { added = ' ', modified = '柳 ', removed = ' ' },
+        symbols = { added = ' ', modified = ' ', removed = ' ' },
         diff_color = {
           added = { fg = colors.green },
           removed = { fg = colors.red },
@@ -167,12 +167,15 @@ return {
         },
         cond = conditions.hide_in_width,
       }
-      
-      -- Add components to right sections
+
       ins_right {
-        '%S'
+        function()
+          return Keyboard
+        end,
+        icon = ' ',
+        color = { fg = '#ffffff', gui = 'bold' },
       }
-      
+
       ins_right {
         -- Lsp server name .
         function()
@@ -190,10 +193,10 @@ return {
           end
           return msg
         end,
-        icon = '',
+        icon = ' ',
         color = { fg = '#ffffff', gui = 'bold' },
       }
-      
+
       lualine.setup(config)
     end,
   }

@@ -10,3 +10,9 @@ function Copy(t)
   end
   return t2
 end
+
+function Switch_to_keyboard(keyboard)
+  Keyboard = keyboard
+  package.loaded[User..'.keymaps'] = nil
+  require(User..'.keymaps')
+end
