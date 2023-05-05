@@ -1,4 +1,4 @@
-vim.keymap.set('n', '<leader>p', '<cmd>Explore<CR><CR>')
+vim.keymap.set('n', '<leader>ft', '<cmd>Explore<CR><CR>')
 
 local utils = require(User..'.utils')
 
@@ -25,6 +25,8 @@ utils.remap{
     { '<C-o>', { colemak = '<C-u>', qwerty = '<C-i>' }, 'Undo last jump' },
     { '<C-i>', { colemak = '<C-y>', qwerty = '<C-o>' }, 'Redo last jump' },
     {':', '<CR>', 'Cmdline mode'},
+    {'<C-a>', '+', 'Increase count'},
+    {'<C-x>', '-', 'Decrease count'},
   },
   n = {
     { 'dd', 'D', 'Delete line' },

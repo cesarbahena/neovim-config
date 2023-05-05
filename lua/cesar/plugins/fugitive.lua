@@ -29,7 +29,7 @@ return {
       })
     end,
     keys = {
-      { "<leader>g", vim.cmd.Git },
+      { "<leader>gs", vim.cmd.Git },
     },
   }
 }

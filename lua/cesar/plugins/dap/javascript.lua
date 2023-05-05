@@ -1,13 +1,13 @@
 return function ()
-require("dap").adapters["pwa-node"] = {
-  type = "server",
-  -- host = "localhost",
-  port = 3000,
-  executable = {
-    command = "node",
-    args = {"~/.local/share/nvim/lazy/vscode-js-debug/src/", 3000 },
+  require("dap").adapters["pwa-node"] = {
+    type = "server",
+    host = "localhost",
+    port = "${port}",
+    executable = {
+      command = "js-debug-adapter",
+      args = { "${port}" },
+    },
   }
-}
 
 for _, language in ipairs { "typescript", "javascript" } do
     require("dap").configurations[language] = {

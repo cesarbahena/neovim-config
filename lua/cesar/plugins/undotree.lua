@@ -2,7 +2,7 @@ return {
   {
     "mbbill/undotree",
     keys = {
-      { "<leader>vu", '<cmd>UndotreeToggle<CR><C-w><C-h>'}
+      { 'U', '<cmd>UndotreeToggle<CR><C-w><C-h>'}
     }
   }
 }

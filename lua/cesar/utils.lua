@@ -28,7 +28,7 @@ function M.remap(table_of_remaps)
 end
 
 function M.map_numpad(params)
-  local tens = Copy(params['digits'])
+  local tens = vim.deepcopy(params['digits'])
   tens[1] = ''
   for i = params['i'], params['n'] do
     for j = params['j'], params['m'] do
