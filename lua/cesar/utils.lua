@@ -13,12 +13,19 @@ function M.remap(table_of_remaps)
     for _, remap in ipairs(remaps) do
       local lhs = remap[2]
       if type(lhs) == 'table' then
-        lhs = lhs[Keyboard]
+        lhs = lhs[vim.g.keyboard]
       end
       if lhs then
-          vim.keymap.set(
+        vim.keymap.set(
           mode,
           lhs,
+          remap[1],
+          { desc = remap[3]}
+        )
+      else
+        vim.keymap.set(
+          mode,
+          remap[1],
           remap[1],
           { desc = remap[3]}
         )

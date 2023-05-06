@@ -9,7 +9,7 @@ return {
     { "<leader>fb",  function() require 'telescope'.extensions.dap.list_breakpoints {} end,
     desc =
     "Find breakpoints" },
-    { "<leader>fv",  function() require 'telescope'extensions.dap.variables {} end,      desc = "Find variables" },
+    { "<leader>fv",  function() require 'telescope'.extensions.dap.variables {} end,      desc = "Find variables" },
     { "<leader>fdf", function() require 'telescope'.extensions.dap.frames {} end,         desc = "Find frames" },
   },
   config = function ()

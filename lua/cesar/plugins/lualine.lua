@@ -170,7 +170,7 @@ return {
 
       ins_right {
         function()
-          return Keyboard
+          return vim.g.keyboard
         end,
         icon = ' ',
         color = { fg = '#ffffff', gui = 'bold' },

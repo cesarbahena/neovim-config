@@ -1,24 +1,25 @@
-User = 'cesar'
-Keyboard = 'colemak'
+vim.g.user = 'cesar'
+vim.g.keyboard = 'colemak'
 
-function P(v)
-  print(vim.inspect(v))
-  return v
-end
+require(vim.g.user)
 
-function Require(dir, files, callable)
-  for _, file in ipairs(files) do
-    local module = require(dir..'.'..file)
-    if callable then
-      module()
-    end
-  end
-end
-
-function Switch_to_keyboard(keyboard)
-  Keyboard = keyboard
-  package.loaded[User..'.keymaps'] = nil
-  require(User..'.keymaps')
-end
-
-require(User)
+-- print(
+-- vim.inspect({
+--   {
+--     'nvim-telescope/telescope.nvim',
+--     branch = '0.1.1',
+--     lazy = false,
+--     dependencies = { 'nvim-lua/plenary.nvim' },
+--     keys = {
+--       { '<leader>fp', '<cmd>Telescope find_files<CR>' },
+--     },
+--     opts = {
+--       require(User .. '.plugins.telescope.options')
+--     },
+--     config = function(_, opts)
+--       require'telescope'.setup(opts)
+--       require(User .. '.plugins.telescope.mappings')()
+--     end,
+--   },
+-- })
+-- )

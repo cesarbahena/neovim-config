@@ -4,7 +4,6 @@ return {
     config = function()
       local Fugitive = vim.api.nvim_create_augroup("Fugitive", {})
       local autocmd = vim.api.nvim_create_autocmd
-      
       autocmd("BufWinEnter", {
           group = Fugitive,
           pattern = "*",
@@ -12,7 +11,6 @@ return {
           if vim.bo.ft ~= "fugitive" then
               return
           end
-      
           local bufnr = vim.api.nvim_get_current_buf()
           local opts = {buffer = bufnr, remap = false}
           vim.keymap.set("n", "<leader>p", function()
