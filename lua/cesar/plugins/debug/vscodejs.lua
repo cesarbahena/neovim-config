@@ -10,6 +10,6 @@ return {
   },
   config = function(_, opts)
     require 'dap-vscode-js'.setup(opts)
-    require(vim.g.user..'.plugins.dap.config.javascript')()
+    require(vim.g.user..'.plugins.debug.config.javascript')()
   end,
 }

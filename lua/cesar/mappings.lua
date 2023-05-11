@@ -1,3 +1,4 @@
+vim.keymap.set('n', '<space>', '<nop>')
 vim.keymap.set('n', '<leader>ft', '<cmd>Explore<CR><CR>')
 
 local utils = require(vim.g.user..'.utils')
@@ -23,8 +24,8 @@ utils.remap{
     { 'h', { colemak = 'm' }, 'Left' },
     { 'l', { colemak = 'o' }, 'Right' },
     { 'm', { colemak = 'j' }, 'Mark' },
-    { '', '\\', 'Next match' },
-    { '', '|', 'Next match' },
+    { 'n', '\\', 'Next match' },
+    { 'N', '|', 'Next match' },
     { '<C-o>', { colemak = '<C-u>', qwerty = '<C-i>' }, 'Undo last jump' },
     { '<C-i>', { colemak = '<C-y>', qwerty = '<C-o>' }, 'Redo last jump' },
     {':', '<CR>', 'Cmdline mode'},

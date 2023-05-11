@@ -6,6 +6,16 @@ function ColorMyPencils(color)
 end
 
 return {
+{
+  'tjdevries/colorbuddy.vim',
+  config = function ()
+    require(vim.g.user..'.plugins.colors.colorscheme')
+    require(vim.g.user..'.plugins.colors.config')
+  end,
+  lazy = false,
+  -- priority = 3000,
+},
+'tjdevries/gruvbuddy.nvim',
   {
     'rose-pine/neovim',
     config = function()
@@ -21,10 +31,9 @@ return {
     priority = 1000,
     config = function()
       require('catppuccin').setup({
-        transparent_background = true,
         flavour = 'mocha',
       })
-      ColorMyPencils('catppuccin')
+      -- ColorMyPencils('catppuccin')
     end,
   },
 }

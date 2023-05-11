@@ -1,5 +1,0 @@
-return {
-  dap = {
-    theme = 'dropdown',
-  },
-}

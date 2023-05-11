@@ -1,7 +1,7 @@
 local modules = {
   'globals',
   'options',
-  'keymaps',
+  'mappings',
   'autocmd',
 }
 

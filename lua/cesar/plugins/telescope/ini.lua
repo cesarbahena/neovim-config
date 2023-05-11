@@ -7,10 +7,10 @@ return {
     keys = {
       { '<leader>fp', '<cmd>Telescope find_files<CR>' },
     },
-    opts = require(vim.g.user..'.plugins.telescope.options'),
-    config = function(_, opts)
-      require'telescope'.setup(opts)
-      require(vim.g.user..'.plugins.telescope.mappings')()
+    config = function()
+      require(vim.g.user..'.plugins.telescope.options')()
+      require(vim.g.user..'.plugins.telescope.mappings').ui()
+      require(vim.g.user..'.plugins.telescope.mappings').commands()
     end,
   },
   {
