@@ -10,6 +10,7 @@ return {
           end,
         },
       }
+      require 'completion.snips.config'
     end,
   },
 }

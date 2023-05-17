@@ -1,6 +1,7 @@
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local themes = require "telescope.themes"
+local tele_cmd = require(vim.g.user..'.utils').tele_cmd
 
 local set_prompt_to_entry_value = function(prompt_bufnr)
   local entry = action_state.get_selected_entry()
@@ -12,6 +13,55 @@ end
 
 local M = {}
 
+
+-- Dotfiles
+tele_cmd("<space><space>d", "diagnostics")
+
+-- Search
+tele_cmd("<space>gw", "grep_string", {
+  word_match = "-w",
+  short_path = true,
+  only_sort_text = true,
+  layout_strategy = "vertical",
+})
+
+tele_cmd("<space>f/", "grep_last_search", {
+  layout_strategy = "vertical",
+})
+
+-- Files
+tele_cmd("<space>fg", "git_files")
+-- tele_cmd("<space>fg", "multi_rg")
+tele_cmd("<space>fo", "oldfiles")
+tele_cmd("<space>fd", "find_files")
+tele_cmd("<space>fs", "fs")
+
+tele_cmd("<space>pp", "project_search")
+tele_cmd("<space>fv", "find_nvim_source")
+tele_cmd("<space>fe", "file_browser")
+tele_cmd("<space>fz", "search_only_certain_files")
+
+-- Git
+tele_cmd("<space>fgs", "git_status")
+tele_cmd("<space>gc", "git_commits")
+
+-- Nvim
+tele_cmd("<space>fb", "buffers")
+-- tele_cmd("<space>fp", "my_plugins")
+tele_cmd("<space>fa", "installed_plugins")
+tele_cmd("<space>fi", "search_all_files")
+tele_cmd("<space>ff", "curbuf")
+tele_cmd("<space>fh", "help_tags")
+tele_cmd("<space>bo", "vim_options")
+tele_cmd("<space>gp", "grep_prompt")
+tele_cmd("<space>wt", "treesitter")
+
+-- Telescope Meta
+tele_cmd("<space>fB", "builtin")
+
+
+
+tele_cmd("<leader>en", "edit_neovim")
 function M.edit_neovim()
   local opts_with_preview = {
     prompt_title = "~ dotfiles ~",
@@ -51,6 +101,7 @@ function M.edit_neovim()
   require("telescope.builtin").find_files(opts_with_preview)
 end
 
+tele_cmd("<leader>ez", "edit_zsh")
 function M.edit_zsh()
   require("telescope.builtin").find_files {
     shorten_path = false,
@@ -66,7 +117,6 @@ end
 
 function M.find_files()
   require("telescope.builtin").find_files {
-    sorting_strategy = "descending",
     scroll_strategy = "cycle",
     layout_config = {
       -- height = 10,
@@ -175,7 +225,7 @@ end
 function M.curbuf()
   local opts = themes.get_dropdown {
 
-    winblend = 10,
+    -- winblend = 10,
     border = true,
     previewer = false,
     shorten_path = false,

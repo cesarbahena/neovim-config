@@ -31,7 +31,7 @@ function M.tele_cmd(key, fn, opts, buffer)
 
   local rhs = string.format(
     "<cmd>lua require('"..vim.g.user..
-    ".plugins.telescope.commands')['%s']"..
+    ".plugins.telescope.telescopes')['%s']"..
     "(vim.g.telescopes['%s'])<CR>",
     fn, id
   )

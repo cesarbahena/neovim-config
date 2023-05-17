@@ -5,30 +5,10 @@ return {
       'nvim-tree/nvim-web-devicons'
     },
     config = function()
-      local lualine = require('lualine')
-
-      -- Color table for highlights
-      -- stylua: ignore
-      local colors = {
-        bg       = '#202328',
-        fg       = '#bbc2cf',
-        yellow   = '#ECBE7B',
-        cyan     = '#008080',
-        darkblue = '#081633',
-        green    = '#98be65',
-        orange   = '#FF8800',
-        violet   = '#a9a1e1',
-        magenta  = '#c678dd',
-        blue     = '#51afef',
-        red      = '#ec5f67',
-      }
 
       local conditions = {
         buffer_not_empty = function()
           return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
-        end,
-        hide_in_width = function()
-          return vim.fn.winwidth(0) > 80
         end,
         check_git_workspace = function()
           local filepath = vim.fn.expand('%:p:h')
@@ -37,32 +17,96 @@ return {
         end,
       }
 
-      -- Config
-      local config = {
+      require('lualine').setup {
         options = {
-          -- Disable sections and component separators
           component_separators = '',
           section_separators = '',
-          theme = {
-            -- We are going to use lualine_c an lualine_x as left and
-            -- right section. Both are highlighted by c theme .  So we
-            -- are just setting default looks o statusline
-            normal = { c = { fg = colors.fg } },
-            inactive = { c = { fg = colors.fg } },
-          },
         },
         sections = {
-          -- these are to remove the defaults
           lualine_a = {},
           lualine_b = {},
+          lualine_c = {
+            {
+              "%{fnamemodify(getcwd(), ':t')}",
+              icon = ' ',
+            },
+            {
+              'branch',
+              icon = '',
+              color = function ()
+                vim.fn.systemlist("git diff --quiet " .. vim.fn.expand('%'))
+                if vim.v.shell_error == 1 then
+                  return { fg = 'orange' }
+                end
+              end
+            },
+            {
+              'filetype',
+              icon_only = true,
+              colored = false,
+              color = function ()
+                local dx = vim.diagnostic
+                if #dx.get(0, { severity = dx.severity.ERROR }) > 0 then
+                  return { fg = 'orange' }
+                elseif #dx.get(0, { severity = dx.severity.WARN }) > 0 then
+                  return { fg = 'yellow' }
+                end
+              end,
+              padding = { left = 1, right = 0 },
+            },
+            {
+              function ()
+                return vim.fn.fnamemodify(vim.fn.expand '%:p', ':t:r')
+              end,
+              color = function ()
+                local dx = vim.diagnostic
+                if #dx.get(0, { severity = dx.severity.ERROR }) > 0 then
+                  return { fg = 'orange' }
+                elseif #dx.get(0, { severity = dx.severity.WARN }) > 0 then
+                  return { fg = 'yellow' }
+                end
+              end,
+            },
+            {
+              function ()
+                if vim.o.modified then
+                  return ''
+                end
+                return ''
+              end,
+              padding = { left = 0 },
+            }
+          },
+          lualine_x = {
+            {
+              function()
+                return vim.g.keyboard
+              end,
+              icon = ' ',
+            },
+            {
+              function()
+                local msg = 'No LSP'
+                local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+                local clients = vim.lsp.get_active_clients()
+                if next(clients) == nil then
+                  return msg
+                end
+                for _, client in ipairs(clients) do
+                  local filetypes = client.config.filetypes
+                  if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+                    return client.name
+                  end
+                end
+                return msg
+              end,
+              icon = ' ',
+            },
+          },
           lualine_y = {},
           lualine_z = {},
-          -- These will be filled later
-          lualine_c = {},
-          lualine_x = {},
         },
         inactive_sections = {
-          -- these are to remove the defaults
           lualine_a = {},
           lualine_b = {},
           lualine_y = {},
@@ -71,133 +115,6 @@ return {
           lualine_x = {},
         },
       }
-
-      -- Inserts a component in lualine_c at left section
-      local function ins_left(component)
-        table.insert(config.sections.lualine_c, component)
-      end
-
-      -- Inserts a component in lualine_x at right section
-      local function ins_right(component)
-        table.insert(config.sections.lualine_x, component)
-      end
-
-      ins_left {
-        function()
-          return ' '
-        end,
-        color = { fg = colors.blue },      -- Sets highlighting of component
-        padding = { left = 0, right = 1 }, -- We don't need space before this
-      }
-
-      ins_left {
-        -- mode component
-        function()
-          -- return require('nvim-web-devicons').get_icon(vim.fn.expand('%:t'), vim.bo.filetype)
-          return require('nvim-web-devicons').get_icon_by_filetype(vim.bo.filetype)
-        end,
-        color = function()
-          -- auto change color according to neovims mode
-          local mode_color = {
-            n = colors.red,
-            i = colors.green,
-            v = colors.blue,
-            [''] = colors.blue,
-            V = colors.blue,
-            c = colors.magenta,
-            no = colors.red,
-            s = colors.orange,
-            S = colors.orange,
-            [''] = colors.orange,
-            ic = colors.yellow,
-            R = colors.violet,
-            Rv = colors.violet,
-            cv = colors.red,
-            ce = colors.red,
-            r = colors.cyan,
-            rm = colors.cyan,
-            ['r?'] = colors.cyan,
-            ['!'] = colors.red,
-            t = colors.red,
-          }
-          return { fg = mode_color[vim.fn.mode()] }
-        end,
-        padding = { right = 1 },
-      }
-
-      ins_left {
-        'filename',
-        cond = conditions.buffer_not_empty,
-        color = { gui = 'bold' },
-      }
-
-      -- Insert mid section. You can make any number of sections in neovim :)
-      -- for lualine it's any number greater then 2
-      ins_left {
-        'diagnostics',
-        sources = { 'nvim_diagnostic' },
-        symbols = { error = ' ', warn = ' ', info = ' ' },
-        diagnostics_color = {
-          color_error = { fg = colors.red },
-          color_warn = { fg = colors.yellow },
-          color_info = { fg = colors.cyan },
-        },
-      }
-
-      ins_left {
-        function()
-          return '%='
-        end,
-      }
-
-      ins_left {
-        'branch',
-        icon = '',
-        color = { fg = colors.violet, gui = 'bold' },
-      }
-
-      ins_left {
-        'diff',
-        -- Is it me or the symbol for modified us really weird
-        symbols = { added = ' ', modified = ' ', removed = ' ' },
-        diff_color = {
-          added = { fg = colors.green },
-          removed = { fg = colors.red },
-          modified = { fg = colors.orange },
-        },
-        cond = conditions.hide_in_width,
-      }
-
-      ins_right {
-        function()
-          return vim.g.keyboard
-        end,
-        icon = ' ',
-        color = { fg = '#ffffff', gui = 'bold' },
-      }
-
-      ins_right {
-        -- Lsp server name .
-        function()
-          local msg = 'No LSP'
-          local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-          local clients = vim.lsp.get_active_clients()
-          if next(clients) == nil then
-            return msg
-          end
-          for _, client in ipairs(clients) do
-            local filetypes = client.config.filetypes
-            if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-              return client.name
-            end
-          end
-          return msg
-        end,
-        icon = ' ',
-        color = { fg = '#ffffff', gui = 'bold' },
-      }
-
-      lualine.setup(config)
     end,
-  }
+  },
 }

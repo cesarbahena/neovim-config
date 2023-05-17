@@ -2,8 +2,8 @@ return {
   {
     "hrsh7th/nvim-cmp",
     config = function()
-      require(vim.g.user..'.plugins.completion.mappings')
-      require(vim.g.user..'.plugins.completion.config')
+      require 'completion.mappings'
+      require 'completion.config'
     end,
   },
   "hrsh7th/cmp-buffer",
@@ -11,8 +11,8 @@ return {
   "hrsh7th/cmp-nvim-lua",
   "hrsh7th/cmp-nvim-lsp",
   "tamago324/cmp-zsh",
-  require(vim.g.user..'.plugins.completion.ui'),
-  require(vim.g.user..'.plugins.completion.snips'),
+  require 'completion.ui',
+  require 'completion.snips.init',
   'rafamadriz/friendly-snippets',
   {
     "zbirenbaum/copilot.lua",
@@ -23,3 +23,7 @@ return {
     config = true,
   },
 }
+
+-- local function new(args)
+--
+-- end

@@ -1,9 +1,7 @@
 return {
   {
     'neovim/nvim-lspconfig',
-    config = function()
-      require(vim.g.user..'.plugins.lsp.config')
-    end,
+    config = require 'lsp.setup',
   },
 
   'williamboman/mason.nvim',
@@ -14,14 +12,12 @@ return {
       require("mason-tool-installer").setup {
         auto_update = true,
         debounce_hours = 24,
-        ensure_installed = {
-          "black",
-        },
+        ensure_installed = {},
       }
     end,
   },
 
-  require(vim.g.user..'.plugins.lsp.inlay'),
+  require 'lsp.inlay',
   'j-hui/fidget.nvim',
   'folke/neodev.nvim',
   'jose-elias-alvarez/null-ls.nvim',

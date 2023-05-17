@@ -1,3 +1,5 @@
+User = 'cesar'
+
 local modules = {
   'globals',
   'options',
@@ -6,7 +8,7 @@ local modules = {
 }
 
 for _, module in ipairs(modules) do
-  require(vim.g.user ..'.'.. module)
+  require(User .. '.' .. module)
 end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -22,4 +24,4 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup(vim.g.user..'.plugins')
+require("lazy").setup(User .. '.plugins')

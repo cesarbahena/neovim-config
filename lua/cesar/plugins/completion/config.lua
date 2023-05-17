@@ -39,8 +39,8 @@ cmp.setup {
   },
 
   experimental = {
-    native_menu = false,
-    ghost_text = true,
+    -- native_menu = false,
+    -- ghost_text = true,
   },
 }
 
@@ -117,12 +117,13 @@ autocmd FileType lua lua require'cmp'.setup.buffer {
 autocmd FileType TelescopePrompt lua require('cmp').setup.buffer { enabled = false }
 --]]
 
-local Group = require("colorbuddy.group").Group
-local g = require("colorbuddy.group").groups
-local s = require("colorbuddy.style").styles
-
-Group.new("CmpItemAbbr", g.Comment)
-Group.new("CmpItemAbbrDeprecated", g.Error)
-Group.new("CmpItemAbbrMatchFuzzy", g.CmpItemAbbr.fg:dark(), nil, s.italic)
-Group.new("CmpItemKind", g.Special)
-Group.new("CmpItemMenu", g.NonText)
+-- local color = require("colorbuddy.color").colors
+-- local Group = require("colorbuddy.group").Group
+-- local g = require("colorbuddy.group").groups
+-- local s = require("colorbuddy.style").styles
+--
+-- Group.new("CmpItemAbbr", g.Comment)
+-- -- Group.new("CmpItemAbbrDeprecated", g.Error)
+-- Group.new("CmpItemAbbrMatchFuzzy", g.CmpItemAbbr.fg:dark(), nil, s.italic)
+-- Group.new("CmpItemKind", g.Special)
+-- Group.new("CmpItemMenu", g.NonText)

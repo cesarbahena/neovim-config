@@ -5,7 +5,8 @@ return {
       { '<leader>p', '<cmd>Telescope neoclip<CR>', desc = 'Clipboard' }
     },
     config = function ()
-      require('telescope').load_extension('neoclip')
+      require 'neoclip'.setup()
+      require 'telescope'.load_extension 'neoclip'
     end,
   },
 }
