@@ -2,8 +2,8 @@ return {
   {
     "hrsh7th/nvim-cmp",
     config = function()
-      require 'completion.mappings'
-      require 'completion.config'
+      Plugin 'completion.mappings'
+      Plugin 'completion.setup'
     end,
   },
   "hrsh7th/cmp-buffer",
@@ -11,8 +11,8 @@ return {
   "hrsh7th/cmp-nvim-lua",
   "hrsh7th/cmp-nvim-lsp",
   "tamago324/cmp-zsh",
-  require 'completion.ui',
-  require 'completion.snips.init',
+  Plugin 'completion.ui',
+  Plugin 'completion.snips.init',
   'rafamadriz/friendly-snippets',
   {
     "zbirenbaum/copilot.lua",
@@ -23,7 +23,3 @@ return {
     config = true,
   },
 }
-
--- local function new(args)
---
--- end

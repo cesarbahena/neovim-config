@@ -11,7 +11,9 @@ return {
       },
     },
   },
-  "nvim-treesitter/nvim-treesitter-context",
-  "nvim-treesitter/playground",
+  'nvim-treesitter/nvim-treesitter-context',
+  'nvim-treesitter/playground',
+  Plugin 'syntax.comment',
+  'tpope/vim-surround',
 }
 

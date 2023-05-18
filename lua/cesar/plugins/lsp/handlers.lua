@@ -24,4 +24,4 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
     virtual_text = true,
   })
 
-vim.lsp.handlers["window/showMessage"] = require(vim.g.user..'.plugins.lsp.show_message')
+vim.lsp.handlers["window/showMessage"] = Plugin 'lsp.show_message'

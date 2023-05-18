@@ -1,6 +1,6 @@
 return function ()
   local actions = require 'telescope.actions'
-  require 'telescope.telescopes'
+  Plugin 'telescope.telescopes'
   require 'telescope'.setup {
     defaults = {
       -- winblend = 15,

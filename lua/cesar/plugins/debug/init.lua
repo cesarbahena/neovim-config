@@ -1,10 +1,10 @@
 return {
   {
     'mfussenegger/nvim-dap',
-    keys = require(vim.g.user..'.plugins.debug.mappings'),
+    keys = Plugin 'debug.mappings',
     dependencies = {
-      require('debug.ui'),
+      Plugin 'debug.ui',
     },
   },
-  require('debug.adapters.js'),
+  Plugin 'debug.adapters.js',
 }

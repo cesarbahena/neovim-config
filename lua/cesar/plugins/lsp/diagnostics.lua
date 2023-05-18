@@ -1,5 +1,5 @@
 
-local nmap = require(vim.g.user..'utils').nmap
+local nmap = require(User .. '.utils').nmap
 
 vim.diagnostic.config {
   underline = true,
@@ -60,7 +60,7 @@ local get_highest_error_severity = function()
 end
 
 nmap {
-  "<leader>dn",
+  "]d",
   function()
     vim.diagnostic.goto_next {
       severity = get_highest_error_severity(),
@@ -71,7 +71,7 @@ nmap {
 }
 
 nmap {
-  "<leader>dp",
+  "[d",
   function()
     vim.diagnostic.goto_prev {
       severity = get_highest_error_severity(),

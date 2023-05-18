@@ -1,7 +1,7 @@
 vim.keymap.set('n', '<space>', '<nop>')
 vim.keymap.set('n', '<leader>ft', '<cmd>Explore<CR><CR>')
 
-local utils = require(vim.g.user..'.utils')
+local utils = require(User .. '.utils')
 
 utils.remap{
   [''] = {
@@ -68,22 +68,22 @@ utils.remap{
   },
 }
 
-local digits = {'m','k','h',',','n','e','i','l','u','y'}
-
-utils.map_numpad{
-  prefix = '<leader>',
-  digits = digits,
-  i = 0,
-  n = 2,
-  j = 0,
-  m = 9,
-}
-
-utils.map_numpad{
-  prefix = '<leader><leader>',
-  digits = digits,
-  i = 3,
-  n = 9,
-  j = 0,
-  m = 9,
-}
+-- local digits = {'m','k','h',',','n','e','i','l','u','y'}
+--
+-- utils.map_numpad{
+--   prefix = '<leader>',
+--   digits = digits,
+--   i = 0,
+--   n = 2,
+--   j = 0,
+--   m = 9,
+-- }
+--
+-- utils.map_numpad{
+--   prefix = '<leader><leader>',
+--   digits = digits,
+--   i = 3,
+--   n = 9,
+--   j = 0,
+--   m = 9,
+-- }

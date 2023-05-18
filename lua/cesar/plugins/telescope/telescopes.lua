@@ -1,7 +1,7 @@
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local themes = require "telescope.themes"
-local tele_cmd = require(vim.g.user..'.utils').tele_cmd
+local tele_cmd = require(User .. '.utils').tele_cmd
 
 local set_prompt_to_entry_value = function(prompt_bufnr)
   local entry = action_state.get_selected_entry()

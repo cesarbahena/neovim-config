@@ -2,14 +2,14 @@ return function()
   local lspconfig = vim.F.npcall(require, "lspconfig")
   if not lspconfig then return end
 
-  local imap = require(vim.g.user..'.utils').imap
-  local nmap = require(vim.g.user..'.utils').nmap
-  local autocmd = require(vim.g.user..'.utils').autocmd
+  local imap = require(User .. '.utils').imap
+  local nmap = require(User .. '.utils').nmap
+  local autocmd = require(User .. '.utils').autocmd
   local autocmd_clear = vim.api.nvim_clear_autocmds
-  local telescope_mapper = require(vim.g.user..'.utils').tele_cmd
-  local handlers = require('lsp.handlers')
+  local telescope_mapper = require(User .. '.utils').tele_cmd
+  local handlers = Plugin 'lsp.handlers'
   local ts_util = require 'nvim-lsp-ts-utils'
-  -- local inlays = require(vim.g.user..'.plugins.lsp.inlay')
+  -- local inlays = require(User .. '.plugins.lsp.inlay')
 
   local custom_init = function(client)
     client.config.flags = client.config.flags or {}
@@ -22,7 +22,7 @@ return function()
   local augroup_semantic = vim.api.nvim_create_augroup("custom-lsp-semantic", { clear = true })
 
   local autocmd_format = function(async, filter)
-    vim.api.nvim_clear_autocmds { buffer = 0, group = augroup_format }
+    autocmd_clear { buffer = 0, group = augroup_format }
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = 0,
       callback = function()
@@ -71,9 +71,9 @@ return function()
     end,
 
     javascript = function()
-      autocmd_format(false)
-        -- return client.name ~= "tsserver"
-      -- end)
+      autocmd_format(false, function (client)
+        return client.name ~= "tsserver"
+      end)
     end,
 
     python = function()
@@ -266,7 +266,16 @@ return function()
     on_attach = custom_attach,
     capabilities = updated_capabilities,
     settings = {
-      Lua = { workspace = { checkThirdParty = false }, semantic = { enable = false } },
+      Lua = {
+        workspace = { checkThirdParty = false },
+        semantic = { enable = false },
+        diagnostics = {
+          globals = {
+            'User',
+            'Plugin',
+          },
+        },
+      },
     },
   }
 

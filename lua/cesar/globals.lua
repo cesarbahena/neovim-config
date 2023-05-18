@@ -3,9 +3,14 @@ function P(v)
   return v
 end
 
+function Plugin(module_name)
+  -- Requires a module from lua.<user>.plugins.
+  return require(User .. '.plugins.' .. module_name)
+end
+
 function Switch_to_keyboard(keyboard)
-  vim.g.keyboard = keyboard
-  package.loaded[vim.g.user..'.keymaps'] = nil
-  require(vim.g.user..'.keymaps')
+  Keyboard = keyboard
+  package.loaded[User .. '.mappings'] = nil
+  require(User .. '.mappings')
 end
 

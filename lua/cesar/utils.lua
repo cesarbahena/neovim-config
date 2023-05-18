@@ -26,13 +26,11 @@ end
 
 function M.tele_cmd(key, fn, opts, buffer)
   local id = vim.api.nvim_replace_termcodes(key..fn, true, true, true)
-  vim.g.telescopes = vim.g.telescopes or {}
-  vim.g.telescopes[id] = opts or {}
+  Telescopes = Telescopes or {}
+  Telescopes[id] = opts or {}
 
   local rhs = string.format(
-    "<cmd>lua require('"..vim.g.user..
-    ".plugins.telescope.telescopes')['%s']"..
-    "(vim.g.telescopes['%s'])<CR>",
+    "<cmd>lua Plugin 'telescope.telescopes'['%s'](Telescopes['%s'])<CR>",
     fn, id
   )
 
@@ -99,11 +97,6 @@ function M.found(value, table)
     end
     return found
   end
-end
-
-function M.execute_file()
-  vim.cmd('wa')
-  vim.cmd('so')
 end
 
 return M

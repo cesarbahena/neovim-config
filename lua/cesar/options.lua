@@ -23,7 +23,7 @@ opt.wrap = false
 -- Backup
 opt.swapfile = false
 opt.backup = false
-opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 opt.undofile = true
 
 -- Search
@@ -60,6 +60,8 @@ opt.shortmess:append "c"
 opt.foldmethod = 'syntax'
 
 -- General
+opt.cpoptions = opt.cpoptions
+  + 'I' -- Don't trim whitespace when moving right after auto indent
 opt.formatoptions = opt.formatoptions
   - "a" -- Auto formatting is BAD.
   - "t" -- Don't auto format my code. I got linters for that.
@@ -67,9 +69,4 @@ opt.formatoptions = opt.formatoptions
   + "q" -- Allow formatting comments w/ gq
   - "o" -- O and o, don't continue comments
   + "r" -- But do continue when pressing enter.
-  + "n" -- Indent past the formatlistpat, not underneath it.
   + "j" -- Auto-remove comments if possible.
-  - "2" -- I'm not in gradeschool anymore
-
--- ?
-opt.isfname:append("@-@")
