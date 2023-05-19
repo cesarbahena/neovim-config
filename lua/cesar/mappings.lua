@@ -40,11 +40,11 @@ utils.remap{
     { 'Yp', 'yp', 'Copy down' },
     { 'mzA,<Esc>`z', ',,', 'Insert comma at the end' },
     { 'mzA;<Esc>`z', { colemak = ',h', qwerty = ',m' }, 'Insert semicolon at the end' },
+    { 'mz$x`z', ',d', 'Insert comma at the end' },
     { ':m +<CR>==', '<C-d>', 'Move line down' },
     { ':m -2<CR>==', '<C-f>', 'Move line up' },
     { 'mzJ`z', { colemak = 'J', qwerty = 'M' }, 'Join/Merge lines (pretty)' },
     { 'mzgJ`z', { colemak = 'gJ', qwerty = 'gM' }, 'Join/Merge lines (raw)' },
-    { '@@', 'Q', 'Repeat macro' },
   },
   i = {
     { '<Esc>', { colemak = '<C-e>', qwerty = '<C-k>' }, 'Escape to normal mode' },
@@ -59,7 +59,8 @@ utils.remap{
   },
   v = {
     { '<Esc>', { colemak = '<C-e>', qwerty = '<C-k>' }, 'Escape to normal mode' },
-    { "y`>", 'y', 'Yank (keep the position' },
+    { "y`>", 'y', 'Yank (keep the position)' },
+    { "<Esc><cmd>'<,'>w !clip.exe<CR><Esc>", '<leader>y', 'Yank to clipboard' },
     { '"_dP', 'p', 'Paste (keeping the register)' },
     { ":m '>+<CR>gv=gv", '<C-d>', 'Move line down' },
     { ":m '<-2<CR>gv=gv", '<C-f>', 'Move line up' },

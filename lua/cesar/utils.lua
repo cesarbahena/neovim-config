@@ -39,6 +39,7 @@ function M.tele_cmd(key, fn, opts, buffer)
   else
     vim.api.nvim_buf_set_keymap(0, 'n', key, rhs)
   end
+  -- vim.notify(fn)
 end
 
 function M.non_zero(num)

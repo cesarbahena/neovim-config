@@ -1,11 +1,22 @@
 return {
   {
     'neovim/nvim-lspconfig',
-    config = Plugin 'lsp.setup',
+    config = function()
+      local servers = Plugin 'lsp.config.servers'
+      for server, config in pairs(servers) do
+        Plugin 'lsp.config' (server, config)
+      end
+      Plugin 'lsp.diagnostics' ()
+    end
   },
 
-  'williamboman/mason.nvim',
-  'williamboman/mason-lspconfig.nvim',
+  { 'williamboman/mason.nvim', config = true },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    opts = {
+      ensure_installed = { "lua_ls", "tsserver", "jsonls" },
+    },
+  },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
@@ -18,11 +29,11 @@ return {
   Plugin 'lsp.inlay',
   'j-hui/fidget.nvim',
   'folke/neodev.nvim',
-  'jose-elias-alvarez/null-ls.nvim',
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    config = Plugin 'lsp.null_ls'
+  },
   'jose-elias-alvarez/nvim-lsp-ts-utils',
   'MunifTanjim/prettier.nvim',
   "b0o/schemastore.nvim",
 }
-
-
-

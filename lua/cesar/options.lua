@@ -2,7 +2,6 @@ local opt = vim.opt
 
 vim.g.mapleader = " "
 vim.g.netrw_banner = 0
--- vim.g.netrw_liststyle = 3
 opt.termguicolors = true
 
 -- Lines
@@ -57,7 +56,7 @@ opt.completeopt = { "menu", "menuone", "noselect" }
 opt.shortmess:append "c"
 
 -- Folds
-opt.foldmethod = 'syntax'
+-- opt.foldmethod = 'syntax'
 
 -- General
 opt.cpoptions = opt.cpoptions
