@@ -1,15 +1,10 @@
 User = 'cesar'
 
-local modules = {
-  'globals',
-  'options',
-  'mappings',
-  'autocmd',
-}
-
-for _, module in ipairs(modules) do
-  require(User .. '.' .. module)
-end
+require(User .. '.globals')
+require(User .. '.options')
+require(User .. '.keymap_functions')
+require(User .. '.mappings')
+require(User .. '.autocmd')
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

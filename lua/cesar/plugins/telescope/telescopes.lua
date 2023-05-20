@@ -1,7 +1,7 @@
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local themes = require "telescope.themes"
-local tele_cmd = require(User .. '.utils').tele_cmd
+local tele_cmd = Keymaps.map_telescope
 
 local set_prompt_to_entry_value = function(prompt_bufnr)
   local entry = action_state.get_selected_entry()
@@ -129,7 +129,6 @@ function M.fs()
   require("telescope.builtin").find_files(opts)
 end
 
-
 function M.builtin()
   require("telescope.builtin").builtin()
 end
@@ -212,7 +211,7 @@ function M.project_search()
   require("telescope.builtin").find_files {
     previewer = false,
     layout_strategy = "vertical",
-    cwd = require("nvim_lsp.util").root_pattern ".git"(vim.fn.expand "%:p"),
+    cwd = require("nvim_lsp.util").root_pattern ".git" (vim.fn.expand "%:p"),
   }
 end
 
@@ -244,7 +243,6 @@ function M.search_all_files()
   require("telescope.builtin").find_files {
     find_command = { "rg", "--no-ignore", "--files" },
   }
-
 end
 
 function M.file_browser()
@@ -319,19 +317,15 @@ function M.git_status()
   -- }
 
   require("telescope.builtin").git_status(opts)
-
 end
 
 function M.git_commits()
-
   require("telescope.builtin").git_commits {
     winblend = 5,
   }
-
 end
 
 function M.search_only_certain_files()
-
   require("telescope.builtin").find_files {
     find_command = {
       "rg",
@@ -341,7 +335,6 @@ function M.search_only_certain_files()
     },
   }
 end
-
 
 function M.lsp_references()
   require("telescope.builtin").lsp_references {
@@ -365,11 +358,9 @@ function M.lsp_implementations()
     sorting_strategy = "ascending",
     ignore_filename = false,
   }
-
 end
 
 function M.vim_options()
-
   require("telescope.builtin").vim_options {
     layout_config = {
       width = 0.5,
