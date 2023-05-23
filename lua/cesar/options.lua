@@ -7,7 +7,7 @@ opt.termguicolors = true
 -- Lines
 opt.number = true
 opt.relativenumber = true
-opt.fillchars = {eob=' '}
+opt.fillchars = { eob = " " }
 opt.signcolumn = "yes"
 opt.colorcolumn = nil
 
@@ -43,29 +43,28 @@ opt.showmode = false
 opt.showcmd = false
 opt.cmdheight = 0
 opt.laststatus = 3
-opt.showcmdloc = 'statusline'
+opt.showcmdloc = "statusline"
 
 -- Completion
 opt.wildignore = "__pycache__"
-opt.wildignore:append { "*.o", "*~", "*.pyc", "*pycache*" }
-opt.wildignore:append { "Cargo.lock", "Cargo.Bazel.lock" }
+opt.wildignore:append({ "*.o", "*~", "*.pyc", "*pycache*" })
+opt.wildignore:append({ "Cargo.lock", "Cargo.Bazel.lock" })
 opt.pumblend = 17
 opt.wildmode = "longest:full"
 opt.wildoptions = "pum"
 opt.completeopt = { "menu", "menuone", "noselect" }
-opt.shortmess:append "c"
+opt.shortmess:append("c")
 
 -- Folds
 -- opt.foldmethod = 'syntax'
 
 -- General
-opt.cpoptions = opt.cpoptions
-  + 'I' -- Don't trim whitespace when moving right after auto indent
+opt.cpoptions = opt.cpoptions + "I" -- Don't trim whitespace when moving right after auto indent
 opt.formatoptions = opt.formatoptions
-  - "a" -- Auto formatting is BAD.
-  - "t" -- Don't auto format my code. I got linters for that.
-  + "c" -- In general, I like it when comments respect textwidth
-  + "q" -- Allow formatting comments w/ gq
-  - "o" -- O and o, don't continue comments
-  + "r" -- But do continue when pressing enter.
-  + "j" -- Auto-remove comments if possible.
+	- "a" -- Auto formatting is BAD.
+	- "t" -- Don't auto format my code. I got linters for that.
+	+ "c" -- In general, I like it when comments respect textwidth
+	+ "q" -- Allow formatting comments w/ gq
+	- "o" -- O and o, don't continue comments
+	+ "r" -- But do continue when pressing enter.
+	+ "j" -- Auto-remove comments if possible.
