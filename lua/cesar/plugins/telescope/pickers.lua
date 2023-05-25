@@ -10,16 +10,20 @@ function Keymaps.map_telescope(finder, picker, opts, extension)
 	-- Add pickers here
 	local pickers = {
 		ivy = require("telescope.themes").get_ivy(params({
+			prompt_prefix = "   ",
+			sorting_strategy = "ascending",
 			layout_config = {
 				prompt_position = "top",
 			},
 		})),
 
 		dropdown = require("telescope.themes").get_dropdown(params({
+			sorting_strategy = "ascending",
 			previewer = false,
 		})),
 
 		tiny = require("telescope.themes").get_dropdown(params({
+			sorting_strategy = "ascending",
 			previewer = false,
 			layout_config = {
 				width = { padding = 0.4 },
@@ -27,6 +31,8 @@ function Keymaps.map_telescope(finder, picker, opts, extension)
 		})),
 
 		vertical = {
+			prompt_prefix = "   ",
+			sorting_strategy = "ascending",
 			layout_strategy = "vertical",
 			layout_config = {
 				prompt_position = "top",
@@ -37,24 +43,25 @@ function Keymaps.map_telescope(finder, picker, opts, extension)
 		},
 
 		padded = params({
+			prompt_prefix = "   ",
+			sorting_strategy = "ascending",
+			layout_strategy = "horizontal",
 			layout_config = {
 				prompt_position = "top",
 				width = { padding = 0.2 },
+				preview_width = 0.6,
 			},
 		}),
 
 		wide = params({
+			prompt_prefix = "   ",
+			sorting_strategy = "ascending",
 			layout_strategy = "horizontal",
 			layout_config = {
 				prompt_position = "top",
 				width = 0.95,
 				height = 0.85,
-				preview_width = function(_, cols, _)
-					if cols > 200 then
-						return math.floor(cols * 0.4)
-					end
-					return math.floor(cols * 0.6)
-				end,
+				preview_width = 0.6,
 			},
 		}),
 	}

@@ -51,7 +51,7 @@ return {
 				desc = "Find debugger configurations",
 			},
 			{
-				"<leader>fb",
+				"<leader>bp",
 				function()
 					require("telescope").extensions.dap.list_breakpoints({})
 				end,

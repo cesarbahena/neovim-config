@@ -14,13 +14,35 @@ return {
 		end,
 	},
 	{
+		"nvim-telescope/telescope-file-browser.nvim",
+		config = function()
+			require("telescope").load_extension("file_browser")
+		end,
+	},
+	{
 		"ahmedkhalf/project.nvim",
 		dependencies = {
-			{ "ygm2/rooter.nvim" },
+			{
+				"notjedi/nvim-rooter.lua",
+				config = function()
+					require("nvim-rooter").setup({
+						exclude_filetypes = { "harpoon" },
+					})
+				end,
+			},
 		},
 		config = function()
-			require("project_nvim").setup()
+			require("project_nvim").setup({
+				manual_mode = true,
+			})
 			require("telescope").load_extension("projects")
 		end,
+	},
+	{
+		"nvim-telescope/telescope-frecency.nvim",
+		config = function()
+			require("telescope").load_extension("frecency")
+		end,
+		dependencies = { "kkharji/sqlite.lua" },
 	},
 }
