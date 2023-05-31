@@ -8,7 +8,6 @@ return {
 		require("notify").setup({
 			background_colour = "#000000",
 		})
-		require("telescope").load_extension("notify")
 		local log = require("plenary.log").new({
 			plugin = "notify",
 			level = "debug",

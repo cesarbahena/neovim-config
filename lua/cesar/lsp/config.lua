@@ -1,7 +1,7 @@
 -- local handlers = require(User .. ".lsp.handlers")
 -- require(User .. ".lsp.inlay")
 
-local custom_attach = require(User .. ".lsp.config.on_attach")
+local custom_attach = require(User .. ".lsp.on_attach")
 
 local custom_init = function(client)
 	client.config.flags = client.config.flags or {}

@@ -1,6 +1,4 @@
-Keymaps = {}
-
-function Keymaps.remap(table_of_remaps, shared_opts)
+function Keymap(table_of_remaps, shared_opts)
 	for mode, remaps in pairs(table_of_remaps) do
 		for _, remap in ipairs(remaps) do
 			local lhs = remap[2]

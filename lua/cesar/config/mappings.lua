@@ -1,7 +1,7 @@
 vim.keymap.set("n", "<space>", "<nop>")
 vim.keymap.set("n", "<leader>ft", "<cmd>Explore<CR><CR>")
 
-Keymaps.remap({
+Keymap({
 	[""] = {
 		{ "Cmdline mode", "<CR>", ":" },
 		{ "Open new Line below", { colemak = "l" }, "o" },

@@ -1,5 +1,5 @@
 -- Wrapper global function for ease of use in mappings
-function Keymaps.map_telescope(finder, picker, opts, extension)
+return function (finder, picker, opts, extension)
 	local function params(defaults)
 		if opts then
 			return vim.tbl_deep_extend("force", defaults, opts)

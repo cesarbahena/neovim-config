@@ -2,7 +2,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
-			local servers = require(User .. ".lsp.config.servers")
+			local servers = require(User .. ".lsp.servers")
 			for server, config in pairs(servers) do
 				require(User .. ".lsp.config")(server, config)
 			end

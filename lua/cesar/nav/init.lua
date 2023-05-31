@@ -15,25 +15,7 @@ return {
 	},
 
   -- Find files
- {
-  "ahmedkhalf/project.nvim",
-  dependencies = {
-		"nvim-telescope/telescope.nvim",
-    {
-      "notjedi/nvim-rooter.lua",
-      config = function()
-        require("nvim-rooter").setup({
-          exclude_filetypes = { "harpoon" },
-        })
-      end,
-    },
-  },
-  config = function()
-    require("project_nvim").setup({
-      manual_mode = true,
-    })
-  end,
-},
+  require(User .. ".nav.projects"),
 	"nvim-telescope/telescope-file-browser.nvim",
   "nvim-telescope/telescope-smart-history.nvim",
 	{
@@ -42,12 +24,10 @@ return {
 	},
 
   -- Utils
+  require(User .. ".nav.harpoon"),
+  require(User .. ".nav.trouble"),
+	{ "AckslD/nvim-neoclip.lua", config = true, lazy = false },
   {
     "nvim-telescope/telescope-ui-select.nvim",
   },
-	{
-		"AckslD/nvim-neoclip.lua",
-		lazy = false,
-		config = true,
-	},
 }

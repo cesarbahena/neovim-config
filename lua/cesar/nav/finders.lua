@@ -1,6 +1,6 @@
-local telescope = Keymaps.map_telescope
+local telescope = require(User .. ".nav.pickers")
 
-Keymaps.remap({
+Keymap({
 	[""] = {
 		{
 			"Find files",

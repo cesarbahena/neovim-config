@@ -1,6 +1,6 @@
 local autocmd = require(User .. ".config.utils").autocmd
 local autocmd_clear = vim.api.nvim_clear_autocmds
-local telescope = Keymaps.map_telescope
+local telescope = require(User .. ".nav.pickers")
 
 local augroup_highlight = vim.api.nvim_create_augroup("custom-lsp-references", { clear = true })
 local augroup_codelens = vim.api.nvim_create_augroup("custom-lsp-codelens", { clear = true })
@@ -13,7 +13,7 @@ return function(client, bufnr)
 	-- nmap({ "<space>lr", "<cmd>lua require('cesar.plugins.lsp.codelens').run()<CR>" })
 	-- telescope_mapper("<space>wd", "lsp_document_symbols", { ignore_filename = true }, true)
 	-- telescope_mapper("<space>ww", "lsp_dynamic_workspace_symbols", { ignore_filename = true }, true)
-	Keymaps.remap({
+	Keymap({
 		[""] = {
 			{ "Go to definition", "gd", vim.lsp.buf.definition },
 			{ "Go to declaration", "gD", vim.lsp.buf.declaration },
@@ -49,6 +49,6 @@ return function(client, bufnr)
 	end
 
 	-- Attach any filetype specific options to the client
-	Plugin("lsp.config.on_filetype")[vim.bo.ft]()
+	require(User .. ".lsp.config.on_filetype")[vim.bo.ft]()
 	vim.notify(vim.bo.ft)
 end

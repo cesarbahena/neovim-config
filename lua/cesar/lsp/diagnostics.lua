@@ -59,34 +59,39 @@ return function()
 		end
 	end
 
-	nmap({
-		"]d",
-		function()
-			vim.diagnostic.goto_next({
-				severity = get_highest_error_severity(),
-				wrap = true,
-				float = true,
-			})
-		end,
-	})
-
-	nmap({
-		"[d",
-		function()
-			vim.diagnostic.goto_prev({
-				severity = get_highest_error_severity(),
-				wrap = true,
-				float = true,
-			})
-		end,
-	})
-
-	nmap({
-		"<leader>sl",
-		function()
-			vim.diagnostic.open_float({
-				scope = "line",
-			})
-		end,
-	})
+  Keymap({
+    [""] = {
+      {
+        "Next diagnostic",
+        "]d",
+        function ()
+          vim.diagnostic.goto_next({
+            severity = get_highest_error_severity(),
+            wrap = true,
+            float = true,
+          })
+        end
+      },
+      {
+        "Previous diagnostic",
+        "[d",
+        function ()
+          vim.diagnostic.goto_prev({
+            severity = get_highest_error_severity(),
+            wrap = true,
+            float = true,
+          })
+        end
+      },
+      {
+        "Diagnostics list",
+        "<leader>dl",
+        function ()
+          vim.diagnostic.open_float({
+            scope = "line",
+          })
+        end
+      },
+    }
+  })
 end

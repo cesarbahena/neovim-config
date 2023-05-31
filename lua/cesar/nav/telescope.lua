@@ -40,6 +40,7 @@ return function()
     "file_browser",
     "projects",
     "ui-select",
+    "notify",
   }
 
   for _, extension in ipairs(extensions) do

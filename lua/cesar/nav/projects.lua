@@ -1,7 +1,7 @@
 return {
   "ahmedkhalf/project.nvim",
   dependencies = {
-		"nvim-telescope/telescope.nvim",
+    "nvim-telescope/telescope.nvim",
     {
       "notjedi/nvim-rooter.lua",
       config = function()
