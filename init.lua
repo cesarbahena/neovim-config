@@ -1,3 +1,1 @@
-vim.g.keyboard = 'colemak'
-
-require 'cesar'
+require("cesar.config.setup")
