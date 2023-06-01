@@ -1,14 +1,12 @@
 return function()
   Keymap({
     [""] = {
-      { "Git status", "<leader>gs", "<cmd>vert Git<CR>" },
+      { "Git status", "gs", function() vim.cmd("vert Git") end },
     },
   })
 
-  local Fugitive = vim.api.nvim_create_augroup("Fugitive", {})
-  local autocmd = vim.api.nvim_create_autocmd
-  autocmd("BufWinEnter", {
-    group = Fugitive,
+  vim.api.nvim_create_autocmd ("BufWinEnter", {
+    group = vim.api.nvim_create_augroup("Fugitive", {}),
     pattern = "*",
     callback = function()
       if vim.bo.ft ~= "fugitive" then
@@ -16,10 +14,10 @@ return function()
       end
       Keymap({
         [""] = {
-          { "Git push", "<leader>p", vim.cmd.Git("push") },
-          { "Git push", "<leader>gp", ":Git push -u origin" },
-          { "Git pull", "<leader>P", vim.cmd.Git("pull") },
-          { "Close", "<C-e>", "<cmd>q<CR>" },
+          { "Git push", "gp", function() vim.cmd.Git("push") end },
+          { "Git push", "gP", ":Git push -u origin " },
+          { "Git pull", "gl", function() vim.cmd.Git("pull") end },
+          { "Close", "<C-e>", vim.cmd.q },
         }, { buffer = true }
       })
     end,

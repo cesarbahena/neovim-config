@@ -22,5 +22,3 @@ function Keymap(table_of_remaps, shared_opts)
 		end
 	end
 end
-
-require(User .. ".nav.pickers")

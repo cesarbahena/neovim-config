@@ -1,21 +1,53 @@
-local augroup = vim.api.nvim_create_augroup
-local autocmd = vim.api.nvim_create_autocmd
+local function autocmd(args)
+	local event = args[1]
+	local clear = args.clear or false
+	local group = vim.api.nvim_create_augroup(args[2], { clear = clear })
+	local buffer = args[4]
 
-local TrimTrailingSpace = augroup("TrimTrailingSpace", {})
-autocmd({ "BufWritePre" }, {
-	group = TrimTrailingSpace,
+	local callback, command
+	if type(args[3]) == "function" then
+		callback = args[3]
+	else
+		command = args[3]
+	end
+
+	if args.clear then
+		vim.api.nvim_clear_autocmds({
+			group = group,
+			buffer = buffer,
+		})
+	end
+
+	vim.api.nvim_create_autocmd(event, {
+		group = group,
+		callback = callback,
+		command = command,
+		buffer = buffer,
+		pattern = args.pattern,
+		once = args.once,
+	})
+end
+
+autocmd({
+	"BufWritePre",
+	"TrimTrailingSpace",
+	function()
+		vim.cmd([[%s/\s\+$//e]])
+	end,
 	pattern = "*",
-	command = [[%s/\s\+$//e]],
+	clear = true,
 })
 
-local yank_group = augroup("HighlightYank", {})
-autocmd("TextYankPost", {
-	group = yank_group,
-	pattern = "*",
-	callback = function()
+autocmd({
+	"TextYankPost",
+	"HighlightYank",
+	function()
 		vim.highlight.on_yank({
 			higroup = "IncSearch",
 			timeout = 40,
 		})
 	end,
+	pattern = "*",
 })
+
+return autocmd

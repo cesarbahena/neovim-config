@@ -1,5 +1,5 @@
 return function()
-  local telescope = require("telescope")
+	local telescope = require("telescope")
 	require(User .. ".nav.finders")
 
 	telescope.setup({
@@ -24,26 +24,26 @@ return function()
 				},
 			},
 		},
-    extensions = {
-      file_browser = {
-        theme = "ivy",
-        hijack_netrw = true,
-        hidden = true,
-      }
-    }
+		extensions = {
+			file_browser = {
+				theme = "ivy",
+				hijack_netrw = true,
+				hidden = true,
+			},
+		},
 	})
 
-  local extensions = {
-    "fzf",
-    "neoclip",
-    "frecency",
-    "file_browser",
-    "projects",
-    "ui-select",
-    "notify",
-  }
+	local extensions = {
+		"fzf",
+		"neoclip",
+		"frecency",
+		"file_browser",
+		"projects",
+		"ui-select",
+		"notify",
+	}
 
-  for _, extension in ipairs(extensions) do
-    telescope.load_extension(extension)
-  end
+	for _, extension in ipairs(extensions) do
+		telescope.load_extension(extension)
+	end
 end

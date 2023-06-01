@@ -47,7 +47,7 @@ Keymap({
 	i = {
 		{ "Escape to normal mode", { colemak = "<C-e>", qwerty = "<C-k>" }, "<Esc>" },
 		{ "Do one normal mode command", { colemak = "<C-l>" }, "<C-o>" },
-		{ "Backspace", "<C-u>", "<BS>" },
+		{ "Undo", "<C-u>", "<Esc>u" },
 		{ "Delete", "<C-x>", "<Del>" },
 		{ "Go outside of the brackets", { colemak = "<C-k>", qwerty = "<C-b>" }, "<Esc>va{A" },
 		{ "Go outside of parentheses)", { colemak = "<C-h>", qwerty = "<C-j>" }, "<Esc>va(A" },
@@ -68,5 +68,8 @@ Keymap({
 		{ "Move line up", "<C-f>", ":m '<-2<CR>gv=gv" },
 		{ "Deindent (keep selection)", "<", "<gv" },
 		{ "Indent (keep selection)", ">", ">gv" },
+	},
+	c = {
+		{ "Escape to normal mode", { colemak = "<C-e>", qwerty = "<C-k>" }, "<Esc>" },
 	},
 })
