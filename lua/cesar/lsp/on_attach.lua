@@ -1,15 +1,14 @@
 local autocmd = require(User .. ".config.autocmd")
 local telescope = require(User .. ".nav.pickers")
+local keymap = require(User .. ".config.mappings")
 
 return function(client, bufnr)
 	if client.name == "copilot" then
 		return
 	end
 
-	-- nmap({ "<space>lr", "<cmd>lua require('cesar.plugins.lsp.codelens').run()<CR>" })
-	-- telescope_mapper("<space>wd", "lsp_document_symbols", { ignore_filename = true }, true)
-	-- telescope_mapper("<space>ww", "lsp_dynamic_workspace_symbols", { ignore_filename = true }, true)
-	Keymap({
+	-- { "<space>lr", "<cmd>lua require('cesar.plugins.lsp.codelens').run()<CR>" }
+	keymap({
 		[""] = {
 			{ "Go to definition", "gd", vim.lsp.buf.definition },
 			{ "Go to declaration", "gD", vim.lsp.buf.declaration },
@@ -20,11 +19,9 @@ return function(client, bufnr)
 			{ "Find docunment symbols", "<leader>fd", telescope("lsp_dynamic_workspace_symbols", "wide") },
 			{ "Code rename", "<leader>cr", vim.lsp.buf.rename },
 			{ "Code actions", "<leader>ca", vim.lsp.buf.code_action },
-			{ "Show hover help", "<C-s>", vim.lsp.buf.hover },
 		},
-		i = {
-			{ "Show signature help", "<C-s>", vim.lsp.buf.signature_help },
-		},
+		n = { { "Show hover help", "<C-s>", vim.lsp.buf.hover } },
+		i = { { "Show signature help", "<C-s>", vim.lsp.buf.signature_help } },
 	}, { buffer = true })
 
 	vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -36,14 +33,13 @@ return function(client, bufnr)
 			"CustomLspReferences",
 			vim.lsp.buf.document_highlight,
 			bufnr,
-			clear = true,
 		})
 		autocmd({
 			"CursorMoved",
 			"CustomLspReferences",
 			vim.lsp.buf.clear_references,
 			bufnr,
-			-- clear = true,
+			clear = false,
 		})
 	end
 

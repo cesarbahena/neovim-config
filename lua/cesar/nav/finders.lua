@@ -1,6 +1,7 @@
 local telescope = require(User .. ".nav.pickers")
+local keymap = require(User .. ".config.mappings")
 
-Keymap({
+keymap({
 	[""] = {
 		{
 			"Find files",
@@ -114,7 +115,7 @@ Keymap({
 			"<leader>ft",
 			function()
 				require("telescope").extensions.file_browser.file_browser(require("telescope.themes").get_ivy({
-          cwd = vim.fn.expand("%:p:h")
+					cwd = vim.fn.expand("%:p:h"),
 				}))
 			end,
 		},

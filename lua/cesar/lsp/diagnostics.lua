@@ -1,5 +1,3 @@
-local nmap = require(User .. ".config.utils").nmap
-
 return function()
 	vim.diagnostic.config({
 		underline = true,
@@ -43,6 +41,7 @@ return function()
 
 	-- Go to the next diagnostic, but prefer going to errors first
 	-- In general, I pretty much never want to go to the next hint
+
 	local severity_levels = {
 		vim.diagnostic.severity.ERROR,
 		vim.diagnostic.severity.WARN,
@@ -59,39 +58,43 @@ return function()
 		end
 	end
 
-  Keymap({
-    [""] = {
-      {
-        "Next diagnostic",
-        "]d",
-        function ()
-          vim.diagnostic.goto_next({
-            severity = get_highest_error_severity(),
-            wrap = true,
-            float = true,
-          })
-        end
-      },
-      {
-        "Previous diagnostic",
-        "[d",
-        function ()
-          vim.diagnostic.goto_prev({
-            severity = get_highest_error_severity(),
-            wrap = true,
-            float = true,
-          })
-        end
-      },
-      {
-        "Diagnostics list",
-        "<leader>dl",
-        function ()
-          vim.diagnostic.open_float({
-            scope = "line",
-          })
-        end
-      },
-    }
-  })
+	local keymap = require(User .. ".config.mappings")
+
+	keymap({
+		[""] = {
+			{
+				"Next diagnostic",
+				"]d",
+				function()
+					vim.diagnostic.goto_next({
+						severity = get_highest_error_severity(),
+						wrap = true,
+						float = true,
+					})
+				end,
+			},
+			{
+				"Previous diagnostic",
+				"[d",
+				function()
+					vim.diagnostic.goto_prev({
+						severity = get_highest_error_severity(),
+						wrap = true,
+						float = true,
+					})
+				end,
+			},
+		},
+		n = {
+			{
+				"Diagnostics list",
+				"cd",
+				function()
+					vim.diagnostic.open_float({
+						scope = "line",
+					})
+				end,
+			},
+		},
+	})
 end

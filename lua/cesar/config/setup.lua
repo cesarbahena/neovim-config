@@ -5,81 +5,78 @@ vim.g.mapleader = " "
 vim.undodir = os.getenv("HOME") .. "/.vim/undodir"
 
 local opts = {
-  -- Lines
-  number = true,
-  relativenumber = true,
-  fillchars = { eob = " " },
-  signcolumn = "yes",
-  colorcolumn = nil,
+	-- Lines
+	number = true,
+	relativenumber = true,
+	fillchars = { eob = " " },
+	signcolumn = "yes",
+	colorcolumn = nil,
 
-  -- Formatting
-  tabstop = 2,
-  softtabstop = 2,
-  shiftwidth = 2,
-  expandtab = true,
-  smartindent = true,
-  wrap = false,
+	-- Formatting
+	tabstop = 2,
+	softtabstop = 2,
+	shiftwidth = 2,
+	expandtab = true,
+	smartindent = true,
+	wrap = false,
 
-  -- Backup
-  swapfile = false,
-  backup = false,
-  undofile = true,
+	-- Backup
+	swapfile = false,
+	backup = false,
+	undofile = true,
 
-  -- Search
-  hlsearch = false,
-  incsearch = true,
-  updatetime = 50,
-  ignorecase = true, -- Ignore case when searching...
-  smartcase = true, -- ... unless there is a capital letter in the query
+	-- Search
+	hlsearch = false,
+	incsearch = true,
+	updatetime = 50,
+	ignorecase = true, -- Ignore case when searching...
+	smartcase = true, -- ... unless there is a capital letter in the query
 
-  -- Windows
-  termguicolors = true,
-  equalalways = false, -- I don't like my windows changing all the time
-  splitright = true, -- Prefer windows splitting to the right
-  splitbelow = true, -- Prefer windows splitting to the bottom
-  scrolloff = 8,
+	-- Windows
+	termguicolors = true,
+	equalalways = false, -- I don't like my windows changing all the time
+	splitright = true, -- Prefer windows splitting to the right
+	splitbelow = true, -- Prefer windows splitting to the bottom
+	scrolloff = 8,
 
-  -- Statusline
-  showmode = false,
-  showcmd = false,
-  cmdheight = 0,
-  laststatus = 3,
-  showcmdloc = "statusline",
+	-- Statusline
+	showmode = false,
+	showcmd = false,
+	cmdheight = 0,
+	laststatus = 3,
+	showcmdloc = "statusline",
 
-  -- Completion
-  completeopt = { "menu", "menuone", "noselect" },
-  wildmode = "longest:full",
+	-- Folding
+	foldmethod = "expr",
+	foldexpr = "nvim_treesitter#foldexpr()",
+	foldenable = false,
 
-  -- General
-  cpoptions = vim.opt.cpoptions + "I", -- Don't trim whitespace when moving right after auto indent
-  formatoptions = vim.opt.formatoptions
-  - "a" -- Auto formatting is BAD.
-  - "t" -- Don't auto format my code. I got linters for that.
-  + "c" -- In general, I like it when comments respect textwidth
-  + "q" -- Allow formatting comments w/ gq
-  - "o" -- O and o, don't continue comments
-  + "r" -- But do continue when pressing enter.
-  + "j", -- Auto-remove comments if possible.
+	-- Completion
+	completeopt = { "menu", "menuone", "noselect" },
+	wildmode = "longest:full",
+
+	-- General
+	-- cpoptions = "aABceFIs_",
+	-- formatoptions = "crqj",
 }
 
 for k, v in pairs(opts) do
-  vim.opt[k] = v
+	vim.opt[k] = v
 end
 
-require(User .. ".config.keymap")
 require(User .. ".config.mappings")
 require(User .. ".config.autocmd")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable",
-    lazypath,
-  })
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
 end
 vim.opt.rtp:prepend(lazypath)
 

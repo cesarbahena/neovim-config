@@ -1,25 +1,46 @@
 return function()
-  Keymap({
-    [""] = {
-      { "Git status", "gs", function() vim.cmd("vert Git") end },
-    },
-  })
+	local keymap = require(User .. ".config.mappings")
+	local autocmd = require(User .. ".config.autocmd")
 
-  vim.api.nvim_create_autocmd ("BufWinEnter", {
-    group = vim.api.nvim_create_augroup("Fugitive", {}),
-    pattern = "*",
-    callback = function()
-      if vim.bo.ft ~= "fugitive" then
-        return
-      end
-      Keymap({
-        [""] = {
-          { "Git push", "gp", function() vim.cmd.Git("push") end },
-          { "Git push", "gP", ":Git push -u origin " },
-          { "Git pull", "gl", function() vim.cmd.Git("pull") end },
-          { "Close", "<C-e>", vim.cmd.q },
-        }, { buffer = true }
-      })
-    end,
-  })
+	keymap({
+		[""] = {
+			{
+				"Git status",
+				"gs",
+				function()
+					vim.cmd("vert Git")
+				end,
+			},
+		},
+	})
+
+	autocmd({
+		"BufWinEnter",
+		"Fugitive",
+		function()
+			if vim.bo.ft ~= "fugitive" then
+				return
+			end
+			keymap({
+				[""] = {
+					{
+						"Git push",
+						"<leader>p",
+						function()
+							vim.cmd.Git("push")
+						end,
+					},
+					{ "Git push", "<leader>gp", ":Git push -u origin" },
+					{
+						"Git pull",
+						"<leader>P",
+						function()
+							vim.cmd.Git("pull")
+						end,
+					},
+					{ "Close", "<C-e>", vim.cmd.q },
+				},
+			}, { buffer = true })
+		end,
+	})
 end
