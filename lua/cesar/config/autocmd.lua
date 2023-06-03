@@ -1,58 +1,63 @@
----@param args table<string|table|function>
 local function autocmd(args)
-	local event = args[1]
-	local buffer = args[4]
+  local event = args[1]
+  local buffer = args[4]
 
-	local group
-	if args.clear == false then
-		group = vim.api.nvim_create_augroup(args[2], { clear = false })
-	else
-		group = vim.api.nvim_create_augroup(args[2], {})
-		vim.api.nvim_clear_autocmds({
-			group = group,
-			buffer = buffer,
-		})
-	end
+  local group
+  if args.clear == false then
+    group = vim.api.nvim_create_augroup(args[2], { clear = false })
+  else
+    group = vim.api.nvim_create_augroup(args[2], {})
+  end
 
-	local callback, command
-	if type(args[3]) == "function" then
-		callback = args[3]
-	else
-		command = args[3]
-	end
+  local callback, command
+  if type(args[3]) == "function" then
+    callback = args[3]
+  else
+    command = args[3]
+  end
 
-	vim.api.nvim_create_autocmd(event, {
-		group = group,
-		callback = callback,
-		command = command,
-		buffer = buffer,
-		pattern = args.pattern,
-		once = args.once,
-	})
+  vim.api.nvim_create_autocmd(event, {
+    group = group,
+    callback = callback,
+    command = command,
+    buffer = buffer,
+    pattern = args.pattern,
+    once = args.once,
+  })
 end
 
 -- User autocommands
 autocmd({
-	"BufEnter",
-	"SetOptions",
-	"setlocal cpoptions=aABceFIs_ formatoptions=crqj",
+  "BufEnter",
+  "SetOptions",
+  "setlocal cpoptions=aABceFIs_ formatoptions=crqj",
 })
 
--- autocmd({
--- 	"BufWritePre",
--- 	"TrimTrailingSpace",
--- 	[[%s/\s\+$//e]],
--- })
+autocmd({
+  "BufEnter",
+  "HelloWorld",
+  function()
+    vim.notify("Hello world")
+  end,
+})
 
 autocmd({
-	"TextYankPost",
-	"HighlightYank",
-	function()
-		vim.highlight.on_yank({
-			higroup = "IncSearch",
-			timeout = 40,
-		})
-	end,
+  "BufEnter",
+  "HelloWorld",
+  function()
+    vim.notify("Hello world")
+  end,
+})
+
+autocmd({
+  "TextYankPost",
+  "HighlightYank",
+  function()
+    vim.highlight.on_yank({
+      higroup = "IncSearch",
+      timeout = 40,
+    })
+  end,
 })
 
 return autocmd
