@@ -27,7 +27,7 @@ return function()
 		extensions = {
 			file_browser = {
 				theme = "ivy",
-				hijack_netrw = true,
+				-- hijack_netrw = true,
 				hidden = true,
 			},
 		},
@@ -40,7 +40,7 @@ return function()
 		"file_browser",
 		"projects",
 		"ui-select",
-		"notify",
+		-- "notify",
 	}
 
 	for _, extension in ipairs(extensions) do

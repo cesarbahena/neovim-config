@@ -37,6 +37,8 @@
   "nvim-rooter.lua": { "branch": "main", "commit": "6835974903d7679de13b97a8aaf97f6980071e67" },
   "nvim-treesitter": { "branch": "master", "commit": "2cbe8a4296612b2cd603548a31b020f013be512c" },
   "nvim-treesitter-context": { "branch": "master", "commit": "e2ea37627c0681421ccf4a3cf19d68bb958e1817" },
+  "nvim-treesitter-textobjects": { "branch": "master", "commit": "23e883b99228f8d438254e5ef8c897e5e60e75d1" },
+  "nvim-various-textobjs": { "branch": "main", "commit": "56662b7ea1983e28c778357e98c0744e2581b9e1" },
   "nvim-web-devicons": { "branch": "master", "commit": "2a125024a137677930efcfdf720f205504c97268" },
   "playground": { "branch": "master", "commit": "2b81a018a49f8e476341dfcb228b7b808baba68b" },
   "plenary.nvim": { "branch": "master", "commit": "499e0743cf5e8075cd32af68baa3946a1c76adf1" },
@@ -53,6 +55,7 @@
   "telescope.nvim": { "branch": "0.1.1", "commit": "c1a2af0af69e80e14e6b226d3957a064cd080805" },
   "trouble.nvim": { "branch": "main", "commit": "324c977cfeacb8498ca9ba1c74cc35bd18858a8d" },
   "undotree": { "branch": "master", "commit": "485f01efde4e22cb1ce547b9e8c9238f36566f21" },
+  "urlview.nvim": { "branch": "main", "commit": "b183133fd25caa6dd98b415e0f62e51e061cd522" },
   "vim-fugitive": { "branch": "master", "commit": "5f0d280b517cacb16f59316659966c7ca5e2bea2" },
   "vim-surround": { "branch": "master", "commit": "3d188ed2113431cf8dac77be61b842acb64433d9" },
   "vscode-js-debug": { "branch": "main", "commit": "d7ef9e6bf051feacfad7453c333766f1f3622dbc" }

@@ -34,22 +34,6 @@ autocmd({
 })
 
 autocmd({
-  "BufEnter",
-  "HelloWorld",
-  function()
-    vim.notify("Hello world")
-  end,
-})
-
-autocmd({
-  "BufEnter",
-  "HelloWorld",
-  function()
-    vim.notify("Hello world")
-  end,
-})
-
-autocmd({
   "TextYankPost",
   "HighlightYank",
   function()

@@ -6,7 +6,6 @@ local autocmd_format = function(filter)
 		buffer = 0,
 		callback = function()
 			vim.lsp.buf.format({ filter = filter })
-			vim.notify("Autoformatted")
 		end,
 	})
 end
