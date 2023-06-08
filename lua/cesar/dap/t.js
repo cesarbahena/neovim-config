@@ -16,13 +16,12 @@ const sqr_a1 = square(a1);
 const a2 = 3;
 const sqr_a2 = square(a2);
 const c1 = hypotenuse(sqr_a1, sqr_a2);
-
 console.log(a1, a2, c1);
 const u = {
   uno: {
     a: 1,
     b: {
-      c: "anera",
+      c: 'anera',
     },
   },
 };
