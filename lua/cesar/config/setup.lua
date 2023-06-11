@@ -24,7 +24,6 @@ local opts = {
   swapfile = false,
   backup = false,
   undofile = true,
-  clipboard = "unnamedplus",
 
   -- Search
   hlsearch = false,
@@ -61,7 +60,7 @@ for k, v in pairs(opts) do
   vim.opt[k] = v
 end
 
-require(User .. ".config.mappings")
+require(User .. ".config.keymaps")
 require(User .. ".config.autocmd")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

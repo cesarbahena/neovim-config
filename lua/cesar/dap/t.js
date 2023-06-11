@@ -11,6 +11,7 @@ function hypotenuse(a, b) {
   return c;
 }
 
+Math.random();
 const a1 = 5;
 const sqr_a1 = square(a1);
 const a2 = 3;

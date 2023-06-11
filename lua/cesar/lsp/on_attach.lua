@@ -1,6 +1,6 @@
 local autocmd = require(User .. ".config.autocmd")
 local telescope = require(User .. ".nav.pickers")
-local keymap = require(User .. ".config.mappings")
+local keymaps = require(User .. ".config.keymaps")
 
 return function(client, bufnr)
   if client.name == "copilot" then
@@ -8,7 +8,7 @@ return function(client, bufnr)
   end
 
   -- { "<space>lr", "<cmd>lua require('cesar.plugins.lsp.codelens').run()<CR>" }
-  keymap({
+  keymaps({
     [""] = {
       { "Go to definition",       "gd",         vim.lsp.buf.definition },
       { "Go to declaration",      "gD",         vim.lsp.buf.declaration },
@@ -19,6 +19,7 @@ return function(client, bufnr)
       { "Find docunment symbols", "<leader>fd", telescope("lsp_dynamic_workspace_symbols", "wide") },
       { "Code rename",            "<C-r>",      vim.lsp.buf.rename },
       { "Code actions",           "<leader>ca", vim.lsp.buf.code_action },
+      { "Format",                 "<leader>F",  vim.lsp.buf.format },
     },
     n = { { "Show hover help", "<C-s>", vim.lsp.buf.hover } },
     i = { { "Show signature help", "<C-s>", vim.lsp.buf.signature_help } },

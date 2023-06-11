@@ -1,10 +1,10 @@
 return function()
-  local keymap = require(User .. ".config.mappings")
+  local keymaps = require(User .. ".config.keymaps")
   local dap = require("dap")
   local dapui = require("dapui")
   local harpoon = require("harpoon.ui")
 
-  keymap({
+  keymaps({
     [""] = {
       { "Continue",                      "B",  dap.continue },
       { "Debug with last configuration", "bb", dap.run_last },
@@ -44,7 +44,7 @@ return function()
 
   dap.listeners.after.event_initialized["dapui_config"] = function()
     dapui.open({})
-    keymap({
+    keymaps({
       n = {
         { "Step into", "<C-i>", dap.step_into },
         { "Step out",  "<C-e>", dap.step_out },
@@ -55,7 +55,7 @@ return function()
 
   dap.listeners.before.event_terminated["dapui_config"] = function()
     dapui.close({})
-    keymap({
+    keymaps({
       n = {
         {
           "Navigate to file 1",
@@ -83,7 +83,7 @@ return function()
   end
 
   dap.listeners.before.event_exited["dapui_config"] = function()
-    keymap({
+    keymaps({
       n = {
         {
           "Navigate to file 1",

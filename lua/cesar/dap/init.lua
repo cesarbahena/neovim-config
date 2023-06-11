@@ -1,6 +1,6 @@
 return {
-	{
-		"mfussenegger/nvim-dap",
+  {
+    "mfussenegger/nvim-dap",
     dependencies = {
       require(User .. ".dap.ui"),
     },

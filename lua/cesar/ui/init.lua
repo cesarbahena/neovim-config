@@ -6,6 +6,7 @@ local M = {
 	},
 	{
 		"j-hui/fidget.nvim",
+		tag = "legacy",
 		opts = {
 			window = {
 				blend = 0,
@@ -20,6 +21,7 @@ local plugins = {
 	"devicons",
 	"notify",
 	"dressing",
+	"noice",
 }
 
 for _, plugin in ipairs(plugins) do

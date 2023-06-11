@@ -21,8 +21,8 @@ return {
       },
     })
 
-    local keymap = require(User .. ".config.mappings")
-    keymap({
+    local keymaps = require(User .. ".config.keymaps")
+    keymaps({
       n = {
         { "Comment toggler operator", "cc", "c$", { remap = true } },
       },
