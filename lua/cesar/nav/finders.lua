@@ -130,9 +130,14 @@ keymaps({
       telescope("frecency", "wide", nil, "frecency"),
     },
     {
-      "Neoclip",
+      "Find yanks/deletes",
       "<leader>y",
       telescope("neoclip", "wide", nil, "neoclip"),
+    },
+    {
+      "Find notifications",
+      "<leader>fn",
+      telescope("notify", "wide", nil, "notify"),
     },
   },
 })

@@ -21,7 +21,7 @@ return function(client, bufnr)
       { "Code actions",           "<leader>ca", vim.lsp.buf.code_action },
       { "Format",                 "<leader>F",  vim.lsp.buf.format },
     },
-    n = { { "Show hover help", "<C-s>", vim.lsp.buf.hover } },
+    n = { { "Show hover help", "?", vim.lsp.buf.hover } },
     i = { { "Show signature help", "<C-s>", vim.lsp.buf.signature_help } },
   }, { buffer = true })
 

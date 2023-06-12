@@ -1,5 +1,5 @@
 function square(x) {
-  const sqr = x * x;
+  const sqrRoot = x * x;
   return sqr;
 }
 
@@ -9,6 +9,17 @@ function hypotenuse(a, b) {
   const sqr_c = sqr_a + sqr_b;
   const c = Math.sqrt(sqr_c);
   return c;
+}
+if (true) {
+  console.log('True');
+} else {
+  console.log('False');
+}
+
+if (true) {
+  console.log('nn');
+} else {
+  console.log('Fa');
 }
 
 Math.random();

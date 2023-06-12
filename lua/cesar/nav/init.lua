@@ -1,15 +1,4 @@
--- local opener
--- if vim.fn.has("wsl") == 1 then
--- 	opener = "wslview"
--- elseif vim.fn.has("macunix") == 1 then
--- 	opener = "open"
--- elseif vim.fn.has("linux") == 1 then
--- 	opener = "xdg-open"
--- elseif vim.fn.has("win64") == 1 or vim.fn.has("win32") == 1 then
--- 	opener = "start"
--- end
-
-return {
+local M = {
 	-- Telescope
 	{
 		"nvim-telescope/telescope.nvim",
@@ -55,8 +44,14 @@ return {
 	},
 	{
 		"axieax/urlview.nvim",
-		-- opts = {
-		-- 	default_action = opener,
-		-- },
+		opts = {},
 	},
 }
+
+if vim.fn.has("wsl") == 1 then
+	M[#M].opts = {
+		default_action = "wslview",
+	}
+end
+
+return M
