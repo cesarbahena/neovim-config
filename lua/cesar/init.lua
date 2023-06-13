@@ -1,1 +1,69 @@
+-- # More sensible options
+-- set -g default-terminal "xterm-kitty" # Ensure true colors
+-- set -g base-index 1
+-- set -g pane-base-index 1
+-- set -g mouse on
+--
+-- # Statusline
+-- set -g status-left ' '
+-- set -g status-right '#[bold]  #H    #S '
+-- set -g status-style bg=default
+-- set -g status-justify left
+-- set -g window-status-separator ' '
+-- set -g window-status-format '#[bold]#I #W '
+-- set -g window-status-current-format '#[bold] #W '
+--
+-- # Keybindings
+-- bind-key -n M-r source-file ~/.tmux.conf # Apply changes
+--
+-- ## Windows (tabs in vim)
+-- bind-key -n M-t new-window
+-- bind-key -n M-h next-window
+-- bind-key -n M-k previous-window
+--
+-- ## Panes (windows in vim)
+-- ### Creation
+-- bind-key -n M-v split-window -h -c "#{pane_current_path}" # Here window
+-- bind-key -n M-s split-window -v -c "#{pane_current_path}" # means pane
+-- bind-key -n M-q kill-pane
+-- ### Navigation
+-- is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+-- bind-key -n M-m if-shell "$is_vim" 'send-keys M-m' { if -F '#{pane_at_left}' '' 'select-pane -L' }
+-- bind-key -n M-n if-shell "$is_vim" 'send-keys M-n' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
+-- bind-key -n M-e if-shell "$is_vim" 'send-keys M-e' { if -F '#{pane_at_top}' '' 'select-pane -U' }
+-- bind-key -n M-o if-shell "$is_vim" 'send-keys M-o' { if -F '#{pane_at_right}' '' 'select-pane -R' }
+-- bind-key -T copy-mode-vi 'M-m' if -F '#{pane_at_left}' '' 'select-pane -L'
+-- bind-key -T copy-mode-vi 'M-n' if -F '#{pane_at_bottom}' '' 'select-pane -D'
+-- bind-key -T copy-mode-vi 'M-e' if -F '#{pane_at_top}' '' 'select-pane -U'
+-- bind-key -T copy-mode-vi 'M-o' if -F '#{pane_at_right}' '' 'select-pane -R'
+-- ### Resize
+-- bind -n C-M-m if-shell "$is_vim" 'send-keys C-M-m' 'resize-pane -L 1'
+-- bind -n C-M-n if-shell "$is_vim" 'send-keys C-M-n' 'resize-pane -D 1'
+-- bind -n C-M-e if-shell "$is_vim" 'send-keys C-M-e' 'resize-pane -U 1'
+-- bind -n C-M-o if-shell "$is_vim" 'send-keys C-M-o' 'resize-pane -R 1'
+-- bind-key -T copy-mode-vi C-M-m resize-pane -L 1
+-- bind-key -T copy-mode-vi C-M-n resize-pane -D 1
+-- bind-key -T copy-mode-vi C-M-e resize-pane -U 1
+-- bind-key -T copy-mode-vi C-M-o resize-pane -R 1
+--
+-- ## Copy mode
+-- set-window-option -g mode-keys vi
+-- bind-key -n M-i copy-mode # Enter copy mode
+-- ### Commands
+-- bind-key -T copy-mode-vi i send-keys -X cancel # Escape copy mode
+-- bind -T copy-mode-vi C-e send-keys -X clear-selection
+-- bind -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+-- bind -T copy-mode-vi a send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+-- ### Movement
+-- bind-key -T copy-mode-vi m send-keys -X cursor-left
+-- bind-key -T copy-mode-vi n send-keys -X cursor-down
+-- bind-key -T copy-mode-vi e send-keys -X cursor-up
+-- bind-key -T copy-mode-vi o send-keys -X cursor-right
+-- bind-key -T copy-mode-vi v send-keys -X begin-selection
+-- bind-key -T copy-mode-vi M send-keys -X back-to-indentation
+-- bind-key -T copy-mode-vi N send-keys -X halfpage-down
+-- bind-key -T copy-mode-vi E send-keys -X halfpage-up
+-- bind-key -T copy-mode-vi O send-keys -X end-of-line
+-- bind-key -T copy-mode-vi k send-keys -X previous-word
+-- bind-key -T copy-mode-vi h send-keys -X next-word
 return {}

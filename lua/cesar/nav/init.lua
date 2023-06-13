@@ -25,6 +25,7 @@ local M = {
 	-- Utils
 	require(User .. ".nav.harpoon"),
 	require(User .. ".nav.trouble"),
+	require(User .. ".nav.tmux"),
 	{
 		"AckslD/nvim-neoclip.lua",
 		lazy = false,

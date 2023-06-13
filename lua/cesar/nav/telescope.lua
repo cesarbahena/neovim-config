@@ -1,6 +1,6 @@
 return function()
 	local telescope = require("telescope")
-	require(User .. ".nav.finders")
+	local fb_actions = require("telescope").extensions.file_browser.actions
 
 	telescope.setup({
 		defaults = {
@@ -11,16 +11,16 @@ return function()
 			mappings = {
 				i = {
 					["<C-e>"] = "close",
+					["<C-l>"] = "move_selection_previous",
+					["<C-y>"] = "select_default",
+					["<C-b>"] = "cycle_history_next",
+					["<C-p>"] = "cycle_history_prev",
+					["<C-g>s"] = "select_all",
+					["<C-g>a"] = "add_selection",
 					["<RightMouse>"] = "close",
 					["<LeftMouse>"] = "select_default",
 					["<ScrollWheelDown>"] = "move_selection_next",
 					["<ScrollWheelUp>"] = "move_selection_previous",
-					["<C-x>"] = false,
-					["<C-y>"] = "select_default",
-					["<C-h>"] = "cycle_history_next",
-					["<C-k>"] = "cycle_history_prev",
-					["<C-g>s"] = "select_all",
-					["<C-g>a"] = "add_selection",
 				},
 			},
 		},
@@ -29,6 +29,16 @@ return function()
 				theme = "ivy",
 				hijack_netrw = true,
 				hidden = true,
+				mappings = {
+					["i"] = {
+						["<C-c>"] = fb_actions.create_from_prompt,
+						["<C-d>"] = fb_actions.remove,
+						["<C-r>"] = fb_actions.rename,
+						["<C-t>"] = fb_actions.move,
+						["<C-p>"] = fb_actions.copy,
+						["<C-h>"] = fb_actions.goto_home_dir,
+					},
+				},
 			},
 		},
 	})
@@ -46,4 +56,6 @@ return function()
 	for _, extension in ipairs(extensions) do
 		telescope.load_extension(extension)
 	end
+
+	require(User .. ".nav.finders")
 end

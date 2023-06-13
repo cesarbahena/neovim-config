@@ -131,7 +131,7 @@ keymaps({
     },
     {
       "Find yanks/deletes",
-      "<leader>y",
+      "<leader>fy",
       telescope("neoclip", "wide", nil, "neoclip"),
     },
     {

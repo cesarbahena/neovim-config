@@ -2,7 +2,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     config = function()
-      require(User .. ".cmp.mappings")
+      require(User .. ".cmp.keymaps")
       require(User .. ".cmp.setup")
     end,
   },

@@ -8,7 +8,7 @@ return {
 
 			vim.keymap.set("n", "<leader>a", mark.add_file)
 			vim.keymap.set("n", "<leader><leader>a", mark.clear_all)
-			vim.keymap.set("n", "<C-h>", ui.toggle_quick_menu)
+			vim.keymap.set("n", "<C-a>", ui.toggle_quick_menu)
 
 			vim.keymap.set("n", "<C-n>", function()
 				ui.nav_file(1)
