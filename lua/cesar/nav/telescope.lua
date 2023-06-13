@@ -44,13 +44,11 @@ return function()
   })
 
   local extensions = {
-    -- "fzf",
+    "fzf",
     "neoclip",
     "frecency",
     "file_browser",
-    "projects",
     "ui-select",
-    "notify",
   }
 
   for _, extension in ipairs(extensions) do
