@@ -25,7 +25,7 @@ return function(client, bufnr)
 			{ "Go to implementations", "gI", telescope("lsp_implementations", "wide") },
 			{ "Find docunment symbols", "<leader>fs", telescope("lsp_document_symbols", "wide") },
 			{ "Find docunment symbols", "<leader>fd", telescope("lsp_dynamic_workspace_symbols", "wide") },
-			{ "Code rename", "<C-r>", vim.lsp.buf.rename },
+			{ "Code rename", "<leader>rs", vim.lsp.buf.rename },
 			{ "Code actions", "<leader>ca", vim.lsp.buf.code_action },
 			{ "Format", "<leader>F", vim.lsp.buf.format },
 		},

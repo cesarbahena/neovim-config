@@ -26,7 +26,10 @@ return {
 		},
 	},
 	require(User .. ".syntax.comment"),
-	require(User .. ".syntax.ts_join"),
+
+	-- Text movement
+	require(User .. ".syntax.gomove"),
+	require(User .. ".syntax.tsjoin"),
 
 	-- Textobjects
 	require(User .. ".syntax.mini_ai"),
