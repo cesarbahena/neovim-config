@@ -4,6 +4,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       local ui = require("harpoon.ui")
+      local mark = require("harpoon.mark")
       local custom_add_mark = require(User .. ".nav.add_mark")
       local keymaps = require(User .. ".config.keymaps")
       local autocmd = require(User .. ".config.autocmd")
@@ -11,13 +12,6 @@ return {
       local nmap = {
         { "Mark file",           "<leader>aa", custom_add_mark },
         { "Toggle Harpoon menu", "<leader>am", ui.toggle_quick_menu },
-        {
-          "Mark file",
-          "<leader>aa",
-          function()
-            custom_add_mark()
-          end,
-        },
       }
 
       local nkeys = { "n", "e", "i", "o" }
@@ -46,12 +40,22 @@ return {
       autocmd({
         "FileType",
         "HarpoonQuickMenu",
+        pattern = "harpoon",
         function()
           local menu_map = {
             { "Disabled", "<C-n>", "<nop>" },
             { "Close",    "<C-e>", ui.toggle_quick_menu },
             { "Disabled", "<C-i>", "<nop>" },
             { "Disabled", "<C-o>", "<nop>" },
+            {
+              "Clear all marks",
+              "<leader>ad",
+              function()
+                mark.clear_all()
+                ui.toggle_quick_menu()
+                ui.toggle_quick_menu()
+              end,
+            },
           }
 
           for i = 1, 9 do
@@ -66,7 +70,6 @@ return {
 
           keymaps({ n = menu_map }, { buffer = true })
         end,
-        pattern = "harpoon",
       })
     end,
   },

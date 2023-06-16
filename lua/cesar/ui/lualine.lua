@@ -10,6 +10,9 @@ return function()
 			theme = "catppuccin",
 			component_separators = "",
 			section_separators = "",
+			disabled_filetypes = {
+				winbar = { "dap-repl" },
+			},
 		},
 		sections = {
 			lualine_a = {},
@@ -17,9 +20,6 @@ return function()
 			lualine_c = {
 				require(User .. ".ui.file_info").cwd,
 				require(User .. ".ui.file_info").git,
-				require(User .. ".ui.file_info").filetype,
-				require(User .. ".ui.file_info").filename,
-				require(User .. ".ui.file_info").unsaved,
 			},
 			lualine_x = {
 				require(User .. ".ui.server_info").non_lsp_1,
@@ -42,6 +42,31 @@ return function()
 			lualine_z = {},
 			lualine_c = {},
 			lualine_x = {},
+		},
+
+		winbar = {
+			lualine_a = {},
+			lualine_b = {},
+			lualine_c = {
+				require(User .. ".ui.file_info").filetype,
+				require(User .. ".ui.file_info").filename,
+				require(User .. ".ui.file_info").unsaved,
+			},
+			lualine_x = {},
+			lualine_y = {},
+			lualine_z = {},
+		},
+		inactive_winbar = {
+			lualine_a = {},
+			lualine_b = {},
+			lualine_c = {
+				require(User .. ".ui.file_info").filetype,
+				require(User .. ".ui.file_info").filename,
+				require(User .. ".ui.file_info").unsaved,
+			},
+			lualine_x = {},
+			lualine_y = {},
+			lualine_z = {},
 		},
 	})
 end

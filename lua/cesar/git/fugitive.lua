@@ -15,12 +15,10 @@ return function()
   })
 
   autocmd({
-    "BufWinEnter",
+    "FileType",
     "Fugitive",
+    pattern = "fugitive",
     function()
-      if vim.bo.ft ~= "fugitive" then
-        return
-      end
       keymaps({
         [""] = {
           {

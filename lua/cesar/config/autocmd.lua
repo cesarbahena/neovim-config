@@ -57,4 +57,33 @@ autocmd({
   end,
 })
 
+local keymaps = require(User .. ".config.keymaps")
+
+autocmd({
+  "FileType",
+  "QuickFixList",
+  pattern = "qf",
+  function()
+    keymaps({
+      n = {
+        { "Close",      "<C-e>", vim.cmd.q },
+        { "Go to file", "<CR>",  "<CR>" },
+      },
+    }, { buffer = true })
+  end,
+})
+
+autocmd({
+  "FileType",
+  "CloseOnCancel",
+  pattern = { "help", "notify", "noice" },
+  function()
+    keymaps({
+      n = {
+        { "Close", "<C-e>", vim.cmd.q },
+      },
+    }, { buffer = true })
+  end,
+})
+
 return autocmd
