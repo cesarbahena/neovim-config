@@ -47,9 +47,8 @@ keymaps({
 		{ "EOL", { colemak = "O", qwerty = "L" }, "$" },
 		{ "Mark", { colemak = "j" }, "m" },
 		{ "Next match", "\\", "n" },
-		{ "Previous match", "|", "N" },
-		{ "Increase count", "+", "<C-a>" },
-		{ "Decrease count", "-", "<C-x>" },
+		{ "Delete into void register", "x", [["_x]] },
+		{ "Quit", "<M-q>", vim.cmd.q },
 	},
 
 	n = {
@@ -60,6 +59,8 @@ keymaps({
 		{ "Yank to eol", "yy", "y$" },
 		{ "Yank to clipboard", "<leader>y", [["+y]] },
 		{ "Yank line to clipboard", "<leader>Y", [["+yy]] },
+		{ "Paste from clipboard", "<leader>p", [["+P]] },
+		{ "Paste from clipboard in new line", "<leader>P", [[o<Esc>"+p]] },
 		{ "Copy down", "yp", "Yp" },
 		{ "Redo", "U", "<C-r>" },
 		{ "Undo last jump", { colemak = "<C-u>", qwerty = "<C-i>" }, "<C-o>" },
@@ -75,23 +76,20 @@ keymaps({
 
 	v = {
 		{ "Escape to normal mode", { colemak = "<C-e>", qwerty = "<C-k>" }, "<Esc>" },
-		{ "Yank (keep the position)", "y", "y`>" },
-		{ "Yank to clipboard", "<leader>y", [["+y`>]] },
-		{ "Paste (keeping the register)", "p", '"_dP' },
-		{ "Move line down", "<C-c>", ":m '>+<CR>gv=gv" },
-		{ "Move line up", "<C-s>", ":m '<-2<CR>gv=gv" },
-		{ "Deindent (keep selection)", "<", "<gv" },
-		{ "Indent (keep selection)", ">", ">gv" },
+		{ "Yank (keep position)", "y", "y`>" },
+		{ "Yank to clipboard (keep position)", "<leader>y", [["+y`>]] },
+		{ "Paste (w/o cutting)", "p", [["_dP]] },
+		{ "Paste from clipboard (w/o cutting)", "<leader>p", [["_d"+P]] },
 	},
 
 	i = {
 		{ "Escape to normal mode", { colemak = "<C-e>", qwerty = "<C-k>" }, "<Esc>" },
-		{ "Undo", "<C-u>", "<Esc>u" },
+		{ "Paste from clipboard", "<C-p>", [[<C-o>"+P]] },
 		{ "Delete", "<C-x>", "<Del>" },
+		{ "Left", "<C-r>", "<Left>" },
+		{ "Right", "<C-d>", "<Right>" },
 		{ "Comma after bracket", { colemak = "<C-k>", qwerty = "<C-b>" }, "<Esc>mzva{lva,<Esc>`za" },
 		{ "Semicolon after bracket", { colemak = "<C-h>", qwerty = "<C-b>" }, "<Esc>mzva{lva;<Esc>`za" },
-		{ "Move line down", "<C-c>", "<Esc>:m+<CR>==gi" },
-		{ "Move line up", "<C-s>", "<Esc>:m-2<CR>==gi" },
 	},
 
 	c = {

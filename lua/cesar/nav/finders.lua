@@ -94,6 +94,11 @@ keymaps({
 			telescope("help_tags", "ivy", {}),
 		},
 		{
+			"Find keymaps",
+			"<leader>fk",
+			telescope("keymaps", "ivy", {}),
+		},
+		{
 			"Find VIM options",
 			"<leader>fo",
 			telescope("vim_options", "padded", {}),

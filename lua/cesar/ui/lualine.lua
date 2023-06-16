@@ -1,8 +1,8 @@
 vim.api.nvim_set_hl(0, "StatuslineNormal", { fg = "white", bold = true })
 vim.api.nvim_set_hl(0, "StatuslineOk", { fg = "LightGreen", bold = true })
+vim.api.nvim_set_hl(0, "StatuslineOkFocus", { fg = "black", bg = "LightGreen", bold = true })
 vim.api.nvim_set_hl(0, "StatuslineError", { fg = "#f38ba8", bold = true })
 vim.api.nvim_set_hl(0, "StatuslineWarn", { fg = "#f9e2af", bold = true })
--- vim.api.nvim_set_hl(0, "StatuslineWarn", { fg = "orange" })
 
 return function()
 	require("lualine").setup({
@@ -19,6 +19,7 @@ return function()
 				require(User .. ".ui.file_info").git,
 				require(User .. ".ui.file_info").filetype,
 				require(User .. ".ui.file_info").filename,
+				require(User .. ".ui.file_info").unsaved,
 			},
 			lualine_x = {
 				require(User .. ".ui.server_info").non_lsp_1,

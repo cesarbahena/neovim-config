@@ -44,4 +44,17 @@ autocmd({
   end,
 })
 
+autocmd({
+  "QuitPre",
+  "UnsavedChanges",
+  function()
+    if vim.o.modified then
+      Modified = true
+      vim.defer_fn(function()
+        Modified = false
+      end, 5000)
+    end
+  end,
+})
+
 return autocmd

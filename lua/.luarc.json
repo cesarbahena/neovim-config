@@ -28,5 +28,10 @@
         "/home/cesar/.local/share/nvim/lazy/LuaSnip/lua",
         "/home/cesar/.config/nvim/lua",
         "${3rd}/luv/library"
+    ],
+    "diagnostics.globals": [
+        "User",
+        "Plugin",
+        "get_source"
     ]
 }

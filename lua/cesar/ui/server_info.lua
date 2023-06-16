@@ -1,6 +1,6 @@
 local M = {}
 
-function get_source(index)
+local function get_source(index)
 	return require("null-ls.sources").get_available(vim.bo.ft)[index]
 end
 
