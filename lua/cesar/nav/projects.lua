@@ -11,17 +11,16 @@ return {
 				require(User .. ".config.keymaps")({
 					[""] = {
 						{
-							"Deactivate rooter (for multiproject)",
-							"<leader>tm",
+							"Toggle project rooter",
+							"<leader>tr",
 							function()
-								vim.api.nvim_clear_autocmds({ group = "nvim_rooter" })
-								vim.notify("Muti project mode")
-							end,
-						},
-						{
-							"Activate project auto rooter",
-							"<leader>ts",
-							function()
+								if not Multiproject then
+									vim.api.nvim_clear_autocmds({ group = "nvim_rooter" })
+									Multiproject = true
+									vim.notify("Muti project mode")
+									return
+								end
+
 								local group_id = vim.api.nvim_create_augroup("nvim_rooter", { clear = true })
 								local au = vim.api.nvim_create_autocmd
 
@@ -41,6 +40,7 @@ return {
 								})
 
 								require("nvim-rooter").rooter()
+								Multiproject = false
 								vim.notify("Single project mode")
 							end,
 						},

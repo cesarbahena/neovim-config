@@ -1,3 +1,7 @@
+function naa()
+	return harpoon
+end
+
 return {
 	{
 		"folke/noice.nvim",
@@ -11,13 +15,18 @@ return {
 				},
 			},
 			presets = {
-				bottom_search = false,
 				command_palette = true,
-				long_message_to_split = true,
-				inc_rename = false,
 				lsp_doc_border = true,
 			},
 			routes = {
+				{
+					view = "notify",
+					filter = {
+						event = "msg_show",
+						find = "No write since last change",
+					},
+					opts = { skip = true },
+				},
 				{
 					view = "notify",
 					filter = {
@@ -55,7 +64,7 @@ return {
 
 					require(User .. ".config.keymaps")({
 						[""] = {
-							{ "Dismiss", "<leader>n", require("notify").dismiss },
+							{ "Dismiss", "<leader>e", require("notify").dismiss },
 						},
 					})
 				end,

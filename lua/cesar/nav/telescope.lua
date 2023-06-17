@@ -15,12 +15,10 @@ return function()
           ["<C-y>"] = "select_default",
           ["<C-b>"] = "cycle_history_next",
           ["<C-p>"] = "cycle_history_prev",
-          ["<C-g>s"] = "select_all",
-          ["<C-g>a"] = "add_selection",
-          ["<RightMouse>"] = "close",
-          ["<LeftMouse>"] = "select_default",
-          ["<ScrollWheelDown>"] = "move_selection_next",
-          ["<ScrollWheelUp>"] = "move_selection_previous",
+          ["<C-a>"] = "toggle_all",
+        },
+        n = {
+          ["<C-e>"] = "close",
         },
       },
     },
@@ -48,7 +46,6 @@ return function()
     "neoclip",
     "frecency",
     "file_browser",
-    "ui-select",
   }
 
   for _, extension in ipairs(extensions) do

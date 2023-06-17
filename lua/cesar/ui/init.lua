@@ -9,6 +9,7 @@ local M = {
 
 local plugins = {
 	"noice",
+	"dressing",
 	"devicons",
 	"rosepine",
 	"catppuccin",

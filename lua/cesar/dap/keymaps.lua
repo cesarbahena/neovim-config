@@ -2,7 +2,6 @@ return function()
 	local keymaps = require(User .. ".config.keymaps")
 	local dap = require("dap")
 	local dapui = require("dapui")
-	local harpoon = require("harpoon.ui")
 
 	keymaps({
 		[""] = {

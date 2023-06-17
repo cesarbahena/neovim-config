@@ -36,9 +36,6 @@ local M = {
     },
   },
   {
-    "nvim-telescope/telescope-ui-select.nvim",
-  },
-  {
     "axieax/urlview.nvim",
     opts = {},
   },

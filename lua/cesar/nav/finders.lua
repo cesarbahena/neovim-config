@@ -15,7 +15,7 @@ keymaps({
 		},
 		{
 			"Edit neovim config",
-			"<leader>en",
+			"<leader>fn",
 			telescope("fd", "padded", {
 				prompt_title = "Find in Neovim config",
 				cwd = "~/.config/nvim/lua/" .. User,
@@ -41,7 +41,7 @@ keymaps({
 			"<leader>fw",
 			function()
 				require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
-					search = vim.fn.input(":grep "),
+					search = vim.fn.input("> grep "),
 					word_match = "-w",
 					only_sort_text = true,
 					path_display = { "shorten" },
@@ -134,7 +134,7 @@ keymaps({
 		},
 		{
 			"Find notifications",
-			"<leader>fn",
+			"<leader>n",
 			telescope("notify", "wide", nil, "notify"),
 		},
 	},

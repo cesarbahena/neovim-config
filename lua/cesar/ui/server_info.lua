@@ -10,7 +10,7 @@ end
 
 local icons = {
 	eslint = "󰱺",
-	prettier = "",
+	prettier = "󰏣",
 	stylua = "",
 }
 
