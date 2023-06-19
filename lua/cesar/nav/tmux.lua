@@ -31,11 +31,11 @@ return {
 					{ "Move window to bottom", "<leader>_", "<C-w>J" },
 					{ "Move window to top", "<C-w>e", "<C-w>K" },
 					{ "Move window to rightmost side", "<leader>|", "<C-w>L" },
-					{ "Move window to leftmost side", "|", "<C-w>H" },
 					{ "Move window to bottom", "_", "<C-w>J" },
 					{ "Move window to top", "<C-w><C-e>", "<C-w>K" },
 					{ "Evenly distributed windows", "<C-w>=", "<C-w>L" },
 				},
+				n = { { "Move window to leftmost side", "|", "<C-w>H" } },
 			})
 		end,
 	},
