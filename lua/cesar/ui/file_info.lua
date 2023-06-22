@@ -28,15 +28,20 @@ M.git = {
 	"branch",
 	icon = "",
 	color = function()
-		local gs = vim.fn.systemlist("git status --porcelain " .. vim.fn.expand("%:p"))
-		if #gs == 0 then
-			return "StatuslineWarn"
+		local git_status = vim.fn.systemlist("git status --porcelain " .. vim.fn.expand("%:p"))
+		if type(git_status) ~= "table" then
+			return "StatuslineError"
 		end
-		vim.fn.systemlist("git diff --quiet " .. vim.fn.expand("%"))
-		if vim.v.shell_error == 1 then
-			return "StatuslineOk"
+
+		if #git_status == 0 then
+			return "StatuslineNormal"
 		end
-		return "StatuslineNormal"
+
+		if git_status[1]:sub(1, 1) == "?" then
+			return "StatuslineError"
+		end
+
+		return "StatuslineOk"
 	end,
 }
 
@@ -46,8 +51,8 @@ end
 
 local special = {
 	netrw = true,
-	fugitive = true,
 	Trouble = true,
+	lazy = true,
 	lspinfo = true,
 	["dapui_watches"] = last_word,
 	["dapui_breakpoints"] = last_word,
@@ -98,6 +103,40 @@ M.filename = {
 			return "StatuslineOk"
 		end
 		return "StatuslineNormal"
+	end,
+}
+
+M.inactive_filename = {
+	function()
+		local fname = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":t")
+		if fname == "" then
+			return ""
+		end
+
+		if type(special[vim.bo.ft]) == "function" then
+			return special[vim.bo.ft](fname)
+		end
+
+		if special[vim.bo.ft] ~= nil then
+			return fname
+		end
+
+		local parent = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":h:t")
+		return parent .. "/" .. fname
+	end,
+
+	color = function()
+		local dx = vim.diagnostic
+		if #dx.get(0, { severity = dx.severity.ERROR }) > 0 then
+			return "StatuslineErrorInactive"
+		end
+		if #dx.get(0, { severity = dx.severity.WARN }) > 0 then
+			return "StatuslineWarnInactive"
+		end
+		if vim.o.modified then
+			return "StatuslineOkInactive"
+		end
+		return "StatuslineNormalInactive"
 	end,
 }
 

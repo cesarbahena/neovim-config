@@ -83,7 +83,14 @@ keymaps({
     {
       "Find help",
       "<leader>fh",
-      telescope("help_tags", "ivy", {}),
+      telescope("help_tags", "ivy", {
+        attach_mappings = function(_, map)
+          local actions = require("telescope.actions")
+          map("i", "<C-y>", actions.file_edit)
+          map("i", "<CR>", actions.file_edit)
+          return true
+        end,
+      }),
     },
     {
       "Find help",

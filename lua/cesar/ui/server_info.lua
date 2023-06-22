@@ -8,7 +8,7 @@ local function is_executable(index)
 	return require("null-ls.utils").is_executable(get_source(index).name)
 end
 
-local icons = {
+local nls_icons = {
 	eslint = "󰱺",
 	prettier = "󰏣",
 	stylua = "",
@@ -17,13 +17,13 @@ local icons = {
 AutoFormatted = false
 
 for i = 1, 3, 1 do
-	M["non_lsp_" .. i] = {
+	M["nls_" .. i] = {
 		function()
-			local icon = icons[get_source(i).name]
+			local icon = nls_icons[get_source(i).name]
 			if icon then
 				return icon .. "  " .. get_source(i).name
 			end
-			return get_source(i).name
+			return " " .. get_source(i).name
 		end,
 
 		cond = function()
@@ -62,10 +62,32 @@ for i = 1, 3, 1 do
 	}
 end
 
+local devicons_available, devicons = pcall(require, "nvim-web-devicons")
+local get_icon = devicons.get_icon_by_filetype
+local lsp_icons = {}
+if devicons_available then
+	local servers = {
+		lua_ls = "lua",
+		emmet_ls = "xml",
+		tsserver = "typescript",
+		html = "html",
+		cssls = "css",
+		pyright = "python",
+	}
+	for server, filetype in pairs(servers) do
+		lsp_icons[server] = get_icon(filetype)
+	end
+end
+
 for i = 1, 5, 1 do
 	M["lsp_" .. i] = {
 		function()
-			return vim.lsp.get_active_clients()[i].name
+			local server = vim.lsp.get_active_clients()[i]
+			local icon = lsp_icons[server.name]
+			if icon then
+				return icon .. "  " .. server.name
+			end
+			return "  " .. server.name
 		end,
 
 		cond = function()
@@ -83,11 +105,10 @@ for i = 1, 5, 1 do
 		end,
 
 		color = "StatuslineNormal",
-		icon = " ",
 	}
 end
 
-M.no_lsp = {
+M.lsp_error = {
 	function()
 		local servers = vim.lsp.get_active_clients()
 		if #servers > 5 then
@@ -112,6 +133,8 @@ M.no_lsp = {
 		local exclude = {
 			netrw = true,
 			TelescopePrompt = true,
+			Trouble = true,
+			lazy = true,
 			fugitive = true,
 			harpoon = true,
 			lspinfo = true,

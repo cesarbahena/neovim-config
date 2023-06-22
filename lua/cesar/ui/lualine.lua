@@ -40,17 +40,16 @@ return {
 		component("sections", "c", "file_info", "cwd")
 		component("sections", "c", "file_info", "git")
 		component("sections", "c", "file_info", "diff")
-		component("sections", "x", "server_info", "non_lsp", 3)
+		component("sections", "c", "file_info", "diagnostics")
+		component("sections", "x", "server_info", "nls", 3)
 		component("sections", "x", "server_info", "lsp", 5)
-		component("sections", "x", "server_info", "no_lsp")
+		component("sections", "x", "server_info", "lsp_error")
 		component("winbar", "c", "file_info", "filetype")
 		component("winbar", "c", "file_info", "filename")
-		component("winbar", "c", "file_info", "diagnostics")
 		component("winbar", "c", "file_info", "unsaved")
 		component("inactive_winbar", "c", "file_info", "filetype")
-		component("inactive_winbar", "c", "file_info", "filename")
-		component("inactive_winbar", "c", "file_info", "diagnostics")
+		component("inactive_winbar", "c", "file_info", "inactive_filename")
 		component("inactive_winbar", "c", "file_info", "unsaved")
-		return opts
+		return opts -- Modified opts
 	end,
 }

@@ -76,7 +76,13 @@ autocmd({
 autocmd({
 	"FileType",
 	"CloseOnCancel",
-	pattern = { "help", "notify", "noice", "lazy", "Trouble" },
+	pattern = {
+		"notify",
+		"noice",
+		"lazy",
+		"lspinfo",
+		"null-ls-info",
+	},
 	function()
 		keymaps({
 			n = {

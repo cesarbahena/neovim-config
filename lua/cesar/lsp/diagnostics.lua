@@ -1,6 +1,6 @@
 vim.diagnostic.config({
   underline = true,
-  virtual_text = true,
+  virtual_text = false,
   signs = true,
 
   float = {
@@ -29,6 +29,12 @@ vim.diagnostic.config({
   severity_sort = true,
   update_in_insert = false,
 })
+
+local signs = { Error = " ", Warn = " ", Info = " ", Hint = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
 
 local severity_levels = {
   vim.diagnostic.severity.ERROR,
