@@ -1,22 +1,16 @@
 local M = {
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = require(User .. ".ui.lualine"),
-	},
-	{ "norcalli/nvim-colorizer.lua", config = true },
+  { "norcalli/nvim-colorizer.lua", config = true },
 }
 
 local plugins = {
-	"noice",
-	"dressing",
-	"devicons",
-	"rosepine",
-	"catppuccin",
+  "lualine",
+  "noice",
+  "devicons",
+  "catppuccin",
 }
 
 for _, plugin in ipairs(plugins) do
-	table.insert(M, require(User .. ".ui." .. plugin))
+  table.insert(M, require(User .. ".ui." .. plugin))
 end
 
 return M

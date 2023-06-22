@@ -1,5 +1,5 @@
 return {
-	"ahmedkhalf/project.nvim",
+	"nvim-telescope/telescope-project.nvim",
 	dependencies = {
 		{
 			"notjedi/nvim-rooter.lua",
@@ -50,7 +50,7 @@ return {
 		},
 	},
 	config = function()
-		require("project_nvim").setup({ manual_mode = true })
-		require("telescope").load_extension("projects")
+		-- require("project_nvim").setup({ manual_mode = true })
+		require("telescope").load_extension("project")
 	end,
 }

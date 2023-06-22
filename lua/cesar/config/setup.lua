@@ -60,6 +60,18 @@ for k, v in pairs(opts) do
 	vim.opt[k] = v
 end
 
+local hl_groups = {
+	StatuslineNormal = { fg = "white", bold = true },
+	StatuslineOk = { fg = "LightGreen", bold = true },
+	StatuslineError = { fg = "#f38ba8", bold = true },
+	StatuslineWarn = { fg = "#f9e2af", bold = true },
+	StatuslineInfo = { fg = "#f9e2af", bold = true },
+}
+
+for hl_group, hl in pairs(hl_groups) do
+	vim.api.nvim_set_hl(0, hl_group, hl)
+end
+
 require(User .. ".config.keymaps")
 require(User .. ".config.autocmd")
 
@@ -78,6 +90,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup(User, {
 	install = {
-		colorscheme = {"catppuccin"},
+		colorscheme = { "catppuccin" },
 	},
 })

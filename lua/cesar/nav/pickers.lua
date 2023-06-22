@@ -1,5 +1,5 @@
 -- Wrapper global function for ease of use in mappings
-return function (finder, picker, opts, extension)
+return function(finder, picker, opts, extension)
 	local function params(defaults)
 		if opts then
 			return vim.tbl_deep_extend("force", defaults, opts)
@@ -10,7 +10,7 @@ return function (finder, picker, opts, extension)
 	-- Add pickers here
 	local pickers = {
 		ivy = require("telescope.themes").get_ivy(params({
-			prompt_prefix = "   ",
+			prompt_prefix = "  ",
 			sorting_strategy = "ascending",
 			layout_config = {
 				prompt_position = "top",
@@ -31,7 +31,7 @@ return function (finder, picker, opts, extension)
 		})),
 
 		vertical = {
-			prompt_prefix = "   ",
+			prompt_prefix = "  ",
 			sorting_strategy = "ascending",
 			layout_strategy = "vertical",
 			layout_config = {
@@ -43,7 +43,7 @@ return function (finder, picker, opts, extension)
 		},
 
 		padded = params({
-			prompt_prefix = "   ",
+			prompt_prefix = "  ",
 			sorting_strategy = "ascending",
 			layout_strategy = "horizontal",
 			layout_config = {
@@ -54,7 +54,7 @@ return function (finder, picker, opts, extension)
 		}),
 
 		wide = params({
-			prompt_prefix = "   ",
+			prompt_prefix = "  ",
 			sorting_strategy = "ascending",
 			layout_strategy = "horizontal",
 			layout_config = {

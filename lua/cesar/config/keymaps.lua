@@ -72,6 +72,16 @@ keymaps({
 		{ "Move line up", "<C-s>", ":m -2<CR>==" },
 		{ "Join/Merge lines (pretty)", { colemak = "J", qwerty = "M" }, "mzJ`z" },
 		{ "Join/Merge lines (raw)", { colemak = "gJ", qwerty = "gM" }, "mzgJ`z" },
+		{ "Navigate to window to the left", "<C-w>m", "<C-w>h" },
+		{ "Navigate to window below", "<C-w>n", "<C-w>j" },
+		{ "Navigate to window above", "<C-w>e", "<C-w>k" },
+		{ "Navigate to window to the right", "<C-w>o", "<C-w>l" },
+		{ "Move window to leftmost side", "<C-w>m", "<C-w>H" },
+		{ "Move window to top", "_", "<C-w>K" },
+		{ "Move window to bottom", "<leader>_", "<C-w>J" },
+		{ "Move window to leftmost side", "|", "<C-w>H" },
+		{ "Move window to rightmost side", "<leader>|", "<C-w>L" },
+		{ "Evenly distributed windows", "<leader>=", "<C-w>=" },
 	},
 
 	v = {
@@ -88,8 +98,8 @@ keymaps({
 		{ "Delete", "<C-x>", "<Del>" },
 		{ "Left", "<C-r>", "<Left>" },
 		{ "Right", "<C-d>", "<Right>" },
-		{ "Comma after bracket", { colemak = "<C-k>", qwerty = "<C-b>" }, "<Esc>mzva{lva,<Esc>`za" },
-		{ "Semicolon after bracket", { colemak = "<C-h>", qwerty = "<C-b>" }, "<Esc>mzva{lva;<Esc>`za" },
+		{ "Comma after bracket", { colemak = "<C-k>", qwerty = "<C-b>" }, ".<Esc>mzva{lva,<Esc>`za<BS>" },
+		{ "Semicolon after bracket", { colemak = "<C-h>", qwerty = "<C-b>" }, ".<Esc>mzva{lva;<Esc>`za<BS>" },
 	},
 
 	c = {

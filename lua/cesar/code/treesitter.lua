@@ -2,7 +2,6 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		commit = "aa44e5f", -- Workaround for a bug
 		event = "VeryLazy",
 		keys = {
 			{
@@ -12,6 +11,9 @@ return {
 				mode = "i",
 			},
 		},
+		config = function(self, opts)
+			require(self.name .. ".configs").setup(opts)
+		end,
 		opts = {
 			ensure_installed = {
 				"javascript",
@@ -24,7 +26,7 @@ return {
 				"markdown",
 				"markdown_inline",
 			},
-			auto_install = false,
+			auto_install = true,
 			highlight = {
 				enable = true,
 				additional_vim_regex_highlighting = false,
@@ -62,6 +64,10 @@ return {
 				},
 			},
 		},
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		event = "VeryLazy",
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",

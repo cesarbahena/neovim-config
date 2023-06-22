@@ -80,7 +80,10 @@ autocmd({
 	function()
 		keymaps({
 			n = {
+				{ "Disabled", "<C-n>", "<nop>" },
 				{ "Close", "<C-e>", vim.cmd.q },
+				{ "Disabled", "<C-i>", "<nop>" },
+				{ "Disabled", "<C-o>", "<nop>" },
 			},
 		}, { buffer = true })
 	end,

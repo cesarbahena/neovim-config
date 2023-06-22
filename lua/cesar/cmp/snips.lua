@@ -1,7 +1,10 @@
 return {
 	{
 		"saadparwaiz1/cmp_luasnip",
-		dependencies = { "L3MON4D3/LuaSnip" },
+		dependencies = {
+			"L3MON4D3/LuaSnip",
+			"rafamadriz/friendly-snippets",
+		},
 		config = function()
 			require("cmp").setup({
 				snippet = {
@@ -10,7 +13,7 @@ return {
 					end,
 				},
 			})
-			require(User .. ".cmp.snips.config")
+			require(User .. ".cmp.snips_config")
 		end,
 	},
 }

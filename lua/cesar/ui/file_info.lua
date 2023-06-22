@@ -111,4 +111,24 @@ M.unsaved = {
 	color = "StatuslineOk",
 }
 
+M.diff = {
+	"diff",
+	diff_color = {
+		added = "StatuslineOk",
+		modified = "StatuslineWarn",
+		removed = "StatuslineError",
+	},
+}
+
+M.diagnostics = {
+	"diagnostics",
+	sources = { "nvim_diagnostic" },
+	symbols = { error = " ", warn = " ", info = " ", hint = " " },
+	diagnostics_color = {
+		color_error = "StatuslineError",
+		color_warn = "StatuslineWarn",
+		color_info = "StatuslineInfo",
+	},
+}
+
 return M

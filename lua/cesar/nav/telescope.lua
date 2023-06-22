@@ -38,6 +38,14 @@ return function()
           },
         },
       },
+      ["ui-select"] = {
+        require("telescope.themes").get_dropdown(),
+      },
+      project = {
+        base_dirs = {
+          "~/Projects",
+        },
+      },
     },
   })
 
@@ -46,6 +54,7 @@ return function()
     "neoclip",
     "frecency",
     "file_browser",
+    "ui-select",
   }
 
   for _, extension in ipairs(extensions) do
