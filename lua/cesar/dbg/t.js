@@ -37,8 +37,6 @@ console.log(a1, a2, c1);
 const u = {
   uno: {
     a: 1,
-    b: {
-      c: 'anera',
-    },
+    b: { c: 'anera' },
   },
 };

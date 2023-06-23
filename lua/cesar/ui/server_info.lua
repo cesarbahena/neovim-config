@@ -147,4 +147,36 @@ M.lsp_error = {
 	color = "StatuslineError",
 }
 
+M.plugins = {
+	function()
+		local plugins = require("lazy.core.config").plugins
+		local total = 0
+		local init = 0
+		for _, plugin in pairs(plugins) do
+			total = total + 1
+			if plugin._.loaded ~= nil then
+				init = init + 1
+			end
+		end
+		return init .. "/" .. total
+	end,
+	icon = " ",
+	color = function()
+		local plugins = require("lazy.core.config").plugins
+		local has_errors = require("lazy.core.plugin").has_errors
+
+		for _, plugin in pairs(plugins) do
+			if has_errors(plugin) then
+				return "StatuslineError"
+			end
+		end
+
+		if require("lazy.status").has_updates() then
+			return "StatuslineOk"
+		end
+
+		return "StatuslineNormal"
+	end,
+}
+
 return M

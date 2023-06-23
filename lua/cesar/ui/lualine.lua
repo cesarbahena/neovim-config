@@ -41,6 +41,7 @@ return {
 		component("sections", "c", "file_info", "git")
 		component("sections", "c", "file_info", "diff")
 		component("sections", "c", "file_info", "diagnostics")
+		component("sections", "x", "server_info", "plugins")
 		component("sections", "x", "server_info", "nls", 3)
 		component("sections", "x", "server_info", "lsp", 5)
 		component("sections", "x", "server_info", "lsp_error")

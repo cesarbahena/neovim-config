@@ -26,11 +26,37 @@ local function autocmd(args)
 	})
 end
 
+local keymaps = require(User .. ".config.keymaps")
+
 -- User autocommands
 autocmd({
 	"BufEnter",
 	"SetOptions",
 	"setlocal cpoptions=aABceFIs_ formatoptions=crqj",
+})
+
+autocmd({
+	"FileType",
+	"Docs",
+	pattern = { "gitcommit", "markdown" },
+	function()
+		vim.opt_local.wrap = true
+		vim.opt_local.spell = true
+		keymaps({
+			[""] = {
+				{
+					"Next linewrap",
+					{ colemak = "n", qwerty = "j" },
+					"v:count == 0 ? 'gj' : 'j'",
+				},
+				{
+					"prEv linewrap",
+					{ colemak = "e", qwerty = "k" },
+					"v:count == 0 ? 'gk' : 'k'",
+				},
+			},
+		}, { expr = true })
+	end,
 })
 
 autocmd({
@@ -57,31 +83,18 @@ autocmd({
 	end,
 })
 
-local keymaps = require(User .. ".config.keymaps")
-
-autocmd({
-	"FileType",
-	"QuickFixList",
-	pattern = "qf",
-	function()
-		keymaps({
-			n = {
-				{ "Close", "<C-e>", vim.cmd.q },
-				{ "Go to file", "<CR>", "<CR>" },
-			},
-		}, { buffer = true })
-	end,
-})
-
 autocmd({
 	"FileType",
 	"CloseOnCancel",
 	pattern = {
+		"qf",
 		"notify",
 		"noice",
+		"man",
 		"lazy",
 		"lspinfo",
 		"null-ls-info",
+		"tsplayground",
 	},
 	function()
 		keymaps({
@@ -90,6 +103,19 @@ autocmd({
 				{ "Close", "<C-e>", vim.cmd.q },
 				{ "Disabled", "<C-i>", "<nop>" },
 				{ "Disabled", "<C-o>", "<nop>" },
+			},
+		}, { buffer = true })
+	end,
+})
+
+autocmd({
+	"FileType",
+	"GoToFileOnEnter",
+	pattern = "qf",
+	function()
+		keymaps({
+			n = {
+				{ "Go to file", "<CR>", "<CR>" },
 			},
 		}, { buffer = true })
 	end,

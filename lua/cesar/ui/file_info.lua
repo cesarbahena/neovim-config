@@ -164,9 +164,10 @@ M.diagnostics = {
 	sources = { "nvim_diagnostic" },
 	symbols = { error = " ", warn = " ", info = " ", hint = " " },
 	diagnostics_color = {
-		color_error = "StatuslineError",
-		color_warn = "StatuslineWarn",
-		color_info = "StatuslineInfo",
+		color_error = "DiagnosticSignError",
+		color_warn = "DiagnosticSignWarn",
+		color_info = "DiagnosticSignInfo",
+		color_hint = "DiagnosticSignHint",
 	},
 }
 
