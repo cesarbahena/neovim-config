@@ -23,7 +23,8 @@ return {
 			virt_text_pos = "eol",
 		},
 	},
-	init = function()
+	config = function(_, opts)
+		require("gitsigns").setup(opts)
 		vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = "green", bold = true })
 		vim.api.nvim_set_hl(0, "GitSignsChange", { fg = "orange", bold = true })
 		vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = "red", bold = true })

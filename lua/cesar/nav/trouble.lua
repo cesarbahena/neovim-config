@@ -20,12 +20,48 @@ return {
 			{ "gr" },
 		},
 		config = function(_, opts)
-			require("trouble").setup(opts)
+			local trouble = require("trouble")
+			trouble.setup(opts)
+
+			local keymaps = require(User .. ".config.keymaps")
 			require(User .. ".config.autocmd")({
 				"Filetype",
 				"Trouble",
 				pattern = "Trouble",
-				function() end,
+				function()
+					keymaps({
+						n = {
+							{
+								"Next item (skip groups)",
+								{ colemak = "n", qwerty = "j" },
+								function()
+									trouble.next({ skip_groups = true })
+								end,
+							},
+							{
+								"Previous item (skip groups)",
+								{ colemak = "e", qwerty = "k" },
+								function()
+									trouble.previous({ skip_groups = true })
+								end,
+							},
+							{
+								"First item",
+								{ colemak = "N", qwerty = "J" },
+								function()
+									trouble.first({ skip_groups = true })
+								end,
+							},
+							{
+								"Last item",
+								{ colemak = "E", qwerty = "K" },
+								function()
+									trouble.last({ skip_groups = true })
+								end,
+							},
+						},
+					}, { buffer = true })
+				end,
 			})
 		end,
 	},

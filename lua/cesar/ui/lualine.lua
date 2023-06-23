@@ -1,3 +1,16 @@
+local hl_groups = {
+	StatuslineNormal = { fg = "white", bold = true },
+	StatuslineNormalInactive = { fg = "white" },
+	StatuslineOk = { fg = "LightGreen", bold = true },
+	StatuslineOkInactive = { fg = "LightGreen" },
+	StatuslineError = { fg = "#f38ba8", bold = true },
+	StatuslineErrorInactive = { fg = "#f38ba8" },
+}
+
+for hl_group, hl in pairs(hl_groups) do
+	vim.api.nvim_set_hl(0, hl_group, hl)
+end
+
 local sections = {
 	lualine_a = {},
 	lualine_b = {},

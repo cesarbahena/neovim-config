@@ -1,6 +1,9 @@
 return {
 	"mfussenegger/nvim-dap",
-	dependencies = { "rcarriga/nvim-dap-ui" },
+	dependencies = {
+		"rcarriga/nvim-dap-ui",
+		"nvim-telescope/telescope-ui-select.nvim",
+	},
 	keys = function()
 		local installed, dap = pcall(require, "dap")
 		if installed then

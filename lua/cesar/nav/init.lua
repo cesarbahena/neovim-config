@@ -1,17 +1,13 @@
 local M = {
-  -- Find files
+  -- Telescope
   require(User .. ".nav.telescope"),
   require(User .. ".nav.extensions"),
-  require(User .. ".nav.rooter"),
 
   -- Utils
   require(User .. ".nav.harpoon"),
   require(User .. ".nav.trouble"),
   require(User .. ".nav.tmux"),
-  {
-    "nvim-telescope/telescope-ui-select.nvim",
-    lazy = true,
-  },
+  require(User .. ".nav.rooter"),
   {
     "AckslD/nvim-neoclip.lua",
     lazy = false,
