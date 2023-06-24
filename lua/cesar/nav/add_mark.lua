@@ -118,63 +118,66 @@ local function remove_empty_tail()
 end
 
 local function add_file_at_pos(position)
-  pcall(function()
-    filter_filetype()
-    local buf_name = get_buf_name()
-    log.trace("add_file():", buf_name)
+  filter_filetype()
+  local buf_name = get_buf_name()
+  log.trace("add_file():", buf_name)
 
-    if mark.valid_index(mark.get_index_of(buf_name)) then
+  local marks = harpoon.get_mark_config().marks
+
+  local buf_index = mark.get_index_of(buf_name)
+
+  if mark.valid_index(buf_index) then
+    if not position then
       return
     end
+    marks[buf_index] = {}
+  end
 
-    validate_buf_name(buf_name)
+  validate_buf_name(buf_name)
 
-    local marks = harpoon.get_mark_config().marks
-
-    if not position then -- Assing an empty slot
-      local found_idx = get_first_empty_slot()
-      marks[found_idx] = create_mark(buf_name)
-      remove_empty_tail()
-      emit_changed()
-      return
-    end
-
-    -- If position is ocupied, keep the mark info
-    local move, to_move = false, {}
-    if marks[position] and marks[position].filename ~= "(empty)" then
-      to_move = marks[position]
-      move = true
-    end
-
-    -- Assin the desired file to the given position
-    marks[position] = create_mark(buf_name)
-
-    -- Move the previous mark to an empty slot
-    if move then
-      local empty_slot = get_first_empty_slot()
-      marks[empty_slot] = to_move
-      vim.notify(
-        string.format(
-          "%s assigned to mark %d.\n%s moved to mark %d.",
-          marks[position].filename,
-          position,
-          marks[empty_slot].filename,
-          empty_slot
-        ),
-        "info",
-        { title = "Harpoon" }
-      )
-    end
-
-    -- Corrections before save
-    for i = 1, position, 1 do
-      if not marks[i] then
-        marks[i] = {}
-      end
-    end
+  if not position then -- Assing an empty slot
+    local found_idx = get_first_empty_slot()
+    marks[found_idx] = create_mark(buf_name)
     remove_empty_tail()
     emit_changed()
-  end)
+    return
+  end
+
+  -- If position is ocupied, keep the mark info
+  local move, to_move = false, {}
+  if marks[position] and marks[position].filename ~= "(empty)" then
+    to_move = marks[position]
+    move = true
+  end
+
+  -- Assin the desired file to the given position
+  marks[position] = create_mark(buf_name)
+
+  -- Move the previous mark to an empty slot
+  if move then
+    local empty_slot = get_first_empty_slot()
+    marks[empty_slot] = to_move
+    vim.notify(
+      string.format(
+        "%s assigned to mark %d.\n%s moved to mark %d.",
+        marks[position].filename,
+        position,
+        marks[empty_slot].filename,
+        empty_slot
+      ),
+      "info",
+      { title = "Harpoon" }
+    )
+  end
+
+  -- Corrections before save
+  for i = 1, position, 1 do
+    if not marks[i] then
+      marks[i] = {}
+    end
+  end
+  remove_empty_tail()
+  emit_changed()
 end
 
 return add_file_at_pos
