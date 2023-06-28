@@ -52,6 +52,7 @@ end
 local special = {
 	netrw = true,
 	Trouble = true,
+	fugitive = true,
 	lazy = true,
 	lspinfo = true,
 	["dapui_watches"] = last_word,
