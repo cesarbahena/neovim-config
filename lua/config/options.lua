@@ -1,7 +1,3 @@
-User = "cesar"
-Keyboard = "colemak"
-vim.g.mapleader = " "
-
 local opts = {
 	-- Lines
 	number = true,
@@ -17,12 +13,6 @@ local opts = {
 	expandtab = true,
 	smartindent = true,
 	wrap = false,
-
-	-- Backup
-	swapfile = false,
-	backup = false,
-	undofile = true,
-	undodir = os.getenv("HOME") .. "/.vim/undodir",
 
 	-- Search
 	hlsearch = false,
@@ -49,38 +39,8 @@ local opts = {
 	foldmethod = "expr",
 	foldexpr = "nvim_treesitter#foldexpr()",
 	foldenable = false,
-
-	-- Completion
-	completeopt = { "menu", "menuone", "noselect" },
-	wildmode = "longest:full",
 }
 
 for k, v in pairs(opts) do
 	vim.opt[k] = v
 end
-
-require(User .. ".config.keymaps")
-require(User .. ".config.autocmd")
-
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
-	})
-end
-vim.opt.rtp:prepend(lazypath)
-
-require("lazy").setup(User, {
-	lockfile = vim.fn.stdpath("config") .. "/lua/" .. User .. "/lazy-lock.json",
-	install = {
-		colorscheme = { "catppuccin" },
-	},
-	ui = {
-		border = "rounded",
-	},
-})
