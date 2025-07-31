@@ -93,34 +93,14 @@ end
 function M.resolve(keymap)
   local layout = _G.KeyboardLayout
 
-  if type(keymap) ~= "table" then 
-    M.get_or_create 'Errors.Keymap'
-    M.error("Keymaps.InvalidFormat", string.format(
-      "Expected table but got %s. Value: %s",
-      type(keymap),
-      tostring(keymap)
-    ))
-    return nil
-  end
+  table.insert(M.get_or_create('MultiLayoutKeymaps'), keymap)
 
-  if type(keymap[1]) ~= "table" then
-    M.error("Keymaps.InvalidSubtable", string.format(
-      "Expected keymap[1] to be a table, but got %s. Value: %s",
-      type(keymap[1]),
-      tostring(keymap[1])
-    ))
-    return nil
-  end
+  local result = M.try(function()
+    keymap[1] =	keymap[1][layout]
+  end):catch 'UnresolvedKeymapError'
 
-  if keymap[1][layout] == nil then
-    M.error("Keymaps.MissingMappingForKeyboardLayout", string.format(
-      "Expected mapping for layout '%s', but none was provided.",
-      layout
-    ))
-    return nil
-  end
+  if not result.success then return nil end
 
-  keymap[1] = keymap[1][layout]
   return keymap
 end
 
@@ -187,12 +167,11 @@ end
 
 -- Default keymapper
 function M.map(spec)
-  local wk = M.try(require, 'which-key'):catch 'MissingMappingLibrary'()
+  local wk = M.try(require, 'which-key'):catch 'MissingMappingLibrary'
 
-  if type(wk) == 'table' and type(wk.add) == 'function' then
-    return wk.add(spec)
+  if wk.success then
+    return wk().add(spec)
   end
-  print 'Missing mapping library'
 
   recursive_keymap(spec)
 end

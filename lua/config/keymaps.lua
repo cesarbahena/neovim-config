@@ -1,57 +1,56 @@
 _G.KeyboardLayout = "colemak"
-vim.keymap.set("", "<space>", "<nop>")
-
-vim.g.mapleader = " "
 
 local utils = require 'config.utils'
 local try = utils.try
 local resolve = utils.resolve
 
-utils.map {
+try(utils.map, {
   --[[Normal mode]]
-  { desc = "Substitute (w/o yank)", "s", [["_c]] },
-  { desc = "Substitute to eol (w/o yank)", "ss", [["_C]] },
-  { desc = "Yank line", "Y", "yy" },
-  { desc = "Yank to eol", "yy", "y$" },
-  { desc = "Yank line to clipboard", "<leader>Y", [["+yy]] },
-  { desc = "Paste from clipboard", "<leader>p", [["+P]] },
-  { desc = "Paste from clipboard in new line", "<leader>P", [[o<Esc>"+p]] },
-  { desc = "Copy down", "yp", "Yp" },
-  { desc = "Redo", "U", "<C-r>" },
-  resolve({ desc = "Undo last jump", { colemak = "<C-u>", qwerty = "<C-i>" }, "<C-o>" }),
-  resolve({ desc = "Redo last jump", { colemak = "<C-y>", qwerty = "<C-o>" }, "<C-i>" }),
-  resolve({ desc = "Insert comma at the end", { colemak = ",k", qwerty = ",n" }, "mzA,<Esc>`z" }),
-  resolve({ desc = "Insert semicolon at the end", { colemak = ",h", qwerty = ",m" }, "mzA;<Esc>`z" }),
-  { desc = "Delete comma or semicolon at the end", ",d", "mz$x`z" },
+  { '<cr>', ':', desc = 'Command line mode' },
+  { "s", [["_c]], desc = "Substitute (w/o yank)" },
+  -- { "ss", [["_C]], desc = "Substitute to eol (w/o yank)" },
+  -- { "dd", 'd$', desc = "Delete to eol (w/o yank)" },
+  { "Y", "yy", desc = "Yank line" },
+  { "yy", "y$", desc = "Yank to eol" },
+  { "<leader>Y", [["+yy]], desc = "Yank line to clipboard" },
+  { "<leader>p", [["+P]], desc = "Paste from clipboard" },
+  { "<leader>P", [[o<Esc>"+p]], desc = "Paste from clipboard in new line" },
+  { "yp", "Yp", desc = "Copy down" },
+  { 'C', 'gcc', desc = 'Toggle Comment', remap = true },
+  { 'cc', 'gc$', desc = 'Toggle Comment', remap = true },
+  { "U", "<C-r>", desc = "Redo" },
+  { 'gUU', 'gUl', desc = 'Uppercase' },
+  { 'gUu', 'g~', desc = 'Swap case' },
+  { 'guu', 'gul', desc = 'Lowercase' },
+  { 'guU', 'g~', desc = 'Swap case' },
+  resolve({ { colemak = "<C-u>", qwerty = "<C-i>" }, "<C-o>", desc = "Undo last jump" }),
+  resolve({ { colemak = "<C-y>", qwerty = "<C-o>" }, "<C-i>", desc = "Redo last jump" }),
+  resolve({ { colemak = ",k", qwerty = ",n" }, "mzA,<Esc>`z", desc = "Insert comma at the end" }),
+  resolve({ { colemak = ",h", qwerty = ",m" }, "mzA;<Esc>`z", desc = "Insert semicolon at the end" }),
+  { ",d", "mz$x`z", desc = "Delete comma or semicolon at the end" },
   {
-    desc = "Move line down",
-    "<C-c>",
+    "<C-d>",
     "<cmd>execute 'move .+' . v:count1<cr>==",
+    desc = "Move line down",
   },
   {
-    desc = "Move line up",
     "<C-s>",
     "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==",
+    desc = "Move line up",
   },
-  resolve({ desc = "Join/Merge lines (pretty)", { colemak = "J", qwerty = "M" }, "mzJ`z" }),
-  resolve({ desc = "Join/Merge lines (raw)", { colemak = "gJ", qwerty = "gM" }, "mzgJ`z" }),
-  { desc = "Navigate to window to the left", "<C-w>m", "<C-w>h" },
-  { desc = "Navigate to window below", "<C-w>n", "<C-w>j" },
-  { desc = "Navigate to window above", "<C-w>e", "<C-w>k" },
-  { desc = "Navigate to window to the right", "<C-w>o", "<C-w>l" },
-  { desc = "Move window to leftmost side", "<C-w>m", "<C-w>H" },
-  { desc = "Move window to top", "_", "<C-w>K" },
-  { desc = "Move window to bottom", "<leader>_", "<C-w>J" },
-  { desc = "Move window to leftmost side", "|", "<C-w>H" },
-  { desc = "Move window to rightmost side", "<leader>|", "<C-w>L" },
-  { desc = "Evenly distributed windows", "<leader>=", "<C-w>=" },
+  resolve({ { colemak = "J", qwerty = "M" }, "mzJ`z", desc = "Join/Merge lines (pretty)" }),
+  resolve({ { colemak = "gJ", qwerty = "gM" }, "mzgJ`z", desc = "Join/Merge lines (raw)" }),
+  { "<C-w>m", "<C-w>h", desc = "Navigate to window to the left" },
+  { "<C-w>n", "<C-w>j", desc = "Navigate to window below" },
+  { "<C-w>e", "<C-w>k", desc = "Navigate to window above" },
+  { "<C-w>o", "<C-w>l", desc = "Navigate to window to the right" },
+  { "<C-w>m", "<C-w>H", desc = "Move window to leftmost side" },
+  { "_", "<C-w>K", desc = "Move window to top" },
+  { "<leader>_", "<C-w>J", desc = "Move window to bottom" },
+  { "|", "<C-w>H", desc = "Move window to leftmost side" },
+  { "<leader>|", "<C-w>L", desc = "Move window to rightmost side" },
+  { "<leader>=", "<C-w>=", desc = "Evenly distributed windows" },
   {
-    desc = "Replace current word",
-    "<leader>s",
-    ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>",
-  },
-  {
-    desc = "Insert mode (indent blankline)",
     "i",
     function()
       if #vim.fn.getline(".") == 0 then
@@ -60,91 +59,66 @@ utils.map {
         return "i"
       end
     end,
+    desc = "Insert mode (indent blankline)",
     expr = true,
   },
   {
-    desc = "Delete line (don't yank blankline)",
     "D",
     function()
       if vim.api.nvim_get_current_line():match("^%s*$") then
         return '"_dd'
-      else
-        return "dd"
       end
+      return "dd"
     end,
+    desc = "Delete line (don't yank blankline)",
     expr = true,
   },
+  { '>', '>>', desc = 'Indent' },
+  { '<', '<<', desc = 'Deindent' },
+  resolve({ { colemak = "l" }, "o", desc = "Open new Line below" }),
+  resolve({ { colemak = "L" }, "O", desc = "Open new Line above" }),
 
   --[[Normal and visual mode]]
   {
     mode = {'x', 'n'},
-    { desc = "Command line mode", "<CR>", ":"},
+    { "s", [["_c]], desc = "Substitute (w/o yank)" },
+    { 'c', 'gc', desc = 'Toggle Comment', remap = true },
     resolve({
-      desc = "Escape to normal mode and clear highlights",
       { colemak = "<C-e>", keymaps = "<C-k>" },
-      function()
-        vim.cmd("noh")
-        return "<Esc>"
-      end,
-      expr = true,
+      "<cmd>noh<cr><C-c>",
+      desc = "Escape to normal mode and clear highlights",
     }),
-    { desc = "Yank to clipboard", "<leader>y", [["+y]] },
-    { desc = "Cmdline mode", "<CR>", ":" },
-    resolve({ desc = "Open new Line below", { colemak = "l" }, "o" }),
-    resolve({ desc = "Open new Line above", { colemak = "L" }, "O" }),
-    { desc = "Substitute (same as change)", "s", "c" },
-    resolve({
-      desc = "Next line",
-      { colemak = "n", qwerty = "j" },
-      "v:count == 0 ? 'gj' : 'j'",
-      expr = true,
-      silent = true,
-    }),
-    resolve({ desc = "Scroll to Next page", { colemak = "N", qwerty = "J" }, "<C-d>zz" }),
-    resolve({
-      desc = "prEv line",
-      { colemak = "e", qwerty = "j" },
-      "v:count == 0 ? 'gk' : 'k'",
-      expr = true,
-      silent = true,
-    }),
-    resolve({ desc = "Scroll to prEv page", { colemak = "E", qwerty = "K" }, "<C-u>zz" }),
-    resolve({ desc = "bacK one word", { colemak = "k" }, "b" }),
-    resolve({ desc = "bacK one WORD", { colemak = "K" }, "B" }),
-    { desc = "Word (rest of it)", "w", "e" },
-    { desc = "WORD (rest of it)", "W", "E" },
-    resolve({ desc = "Hop to next word", { colemak = "h", qwerty = "n" }, "w" }),
-    resolve({ desc = "Hop to next WORD", { colemak = "H", qwerty = "N" }, "W" }),
-    resolve({ desc = "Left", { colemak = "m" }, "h" }),
-    resolve({ desc = "Right", { colemak = "o" }, "l" }),
-    resolve({ desc = "HoMe (first non whitespace char)", { colemak = "M", qwerty = "H" }, "^" }),
-    resolve({ desc = "EOL", { colemak = "O", qwerty = "L" }, "$" }),
-    resolve({ desc = "Mark", { colemak = "j" }, "m" }),
-    { desc = "Next match", "\\", "n" },
-    { desc = "Delete into void register", "x", [["_x]] },
-    { desc = "Quit", "<M-q>", vim.cmd.q },
+    { "<leader>y", [["+y]], desc = "Yank to clipboard" },
+    { "\\", "n", desc = "Next match" },
+    resolve{ { colemak = 'do', qwerty = 'dl' }, [["_x]], desc = "Delete into void register" },
+    resolve{ { colemak = 'so', qwerty = 'sl' }, 'r', desc = 'Substitute letter and back to normal mode' },
+    { "<M-q>", vim.cmd.q, desc = "Quit" },
   },
 
   --[[Visual mode]]
   {
     mode = { "x" },
-    { desc = "Yank (keep position)", "y", "y`>" },
-    { desc = "Yank to clipboard (keep position)", "<leader>y", [["+y`>]] },
-    { desc = "Paste (w/o cutting)", "p", "P" },
-    { desc = "Paste from clipboard (w/o cutting)", "<leader>p", [["+P]] },
-    { desc = "Comment lines", "c", "gc" },
+    { "y", "y`>", desc = "Yank (keep position)" },
+    { "<leader>y", [["+y`>]], desc = "Yank to clipboard (keep position)" },
+    { "p", "P", desc = "Paste (w/o cutting)" },
+    { "<leader>p", [["+P]], desc = "Paste from clipboard (w/o cutting)" },
+    { '>', '>gv', desc = 'Indent' },
+    { '<', '<gv', desc = 'Deindent' },
+    { 'U', 'nop' },
+    { 'gU', 'U', desc = 'Uppercase' },
+    { 'u', 'nop' },
+    { 'gu', 'u', desc = 'Lowercase' },
     {
-      desc = "Move line down",
-      "<C-c>",
+      "<C-d>",
       ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv",
+      desc = "Move line down",
     },
     {
-      desc = "Move line up",
       "<C-s>",
       ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv",
+      desc = "Move line up",
     },
     {
-      desc = "Change visual mode",
       "V",
       function()
         if vim.fn.mode():find("V") then
@@ -152,6 +126,7 @@ utils.map {
         end
         return "V"
       end,
+      desc = "Change visual mode",
       expr = true,
     },
   },
@@ -159,27 +134,67 @@ utils.map {
   --[[Insert mode]]
   {
     mode = { "i" },
-    { desc = "Paste from clipboard", "<C-p>", [[<C-o>"+P]] },
-    { desc = "Move line down", "<C-c>", "<esc><cmd>m .+1<cr>==gi" },
-    { desc = "Move line up", "<C-s>", "<esc><cmd>m .-2<cr>==gi" },
-    resolve({ desc = "Comma after bracket", { colemak = "<C-k>", qwerty = "<C-b>" }, ".<Esc>mzva{lva,<Esc>`za<BS>" }),
-    resolve({ desc = "Semicolon after bracket", { colemak = "<C-h>", qwerty = "<C-h>" }, ".<Esc>mzva{lva;<Esc>`za<BS>" }),
-    { desc = "Comma with auto undo breakpoints", ",", ",<C-g>u" },
-    { desc = "Semicolon with auto undo breakpoints", ";", ";<C-g>u" },
-    { desc = "Dot with auto undo breakpoints", ".", ".<C-g>u" },
-    { desc = "Left", "<C-r>", "<Left>" },
-    { desc = "Right", "<C-d>", "<Right>" },
+    resolve({
+      { colemak = "<C-e>", keymaps = "<C-k>" },
+      "<C-c>",
+      desc = "Escape to normal mode"
+    }),
+    { "<C-d>", "<esc><cmd>m .+1<cr>==gi", desc = "Move line down" },
+    { "<C-s>", "<esc><cmd>m .-2<cr>==gi", desc = "Move line up" },
+    { ",", ",<C-g>u", desc = "Comma with auto undo breakpoints" },
+    { ";", ";<C-g>u", desc = "Semicolon with auto undo breakpoints" },
+    { ".", ".<C-g>u", desc = "Dot with auto undo breakpoints" },
+    { "<C-k>", "<Left>", desc = "Left" },
+    { "<C-h>", "<Right>", desc = "Right" },
+  },
+
+  --[[Normal, visual and OP mode]]
+  {
+    mode = { 'n', 'x', 'o' },
+    resolve({
+      { colemak = "n", qwerty = "j" },
+      "v:count == 0 ? 'gj' : 'j'",
+      desc = "Next line",
+      expr = true,
+      silent = true,
+    }),
+    resolve({
+      { colemak = "N", qwerty = "J" },
+      "<C-d>zz",
+      desc = "Scroll to Next page",
+    }),
+    resolve({
+      { colemak = "e", qwerty = "j" },
+      "v:count == 0 ? 'gk' : 'k'",
+      desc = "prEv line",
+      expr = true,
+      silent = true,
+    }),
+    resolve({
+      { colemak = "E", qwerty = "K" },
+      "<C-u>zz",
+      desc = "Scroll to prEv page",
+    }),
+    resolve({ { colemak = "k" }, "b", desc = "bacK one word" }),
+    resolve({ { colemak = "K" }, "B", desc = "bacK one WORD" }),
+    { "w", "e", desc = "Word (rest of it)" },
+    { "W", "E", desc = "WORD (rest of it)" },
+    resolve({ { colemak = "h", qwerty = "n" }, "w", desc = "Hop to next word" }),
+    resolve({ { colemak = "H", qwerty = "N" }, "W", desc = "Hop to next WORD" }),
+    resolve({ { colemak = "m" }, "h", desc = "Left" }),
+    resolve({ { colemak = "o" }, "l", desc = "Right" }),
+    resolve({ { colemak = "M", qwerty = "H" }, "^", desc = "HoMe (first non whitespace char)" }),
+    resolve({ { colemak = "O", qwerty = "L" }, "$", desc = "EOL" }),
   },
 
   --[[Command and Insert modes]]
   {
     mode = {'c', 'i'},
     resolve({
-      desc = "Escape to normal mode",
       { colemak = "<C-e>", keymaps = "<C-k>" },
-      "<Esc>"
+      "<C-c>",
+      desc = "Escape to normal mode"
     }),
-    { desc = "Left", "<Right>", "<Left>"},
-    { desc = "Right", "<M-o", "<Right>" },
+    { "<C-u>", "<BS>", desc = "Backspace" },
   },
-}
+})

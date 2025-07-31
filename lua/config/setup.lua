@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+
 local try = require 'config.utils'.try
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -25,16 +27,15 @@ try(lazy.setup, {
   spec = {
     { import = "plugins" },
   },
-  -- automatically check for plugin updates
   checker = { enabled = true },
+  install = { colorscheme = { 'kanagawa' } },
   performance = {
     rtp = {
-      -- disable some rtp plugins
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
         "tarPlugin",
         "tohtml",
         "tutor",

@@ -1,20 +1,33 @@
 return {
   {
-     "folke/which-key.nvim",
-     event = "VeryLazy",
-     opts = {
-       -- your configuration comes here
-       -- or leave it empty to use the default settings
-       -- refer to the configuration section below
-     },
-     keys = {
-       {
-         "<leader>?",
-         function()
-           require("which-key").show({ global = false })
-         end,
-         desc = "buffer local keymaps (which-key)",
+    "folke/which-key.nvim",
+    lazy = true,
+    config = function()
+      require 'which-key'.add({
+        {
+        }
+      })
+
+    end
+  },
+  {
+      "rebelot/kanagawa.nvim",
+      lazy = false, 
+      priority = 1000,
+      init = function()
+        vim.cmd('colorscheme kanagawa')
+      end,
+      opts = { 
+        transparent = true,
+        colors = {
+          theme = {
+            all = {
+              ui = {
+                bg_gutter = "none"
+              }
+            }
+          }
+        }
       },
-     },
-   },
+    }
  }

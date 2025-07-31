@@ -27,7 +27,7 @@ local opts = {
 	splitright = true, -- Prefer windows splitting to the right
 	splitbelow = true, -- Prefer windows splitting to the bottom
 	scrolloff = 8,
-
+	
 	-- Statusline
 	showmode = false,
 	showcmd = false,
