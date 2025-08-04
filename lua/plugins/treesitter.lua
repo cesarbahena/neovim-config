@@ -33,33 +33,33 @@ return {
         swap = {
           enable = true,
           swap_next = {
-            ["<C-h>"] = "@parameter.inner",
+            ['<m-h>'] = '@parameter.inner',
           },
           swap_previous = {
-            ["<C-k>"] = "@parameter.inner",
+            ['<m-k>'] = '@parameter.inner',
           },
         },
         move = {
           enable = true,
           goto_next_start = {
-            ["gnf"] = "@function.outer",
-            ["gnc"] = "@class.outer",
-            ["gna"] = "@parameter.inner",
+            ['gnf'] = '@function.outer',
+            ['gnc'] = '@class.outer',
+            ['gna'] = '@parameter.inner',
           },
           goto_next_end = {
-            ["gof"] = "@function.outer",
-            ["goc"] = "@class.outer",
-            ["goa"] = "@parameter.inner",
+            ['gof'] = "@function.outer",
+            ['goc'] = "@class.outer",
+            ['goa'] = "@parameter.inner",
           },
           goto_previous_start = {
-            ["gef"] = "@function.outer",
-            ["gec"] = "@class.outer",
-            ["gea"] = "@parameter.inner",
+            ['gef'] = "@function.outer",
+            ['gec'] = "@class.outer",
+            ['gea'] = "@parameter.inner",
           },
           goto_previous_end = {
-            ["gmf"] = "@function.outer",
-            ["gmc"] = "@class.outer",
-            ["gma"] = "@parameter.inner",
+            ['gmf'] = "@function.outer",
+            ['gmc'] = "@class.outer",
+            ['gma'] = "@parameter.inner",
 },
         },
         lsp_interop = {

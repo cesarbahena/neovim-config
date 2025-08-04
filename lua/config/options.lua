@@ -21,6 +21,9 @@ local opts = {
 	ignorecase = true, -- Ignore case when searching...
 	smartcase = true, -- ... unless there is a capital letter in the query
 
+	-- Clipboard
+	clipboard = "unnamedplus",
+
 	-- Windows
 	termguicolors = true,
 	equalalways = false, -- I don't like my windows changing all the time

@@ -17,7 +17,10 @@ return {
       win = {
         input = {
           keys = {
-            ["<C-e>"] = { "close", mode = { "n", "i" } },
+            ["<tab>"] = { "close", mode = { "n", "i" } },
+            ["<c-y>"] = { "confirm", mode = { "n", "i" } },
+            ["<c-e>"] = { "list_up", mode = { "n", "i" } },
+            ["<c-p>"] = { "select_and_next", mode = { "n", "i" } },
           }
         }
       }
@@ -35,12 +38,11 @@ return {
   },
   keys = {
     -- Top Pickers & Explorer
-    { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+    { "/", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
     { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
     { "<leader><cr>", function() Snacks.picker.command_history() end, desc = "Command History" },
     { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
-    { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
     -- find
     { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
@@ -85,6 +87,7 @@ return {
     { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
     -- LSP
     { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
+    -- normal( "Yes", fn(Snacks.picker.lsp_definitions), desc = ", go to Definition" ),
     { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
     { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
     { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },

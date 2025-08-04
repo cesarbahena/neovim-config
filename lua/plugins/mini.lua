@@ -31,6 +31,7 @@ return {
         highlight = "rv",
         replace = "rs", 
         suffix_last = 'e',
+        update_n_lines = 'r+'
       },
       custom_surroundings = {
         k = {

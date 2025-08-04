@@ -18,8 +18,8 @@ function M.split_error_message(msg)
   -- Validate error message
   if type(msg) ~= "string" then return "", {} end
 
-  local first_line = msg:match("([^\n]*)")
   local rest = msg:sub(#first_line + 2)
+  local first_line = msg:match("([^\n]*)")
   local raw_lines = vim.split(rest, "\n", { plain = true, trimempty = true })
 
   -- Trim tabs and spaces from each line

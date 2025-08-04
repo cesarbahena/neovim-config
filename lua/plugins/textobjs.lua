@@ -1,11 +1,11 @@
 local VTO = [[<cmd>lua require("various-textobjs").%s<cr>]]
 
 local textobjs = {
-  -- d = {
-  --   desc = "Function Definition",
-  --   treesitter = true,
-  --   { a = "@function.outer", i = "@function.inner" },
-  -- },
+  d = {
+    desc = "Function Definition",
+    treesitter = true,
+    { a = "@function.outer", i = "@function.inner" },
+  },
   o = {
     desc = "Loop",
     treesitter = true,

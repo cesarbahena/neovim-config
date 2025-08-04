@@ -11,7 +11,7 @@ return {
     },
     watch_for_changes = false,
     keymaps = {
-      ['<c-e>'] = { "actions.close", mode = 'n' },
+      ['<c-u>'] = { "actions.close", mode = 'n', opts = { exit_if_last_buf = true } },
       ['<c-y>'] = { 'actions.select', mode = 'n' },
       ['<cr>'] = ':',
     }
