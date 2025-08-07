@@ -1,20 +1,18 @@
 return {
   {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    event = "VeryLazy",
-    dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
     keys = {
       {
-        desc = "Move outside syntactical region",
-        "<C-o>",
-        "<Esc><cmd>normal vvv<cr>A",
-        mode = "i",
+        desc = 'Move outside syntactical region',
+        '<C-o>',
+        '<Esc><cmd>normal vvv<cr>A',
+        mode = 'i',
       },
     },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
+    config = function(_, opts) require('nvim-treesitter.configs').setup(opts) end,
     opts = {
       indent = { enable = true },
       highlight = {
@@ -24,9 +22,9 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          node_incremental = "v",
-          scope_incremental = "U",
-          node_decremental = "u",
+          node_incremental = 'v',
+          scope_incremental = 'U',
+          node_decremental = 'u',
         },
       },
       textobjects = {
@@ -47,25 +45,25 @@ return {
             ['gna'] = '@parameter.inner',
           },
           goto_next_end = {
-            ['gof'] = "@function.outer",
-            ['goc'] = "@class.outer",
-            ['goa'] = "@parameter.inner",
+            ['gof'] = '@function.outer',
+            ['goc'] = '@class.outer',
+            ['goa'] = '@parameter.inner',
           },
           goto_previous_start = {
-            ['gef'] = "@function.outer",
-            ['gec'] = "@class.outer",
-            ['gea'] = "@parameter.inner",
+            ['gef'] = '@function.outer',
+            ['gec'] = '@class.outer',
+            ['gea'] = '@parameter.inner',
           },
           goto_previous_end = {
-            ['gmf'] = "@function.outer",
-            ['gmc'] = "@class.outer",
-            ['gma'] = "@parameter.inner",
-},
+            ['gmf'] = '@function.outer',
+            ['gmc'] = '@class.outer',
+            ['gma'] = '@parameter.inner',
+          },
         },
         lsp_interop = {
           enable = true,
           floating_preview_opts = {
-            border = "rounded",
+            border = 'rounded',
           },
           peek_definition_code = {
             --[[ ["<C-f>"] = "@function.outer",
@@ -76,21 +74,21 @@ return {
     },
   },
   {
-    "nvim-treesitter/nvim-treesitter-context",
-    event = "VeryLazy",
+    'nvim-treesitter/nvim-treesitter-context',
+    event = 'VeryLazy',
   },
   {
-    "nvim-treesitter/playground",
+    'nvim-treesitter/playground',
     cmd = {
-      "TSPlaygroundToggle",
-      "TSHighlightCapturesUnderCursor",
-      "TSNodeUnderCursor",
+      'TSPlaygroundToggle',
+      'TSHighlightCapturesUnderCursor',
+      'TSNodeUnderCursor',
     },
   },
   {
     'Wansmer/treesj',
-    keys = {{'j', ':TSJToggle<cr>', desc = 'Toggle node under cursor'}},
+    keys = { { 'j', ':TSJToggle<cr>', desc = 'Toggle node under cursor' } },
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     opts = {},
-  }
+  },
 }

@@ -2,11 +2,11 @@ local spec_gen = require 'utils.keymap_spec_generator'
 local motion = spec_gen.motion
 local operator = spec_gen.operator
 
-local fn = require 'utils'.fn
+local fn = require('utils').fn
 
 return {
-  "folke/flash.nvim",
-  event = "VeryLazy",
+  'folke/flash.nvim',
+  event = 'VeryLazy',
   opts = {
     modes = {
       char = {
@@ -19,9 +19,9 @@ return {
     },
   },
   keys = {
-    motion('Find in screen', fn 'flash.jump'),
-    pending('Remote', fn 'flash.remote'),
-    -- operator('Till', fn ('flash.jump', { mode = 'char' })),
-    normal('Treesitter search', fn 'flash.treesitter_search'),
+    motion { 'Find in screen', fn 'flash.jump' },
+    pending { 'Remote', fn 'flash.remote' },
+    -- operator { 'Till', fn ('flash.jump', { mode = 'char' }) },
+    normal { 'Treesitter search', fn 'flash.treesitter_search' },
   },
 }

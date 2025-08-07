@@ -9,3 +9,8 @@ local keymapper, ok = try(require, 'utils.keymapper')
 if ok then
   keymapper.map(require 'config.keymaps')
 end
+
+local lsp_config, lsp_ok = try(require, 'config.lsp'):catch('LoadModuleError')()
+if lsp_ok then
+  lsp_config.setup()
+end

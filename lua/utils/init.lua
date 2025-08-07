@@ -3,7 +3,7 @@ local M = {}
 --[[General utils]]
 
 -- Get (or create) global nested table from dot-separated path
-function M.get_or_create(path)
+function M.global(path)
   local current = _G
   for part in string.gmatch(path, "[^%.]+") do
     current[part] = current[part] or {}
@@ -40,15 +40,15 @@ function M.fn(fn_or_module_path, ...)
   local module_path = fn_or_module_path:sub(1, last_dot - 1)
   local function_name = fn_or_module_path:sub(last_dot + 1)
   local args = { ... }
-  
+
   return function()
     local module = require(module_path)
     local module_fn = module[function_name]
-    
+
     if not module_fn then
       error('Function ' .. function_name .. ' not found in module ' .. module_path)
     end
-    
+
     return module_fn(unpack(args))
   end
 end

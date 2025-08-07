@@ -27,7 +27,7 @@ local description_to_key = {}
 for category, keys in pairs(key_descriptions) do
   for key, desc_or_table in pairs(keys) do
     local full_key = build_key(category, key)
-    
+
     if type(desc_or_table) == 'string' then
       -- Single description
       local normalized = normalize_desc(desc_or_table)
@@ -77,109 +77,71 @@ local function rebuild_lookup()
 end
 
 -- Core spec generator function
-local function make_spec(mode, desc, rhs, opts)
-  local normalized = normalize_desc(desc)
+local function make_spec(spec)
+  local normalized = normalize_desc(spec[1])
+
   local lhs = description_to_key[normalized]
   if not lhs then
-    error('No key found for description: ' .. desc)
+    error('No key found for description: ' .. spec[1])
   end
-  
-  local spec = { lhs, rhs, desc = desc, mode = mode }
-  
-  if not opts then return spec end
-  
-  if opts.details then
-    spec.desc = desc .. ' ' .. opts.details
-  end
-  
-  for k, v in pairs(opts) do
-    -- Don't copy details to the final spec
-    if k ~= 'details' then
-      spec[k] = v
-    end
-  end
-  
+
+  spec.desc = spec[1]
+  spec[1] = lhs
+
+  if not spec.details then return spec end
+
+  local separator = spec.details:match('^,') and '' or ' '
+  spec.desc = spec.desc .. separator .. spec.details
+  spec.details = nil
+
   return spec
 end
 
 -- Mode-specific helper functions
-function M.normal(desc, rhs, opts)
-  return make_spec('n', desc, rhs, opts)
+function M.normal(spec)
+  spec.mode = 'n'
+  return make_spec(spec)
 end
 
-function M.insert(desc, rhs, opts)
-  return make_spec('i', desc, rhs, opts)
+function M.insert(spec)
+  spec.mode = 'i'
+  return make_spec(spec)
 end
 
-function M.visual(desc, rhs, opts)
-  return make_spec('x', desc, rhs, opts)
+function M.visual(spec)
+  spec.mode = 'x'
+  return make_spec(spec)
 end
 
-function M.command(desc, rhs, opts)
-  return make_spec('c', desc, rhs, opts)
+function M.command(spec)
+  spec.mode = 'c'
+  return make_spec(spec)
 end
 
-function M.terminal(desc, rhs, opts)
-  return make_spec('t', desc, rhs, opts)
+function M.terminal(spec)
+  spec.mode = 't'
+  return make_spec(spec)
 end
 
-function M.pending(desc, rhs, opts)
-  return make_spec('o', desc, rhs, opts)
+function M.pending(spec)
+  spec.mode = 'o'
+  return make_spec(spec)
 end
 
 -- Mode combinations
-function M.motion(desc, rhs, opts)
-  return make_spec({ 'n', 'o', 'x' }, desc, rhs, opts)
+function M.motion(spec)
+  spec.mode = { 'n', 'o', 'x' }
+  return make_spec(spec)
 end
 
-function M.operator(desc, rhs, opts)
-  return make_spec({ 'o', 'x' }, desc, rhs, opts)
+function M.operator(spec)
+  spec.mode = { 'o', 'x' }
+  return make_spec(spec)
 end
 
-function M.edit(desc, rhs, opts)
-  return make_spec({ 'n', 'x' }, desc, rhs, opts)
-end
-
--- Helper function to create lazy function calls
-function M.fn(fn_or_module, ...)
-  -- Direct function case: wrap it with args
-  if type(fn_or_module) == 'function' then
-    local args = { ... }
-    return function()
-      return fn_or_module(unpack(args))
-    end
-  end
-
-  -- Module case: return a function that can be called with method name or custom function
-  if type(fn_or_module) ~= 'string' then
-    error('Expected function or string, got ' .. type(fn_or_module))
-  end
-
-  return function(module_fn_or_custom_fn, ...)
-    local args = { ... }
-    return function()
-      local module = require(fn_or_module)
-      
-      -- Custom function case: call it with the module as parameter
-      if type(module_fn_or_custom_fn) == 'function' then
-        return module_fn_or_custom_fn(module)
-      end
-      
-      -- Method name case: call the method on the module with args
-      local module_fn = module[module_fn_or_custom_fn]
-      
-      if not module_fn then
-        error('Function ' .. tostring(module_fn_or_custom_fn) .. ' not found in module ' .. fn_or_module)
-      end
-      
-      return module_fn(unpack(args))
-    end
-  end
-end
-
--- Helper for command strings with <CR>
-function M.cmd(command)
-  return '<cmd>' .. command .. "<cr>"
+function M.edit(spec)
+  spec.mode = { 'n', 'x' }
+  return make_spec(spec)
 end
 
 -- Helper functions

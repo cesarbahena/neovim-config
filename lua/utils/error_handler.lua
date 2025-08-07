@@ -1,5 +1,3 @@
-local get_or_create = require 'utils'.get_or_create
-
 local M = {}
 
 -- Transform an error string to an structured error
@@ -45,7 +43,7 @@ function Try.new(fn, ...)
 
   local args = { ... }
   self.ok = xpcall(
-    function() self.value = fn(unpack(args)) end, 
+    function() self.value = fn(unpack(args)) end,
     function(err)
       local first_line, details = M.split_error_message(err)
       local _, traceback = M.split_error_message(debug.traceback("", 2))
@@ -63,7 +61,7 @@ end
 function Try:catch(handler)
   if self.ok then return self end
   if type(handler) == "string" then
-    table.insert(get_or_create('Errors.' .. handler), self.error) 
+    table.insert(global('Errors.' .. handler), self.error)
   elseif type(handler) == "function" then
     handler(self.error)
   end
