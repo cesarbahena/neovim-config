@@ -70,18 +70,45 @@ local function go_to_last_argument_and_add_comma(call_node)
 
   if last_arg then
     local end_row, end_col = last_arg:end_()
+    local start_row = args_node:start()
+    local is_multiline = end_row > start_row
+
     vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col })
 
     local line = vim.api.nvim_get_current_line()
-    local last_char = line:sub(end_col, end_col)
-    if last_char ~= ',' then
-      -- Enter insert mode and insert the comma and space
-      vim.cmd 'startinsert'
-      vim.api.nvim_feedkeys(', ', 'n', false)
+    local after_arg = line:sub(end_col + 1, end_col + 1)
+    if after_arg ~= ',' then
+      if is_multiline then
+        -- Add comma and open new indented line for multiline
+        vim.api.nvim_feedkeys(',', 'n', false)
+        vim.cmd 'normal! o'
+        vim.cmd 'normal! =='
+        vim.defer_fn(function()
+          local indent_level = vim.fn.indent(vim.fn.line('.') - 1)
+          vim.api.nvim_set_current_line(string.rep(' ', indent_level))
+          vim.cmd 'startinsert!'
+        end, 10)
+      else
+        -- Enter insert mode and insert comma and space
+        vim.cmd 'startinsert'
+        vim.api.nvim_feedkeys(', ', 'n', false)
+      end
     else
-      -- There's already a comma, position cursor on it and use append mode
-      vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col })
-      vim.cmd 'startinsert!'
+      -- There's already a comma
+      if is_multiline then
+        -- Move to end of line and open new indented line
+        vim.cmd 'normal! o'
+        vim.cmd 'normal! =='
+        vim.defer_fn(function()
+          local indent_level = vim.fn.indent(vim.fn.line('.') - 1)
+          vim.api.nvim_set_current_line(string.rep(' ', indent_level))
+          vim.cmd 'startinsert!'
+        end, 10)
+      else
+        -- Position cursor after comma and use append mode
+        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col + 1 })
+        vim.cmd 'startinsert'
+      end
     end
   else
     local start_row, start_col = args_node:start()
@@ -106,9 +133,7 @@ end
 function M.clean_exit()
   vim.cmd 'stopinsert'
   vim.defer_fn(function()
-    if vim.fn.getreg '.' == ', ' then
-      vim.cmd 'undo'
-    end
+    if vim.fn.getreg '.' == ', ' then vim.cmd 'undo' end
   end, 10)
 end
 
