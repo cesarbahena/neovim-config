@@ -73,22 +73,15 @@ local function go_to_last_argument_and_add_comma(call_node)
     vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col })
 
     local line = vim.api.nvim_get_current_line()
-    local after_arg = line:sub(end_col + 1, end_col + 1)
-    if after_arg ~= ',' then
-      -- No comma after the argument, add comma and space
+    local last_char = line:sub(end_col, end_col)
+    if last_char ~= ',' then
+      -- Enter insert mode and insert the comma and space
       vim.cmd 'startinsert'
       vim.api.nvim_feedkeys(', ', 'n', false)
     else
-      -- There's already a comma after the argument, position cursor after it
-      local after_comma = line:sub(end_col + 2, end_col + 2)
-      if after_comma == ' ' then
-        -- Position cursor after comma and space
-        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col + 2 })
-      else
-        -- Position cursor after comma
-        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col + 1 })
-      end
-      vim.cmd 'startinsert'
+      -- There's already a comma, position cursor on it and use append mode
+      vim.api.nvim_win_set_cursor(0, { end_row + 1, end_col })
+      vim.cmd 'startinsert!'
     end
   else
     local start_row, start_col = args_node:start()
