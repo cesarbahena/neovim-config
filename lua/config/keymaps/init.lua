@@ -1,3 +1,4 @@
+require 'config.keymaps.reset'
 local spec_gen = require 'utils.keymap_spec_generator'
 local motion = spec_gen.motion
 local edit = spec_gen.edit

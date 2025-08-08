@@ -26,7 +26,46 @@ return {
       },
     },
     quickfile = { enabled = true },
-    scope = { enabled = true },
+    scope = {
+      enabled = true,
+      config = function(opts, defaults)
+        -- Clear the default jump keys and set our own
+        opts.keys = opts.keys or {}
+        opts.keys.jump = {
+          ['<leader>si'] = {
+            min_size = 1,
+            bottom = false,
+            cursor = false,
+            edge = true,
+            treesitter = { blocks = { enabled = false } },
+            desc = 'jump to top edge of scope',
+          },
+          ['<leader>sI'] = {
+            min_size = 1,
+            bottom = true,
+            cursor = false,
+            edge = true,
+            treesitter = { blocks = { enabled = false } },
+            desc = 'jump to bottom edge of scope',
+          },
+        }
+        opts.keys.textobject = {
+          ii = {
+            min_size = 2,
+            edge = false,
+            cursor = false,
+            treesitter = { blocks = { enabled = false } },
+            desc = 'inner scope',
+          },
+          ai = {
+            cursor = false,
+            min_size = 2,
+            treesitter = { blocks = { enabled = false } },
+            desc = 'full scope',
+          },
+        }
+      end,
+    },
     statuscolumn = { enabled = true },
     words = { enabled = true },
     styles = {
@@ -99,15 +138,13 @@ return {
     { '<leader>.', function() Snacks.scratch() end, desc = 'Toggle Scratch Buffer' },
     { '<leader>S', function() Snacks.scratch.select() end, desc = 'Select Scratch Buffer' },
     { '<leader>n', function() Snacks.notifier.show_history() end, desc = 'Notification History' },
-    { '<leader>bd', function() Snacks.bufdelete() end, desc = 'Delete Buffer' },
+    { 'bd', function() Snacks.bufdelete() end, desc = 'Delete Buffer' },
     { '<leader>cR', function() Snacks.rename.rename_file() end, desc = 'Rename File' },
     { '<leader>gB', function() Snacks.gitbrowse() end, desc = 'Git Browse', mode = { 'n', 'v' } },
     { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazygit' },
     { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications' },
     { '<c-/>', function() Snacks.terminal() end, desc = 'Toggle Terminal' },
     { '<c-_>', function() Snacks.terminal() end, desc = 'which_key_ignore' },
-    { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' } },
-    { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' } },
     {
       '<leader>N',
       desc = 'Neovim News',

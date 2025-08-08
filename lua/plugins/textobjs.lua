@@ -89,27 +89,27 @@ return {
       }
     end,
 
-    keys = function()
-      local keys = {}
-
-      for key, spec in pairs(textobjs) do
-        table.insert(keys, {
-          (']%s'):format(key),
-          ('van%s<Esc>'):format(key),
-          desc = ('Next %s'):format(spec.desc),
-          remap = true,
-        })
-
-        table.insert(keys, {
-          ('[%s'):format(key),
-          ('val%s<Esc>'):format(key),
-          desc = ('Previous %s'):format(spec.desc),
-          remap = true,
-        })
-      end
-
-      return keys
-    end,
+    -- keys = function()
+    --   local keys = {}
+    --
+    --   for key, spec in pairs(textobjs) do
+    --     table.insert(keys, {
+    --       (']%s'):format(key),
+    --       ('van%s<Esc>'):format(key),
+    --       desc = ('Next %s'):format(spec.desc),
+    --       remap = true,
+    --     })
+    --
+    --     table.insert(keys, {
+    --       ('[%s'):format(key),
+    --       ('val%s<Esc>'):format(key),
+    --       desc = ('Previous %s'):format(spec.desc),
+    --       remap = true,
+    --     })
+    --   end
+    --
+    --   return keys
+    -- end,
   },
 
   {
