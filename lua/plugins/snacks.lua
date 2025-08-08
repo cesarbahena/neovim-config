@@ -26,46 +26,6 @@ return {
       },
     },
     quickfile = { enabled = true },
-    scope = {
-      enabled = true,
-      config = function(opts, defaults)
-        -- Clear the default jump keys and set our own
-        opts.keys = opts.keys or {}
-        opts.keys.jump = {
-          ['<leader>si'] = {
-            min_size = 1,
-            bottom = false,
-            cursor = false,
-            edge = true,
-            treesitter = { blocks = { enabled = false } },
-            desc = 'jump to top edge of scope',
-          },
-          ['<leader>sI'] = {
-            min_size = 1,
-            bottom = true,
-            cursor = false,
-            edge = true,
-            treesitter = { blocks = { enabled = false } },
-            desc = 'jump to bottom edge of scope',
-          },
-        }
-        opts.keys.textobject = {
-          ii = {
-            min_size = 2,
-            edge = false,
-            cursor = false,
-            treesitter = { blocks = { enabled = false } },
-            desc = 'inner scope',
-          },
-          ai = {
-            cursor = false,
-            min_size = 2,
-            treesitter = { blocks = { enabled = false } },
-            desc = 'full scope',
-          },
-        }
-      end,
-    },
     statuscolumn = { enabled = true },
     words = { enabled = true },
     styles = {
@@ -104,7 +64,7 @@ return {
     -- search
     { '<leader>s"', function() Snacks.picker.registers() end, desc = 'Registers' },
     { '<leader>s/', function() Snacks.picker.seerch_history() end, desc = 'Search History' },
-    { '<leader>sa', function() Snacks.picker.auocmds() end, desc = 'Autocmds' },
+    { '<leader>sa', function() Snacks.picker.autocmds() end, desc = 'Autocmds' },
     { '<leader>sb', function() Snacks.picker.lines() end, desc = 'Buffer Lines' },
     { '<leader>sc', function() Snacks.picker.command_history() end, desc = 'Command History' },
     { '<leader>sC', function() Snacks.picker.commands() end, desc = 'Commands' },
