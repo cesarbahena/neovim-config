@@ -26,7 +26,7 @@ return {
   motion { 'Move right', 'l' },
   motion { 'eoL', '$' },
   motion { 'Next match', 'n' },
-  normal { 'Substitute one', 'r' },
+  normal { 'Replace', 'r' },
   normal { 'Delete one', [["_x]], details = '(no yank)' },
   normal { 'Find in document', '/' },
   normal { 'Add argument', fn 'actions.treesitter.add_argument' },
@@ -68,6 +68,7 @@ return {
   visual { 'Move line down', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv" },
   visual { 'Move line up', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv" },
   visual { 'Change visual mode', fn 'actions.change_visual_mode', expr = true },
+  visual { 'Visual mode', '<Esc>', details = '(exit)' },
 
   insert { 'Escape to normal mode', fn 'actions.treesitter.clean_exit' },
   insert { 'Move line down', '<esc>' .. cmd 'm .+1' .. '==gi' },
@@ -78,8 +79,6 @@ return {
 
   -- control
   normal { 'Undo jump', '<C-t>' },
-  normal { 'Yes', '<C-i>' },
-  visual { 'Escape to normal mode', '<esc>' },
 
   -- alt
   edit { 'Quit', vim.cmd.q },
@@ -87,5 +86,6 @@ return {
   -- ?
   normal { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   normal { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
-  normal { 'To', fn 'actions.flash_aware_treesitter' },
+  normal { 'To', fn 'actions.to' },
+  normal { 'back To', fn 'actions.back_to' },
 }
