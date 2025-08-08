@@ -33,21 +33,57 @@ function M.toggle_macro_recording()
   end
 end
 
-function M.flash_aware_treesitter()
+function M.to()
   local flash = require 'flash'
   local flash_char = require 'flash.plugins.char'
 
-  if flash_char.visible() then
-    -- Manually trigger what happens when 't' is pressed while flash is active
+  local function handle_state(action, hide)
     flash_char.jumping = true
-    local autohide = require('flash.config').get('char').autohide
-    flash_char.jump 't'
+    local autohide = hide and require('flash.config').get('char').autohide
+
+    action()
+
     vim.schedule(function()
       flash_char.jumping = false
-      if flash_char.state and autohide then flash_char.state:hide() end
+      if hide and flash_char.state and autohide then flash_char.state:hide() end
     end)
+  end
+
+  if flash_char.visible() then
+    if flash_char.motion == 'f' or flash_char.motion == 'F' then
+      handle_state(flash_char.next, false)
+    else -- 't' or 'T' motions should repeat action
+      handle_state(function() vim.cmd 'normal! .' end, true)
+    end
   else
-    flash.treesitter()
+    handle_state(function() flash_char.jump 'f' end, true)
+  end
+end
+
+function M.back_to()
+  local flash = require 'flash'
+  local flash_char = require 'flash.plugins.char'
+
+  local function handle_state(action, hide)
+    flash_char.jumping = true
+    local autohide = hide and require('flash.config').get('char').autohide
+
+    action()
+
+    vim.schedule(function()
+      flash_char.jumping = false
+      if hide and flash_char.state and autohide then flash_char.state:hide() end
+    end)
+  end
+
+  if flash_char.visible() then
+    if flash_char.motion == 'F' or flash_char.motion == 'f' then
+      handle_state(flash_char.prev, false)
+    else -- 'T' or 't' motions should repeat action
+      handle_state(function() vim.cmd 'normal! .' end, true)
+    end
+  else
+    handle_state(function() flash_char.jump 'F' end, true)
   end
 end
 

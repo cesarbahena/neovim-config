@@ -21,7 +21,7 @@ local textobjs = {
     treesitter = true,
     { a = '@block.outer', i = '@block.inner' },
   },
-  n = {
+  ['<C-a>'] = {
     desc = 'Number',
     treesitter = true,
     { a = '@number.inner', i = '@number.inner' },
@@ -170,7 +170,8 @@ return {
         VTO:format [[lineCharacterwise 'outer']],
         mode = { 'o', 'x' },
       },
-      { desc = 'Column', '|', VTO:format [[column()]], mode = { 'o', 'x' } },
+      { desc = 'Rest of column', 'i<c-v>', VTO:format [[column('down')]], mode = { 'o', 'x' } },
+      { desc = 'Column', 'a<c-v>', VTO:format [[column('both')]], mode = { 'o', 'x' } },
       { desc = 'Value', 'iv', VTO:format [[value 'inner']], mode = { 'o', 'x' } },
       { desc = 'Value and trailing comma or semicolon', 'av', VTO:format [[value 'outer']], mode = { 'o', 'x' } },
       { desc = 'Variable', 'iV', VTO:format [[key 'inner']], mode = { 'o', 'x' } },
@@ -186,6 +187,8 @@ return {
       { desc = 'Last change', 'ie', VTO:format [[lastChange()]], mode = { 'o', 'x' } },
       { desc = 'Last change', 'ae', VTO:format [[lastChange()]], mode = { 'o', 'x' } },
       { desc = 'Emoji', '.', VTO:format [[emoji()]], mode = { 'o', 'x' } },
+      { desc = 'Natural number', 'i<c-a>', VTO:format [[number 'inner']], mode = { 'o', 'x' } },
+      { desc = 'Real number', 'a<c-a>', VTO:format [[number 'outer']], mode = { 'o', 'x' } },
       { desc = 'Filepath', 'iF', VTO:format [[filepath 'inner']], mode = { 'o', 'x' } },
       { desc = 'Filepath', 'aF', VTO:format [[filepath 'outer']], mode = { 'o', 'x' } },
       { desc = 'Color (value only)', 'i#', VTO:format [[color 'inner']], mode = { 'o', 'x' } },

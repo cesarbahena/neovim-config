@@ -22,7 +22,7 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          node_incremental = 'v',
+          node_incremental = false,
           scope_incremental = 'U',
           node_decremental = 'u',
         },
