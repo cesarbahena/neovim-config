@@ -84,7 +84,7 @@ local function go_to_last_argument_and_add_comma(call_node)
         vim.cmd 'normal! o'
         vim.cmd 'normal! =='
         vim.defer_fn(function()
-          local indent_level = vim.fn.indent(vim.fn.line('.') - 1)
+          local indent_level = vim.fn.indent(vim.fn.line '.' - 1)
           vim.api.nvim_set_current_line(string.rep(' ', indent_level))
           vim.cmd 'startinsert!'
         end, 10)
@@ -100,7 +100,7 @@ local function go_to_last_argument_and_add_comma(call_node)
         vim.cmd 'normal! o'
         vim.cmd 'normal! =='
         vim.defer_fn(function()
-          local indent_level = vim.fn.indent(vim.fn.line('.') - 1)
+          local indent_level = vim.fn.indent(vim.fn.line '.' - 1)
           vim.api.nvim_set_current_line(string.rep(' ', indent_level))
           vim.cmd 'startinsert!'
         end, 10)
