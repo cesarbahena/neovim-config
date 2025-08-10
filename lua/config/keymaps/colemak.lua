@@ -37,6 +37,8 @@ return {
     cd = 'Code Definition',
     x = 'Next dx',
     X = 'Prev dx',
+    gh = 'Next Hunk',
+    gk = 'Prev hunK',
 
     -- nx
     s = 'Substitute',
@@ -82,6 +84,7 @@ return {
     y = 'Yes',
   },
   leader = {
+    ['<F9>'] = 'Hello',
     w = 'Harpoon 1',
     f = 'Harpoon 2',
     p = 'Harpoon 3',
