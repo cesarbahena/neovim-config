@@ -1,24 +1,5 @@
 return {
   {
-    'echasnovski/mini.pairs',
-    event = 'VeryLazy',
-    opts = {
-      modes = { insert = true, command = true, terminal = false },
-      skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-      skip_unbalanced = true,
-    },
-  },
-  {
-    'numToStr/Comment.nvim',
-    event = 'VeryLazy',
-    opts = {
-      toggler = { line = 'C', block = 'gC' },
-      opleader = { line = 'c', block = 'gc' },
-      extra = { above = 'cL', below = 'cl', eol = 'cc' },
-      mappings = { basic = true, extra = true },
-    },
-  },
-  {
     'echasnovski/mini.surround',
     opts = {
       respect_selection_type = false,

@@ -18,6 +18,62 @@ function M.cmd(command)
 end
 
 function M.fn(fn_or_module_path, ...)
+  -- Table case: conditional or try/catch
+  if type(fn_or_module_path) == 'table' then
+    local args = { ... }
+    
+    -- Conditional table: { cond = condition, [1] = fn, fallback = fn }
+    if fn_or_module_path['cond'] and fn_or_module_path[1] then
+      return function()
+        local condition = fn_or_module_path['cond']
+        local condition_result = false
+        
+        -- Evaluate condition
+        if type(condition) == 'string' then
+          -- Path to boolean value
+          local current = _G
+          for part in string.gmatch(condition, "[^%.]+") do
+            current = current[part]
+            if current == nil then
+              condition_result = false
+              break
+            end
+          end
+          condition_result = not not current
+        elseif type(condition) == 'boolean' then
+          condition_result = condition
+        end
+        
+        local target_fn = condition_result and fn_or_module_path[1] or fn_or_module_path['fallback']
+        if not target_fn then
+          return nil
+        end
+        
+        -- Execute the selected function
+        return M.fn(target_fn, unpack(args))()
+      end
+    end
+    
+    -- Try/catch table: { [1] = fn, fallback = fn }
+    if fn_or_module_path[1] then
+      return function()
+        local success, result = pcall(function()
+          return M.fn(fn_or_module_path[1], unpack(args))()
+        end)
+        
+        if success then
+          return result
+        elseif fn_or_module_path['fallback'] then
+          return M.fn(fn_or_module_path['fallback'], unpack(args))()
+        else
+          error(result)
+        end
+      end
+    end
+    
+    error('Invalid table format. Expected { cond = condition, [1] = fn, fallback = fn } or { [1] = fn, fallback = fn }')
+  end
+
   -- Direct function case: wrap it with args
   if type(fn_or_module_path) == 'function' then
     local args = { ... }
@@ -28,7 +84,7 @@ function M.fn(fn_or_module_path, ...)
 
   -- Module.function path case
   if type(fn_or_module_path) ~= 'string' then
-    error('Expected function or string, got ' .. type(fn_or_module_path))
+    error('Expected function, string, or table, got ' .. type(fn_or_module_path))
   end
 
   -- Parse module.function path
