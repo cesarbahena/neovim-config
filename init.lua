@@ -1,11 +1,12 @@
-vim.g.mapleader = ' '
-
--- Check for backup mode via environment variable
-if os.getenv 'NVIM_BACKUP_MODE' then
-  local backup_root = vim.fn.stdpath 'config' .. '/lua/backup'
-  package.path = backup_root .. '/lua/?.lua;' .. backup_root .. '/lua/?/init.lua;' .. package.path
-  vim.notify('Backup mode enabled', vim.log.levels.WARN)
+-- Check for backup mode FIRST - before ANYTHING else
+if os.getenv('NVIM_BACKUP_MODE') then
+  print("=== BACKUP MODE ACTIVATED ===")
+  local backup_root = vim.fn.stdpath('config') .. '/lua/backup'
+  package.path = backup_root .. '/?.lua;' .. backup_root .. '/?/init.lua;' .. package.path
+  print("Backup path set: " .. backup_root)
 end
+
+vim.g.mapleader = ' '
 
 -- Setup global variables and functions first
 require('globals').setup()
