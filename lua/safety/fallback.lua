@@ -27,8 +27,8 @@ function M.load_backup_config()
   -- Prepend backup paths so require() finds modules in backup/ first
   package.path = backup_path .. '/?.lua;' .. backup_path .. '/?/init.lua;' .. package.path
 
-  -- Set global flag to indicate backup mode
-  _G.NVIM_BACKUP_MODE = true
+  -- Set safety mode to backup
+  _G.SAFETY.mode = 'backup'
 
   -- Clear any problematic modules from cache first
   for module_name, _ in pairs(package.loaded) do
@@ -77,7 +77,7 @@ function M.handle_critical_failure(errors)
     M.load_backup_config()
   else
     -- Mark that we've already shown the error summary
-    _G.NVIM_ERROR_SUMMARY_SHOWN = true
+    _G.SAFETY.summary_shown = true
     require('safety.interface').show_error_summary(errors)
   end
 end

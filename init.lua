@@ -1,9 +1,16 @@
+-- Initialize safety system
+_G.SAFETY = _G.SAFETY or {
+  mode = 'normal',        -- 'normal', 'backup', 'emergency'
+  initialized = false,
+  summary_shown = false,
+}
+
 -- Prevent multiple executions
-if _G.NVIM_INIT_EXECUTED then
+if _G.SAFETY.initialized then
   print("DEBUG: init.lua already executed, skipping")
   return
 end
-_G.NVIM_INIT_EXECUTED = true
+_G.SAFETY.initialized = true
 
 vim.g.mapleader = ' '
 
@@ -107,11 +114,11 @@ print("DEBUG: init_ok =", init_ok, "init_result =", init_result)
 
 if not init_ok then
   print("DEBUG: Taking CRITICAL FAILURE path")
-  -- Only trigger backup if not already in backup mode
-  if not _G.NVIM_BACKUP_MODE then
+  -- Only trigger backup if not already in safety mode
+  if _G.SAFETY.mode == 'normal' then
     vim.schedule(function() require('safety.fallback').handle_critical_failure(get_all_errors()) end)
   else
-    vim.notify('Backup configuration failed - using emergency settings', vim.log.levels.ERROR)
+    vim.notify('Safety configuration failed - using emergency settings', vim.log.levels.ERROR)
   end
 else
   print("DEBUG: Taking SUCCESS path")
@@ -121,17 +128,17 @@ else
     print("DEBUG: all_errors count =", #all_errors)
     
     if #all_errors > 0 then
-      -- Don't show error interface in backup mode - backup is expected to have same errors
-      if _G.NVIM_BACKUP_MODE then
-        print("DEBUG: In backup mode, skipping error summary")
-        vim.notify('Backup configuration loaded with errors (expected)', vim.log.levels.WARN)
-      else
+      -- Don't show error interface in safety mode - backup is expected to have same errors
+      if _G.SAFETY.mode ~= 'normal' then
+        print("DEBUG: In safety mode, skipping error summary")
+        vim.notify('Safety configuration loaded with errors (expected)', vim.log.levels.WARN)
+      elseif not _G.SAFETY.summary_shown then
         print("DEBUG: About to call show_error_summary")
-        -- Errors exist but init didn't fail - show interface directly (don't go through fallback)
+        _G.SAFETY.summary_shown = true
         require('safety.interface').show_error_summary(all_errors)
       end
     else
-      local mode_text = _G.NVIM_BACKUP_MODE and ' (backup mode)' or ''
+      local mode_text = _G.SAFETY.mode ~= 'normal' and (' (' .. _G.SAFETY.mode .. ' mode)') or ''
       vim.notify('✓ Configuration loaded successfully!' .. mode_text, vim.log.levels.INFO)
     end
   end)
