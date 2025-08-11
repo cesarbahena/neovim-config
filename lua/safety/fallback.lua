@@ -76,6 +76,8 @@ function M.handle_critical_failure(errors)
   if prefs.auto_fallback then
     M.load_backup_config()
   else
+    -- Mark that we've already shown the error summary
+    _G.NVIM_ERROR_SUMMARY_SHOWN = true
     require('safety.interface').show_error_summary(errors)
   end
 end

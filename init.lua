@@ -1,3 +1,10 @@
+-- Prevent multiple executions
+if _G.NVIM_INIT_EXECUTED then
+  print("DEBUG: init.lua already executed, skipping")
+  return
+end
+_G.NVIM_INIT_EXECUTED = true
+
 vim.g.mapleader = ' '
 
 -- Setup global variables and functions
@@ -15,20 +22,26 @@ local safety = {
   backup_path = vim.fn.stdpath 'config' .. '/backup',
 }
 
--- Get all errors from try function's error storage
+-- Get all errors from try function's error storage (deduplicated)
 local function get_all_errors()
   local all_errors = {}
+  local seen = {} -- Track unique errors by module+message
+  
   for category, errors in pairs(_G.Errors or {}) do
     for _, error in ipairs(errors) do
-      table.insert(all_errors, {
-        category = category,
-        module = error.module,
-        error = error.message,
-        severity = error.category == 'syntax_error' and 'CRITICAL' or 'ERROR',
-        timestamp = error.time,
-        line = error.line,
-        traceback = error.traceback,
-      })
+      local key = error.module .. ':' .. error.message
+      if not seen[key] then
+        seen[key] = true
+        table.insert(all_errors, {
+          category = category,
+          module = error.module,
+          error = error.message,
+          severity = error.category == 'syntax_error' and 'CRITICAL' or 'ERROR',
+          timestamp = error.time,
+          line = error.line,
+          traceback = error.traceback,
+        })
+      end
     end
   end
   return all_errors
@@ -75,7 +88,6 @@ local function main_init()
     'core.package_manager',
   }, false)
 
-  try(require, 'core.options'):catch 'Options'
   -- Core configuration (critical)
   local core_success, core_count = load_config_level('core', {
     'core.options',
@@ -88,20 +100,39 @@ local function main_init()
   return true, 'Configuration loaded successfully'
 end
 
--- Execute main configuration with ultimate fallback protection
+-- Execute main configuration with ultimate fallback protection  
 local init_ok, init_result = pcall(main_init)
 
+print("DEBUG: init_ok =", init_ok, "init_result =", init_result)
+
 if not init_ok then
-  track_error('main_init', init_result, 'CRITICAL')
-  vim.schedule(function() require('safety.fallback').handle_critical_failure(safety.errors) end)
+  print("DEBUG: Taking CRITICAL FAILURE path")
+  -- Only trigger backup if not already in backup mode
+  if not _G.NVIM_BACKUP_MODE then
+    vim.schedule(function() require('safety.fallback').handle_critical_failure(get_all_errors()) end)
+  else
+    vim.notify('Backup configuration failed - using emergency settings', vim.log.levels.ERROR)
+  end
 else
+  print("DEBUG: Taking SUCCESS path")
   -- Schedule success notification and error summary  
   vim.schedule(function()
     local all_errors = get_all_errors()
+    print("DEBUG: all_errors count =", #all_errors)
+    
     if #all_errors > 0 then
-      require('safety.interface').show_error_summary(all_errors)
+      -- Don't show error interface in backup mode - backup is expected to have same errors
+      if _G.NVIM_BACKUP_MODE then
+        print("DEBUG: In backup mode, skipping error summary")
+        vim.notify('Backup configuration loaded with errors (expected)', vim.log.levels.WARN)
+      else
+        print("DEBUG: About to call show_error_summary")
+        -- Errors exist but init didn't fail - show interface directly (don't go through fallback)
+        require('safety.interface').show_error_summary(all_errors)
+      end
     else
-      vim.notify('✓ Configuration loaded successfully!', vim.log.levels.INFO)
+      local mode_text = _G.NVIM_BACKUP_MODE and ' (backup mode)' or ''
+      vim.notify('✓ Configuration loaded successfully!' .. mode_text, vim.log.levels.INFO)
     end
   end)
 end

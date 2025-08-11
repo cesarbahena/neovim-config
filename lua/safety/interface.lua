@@ -72,6 +72,7 @@ end
 
 -- Main error summary interface
 function M.show_error_summary(errors)
+  print("DEBUG: show_error_summary called with", #errors, "errors")
   if #errors == 0 then return end
 
   local content = {
@@ -122,22 +123,25 @@ function M.confirm_backup_load()
     prompt = 'Load your backup configuration (lua/backup/init.lua)?',
     format_item = function(item) return '• ' .. item end,
   }, function(choice)
-    if choice and choice:match 'Yes' then require('safety.fallback').load_backup_config() end
+    if choice and choice:match 'Yes' then 
+      -- Clear existing errors before loading backup to avoid duplicates
+      _G.Errors = {}
+      require('safety.fallback').load_backup_config()
+    end
   end)
 end
 
 -- Open files with errors for editing
 function M.open_error_files()
-  local errors = _G.nvim_safety and _G.nvim_safety.errors or {}
-
-  for _, error in ipairs(errors) do
-    if error.severity == 'ERROR' then
-      local module_path = error.module:gsub('%.', '/')
-      local file_path = vim.fn.stdpath 'config' .. '/lua/' .. module_path .. '.lua'
-
-      if vim.fn.filereadable(file_path) == 1 then
-        vim.cmd('edit ' .. file_path)
-        break
+  -- Use _G.Errors from try function instead of old safety.errors
+  for category, errors in pairs(_G.Errors or {}) do
+    for _, error in ipairs(errors) do
+      if error.module and error.line then
+        local file_path = vim.fn.stdpath 'config' .. '/lua/' .. error.module .. '.lua'
+        if vim.fn.filereadable(file_path) == 1 then
+          vim.cmd('edit +' .. error.line .. ' ' .. file_path)
+          return
+        end
       end
     end
   end
@@ -156,28 +160,35 @@ end
 
 -- Show detailed error information
 function M.show_detailed_errors()
-  local errors = _G.nvim_safety and _G.nvim_safety.errors or {}
+  local all_errors = {}
+  for category, errors in pairs(_G.Errors or {}) do
+    for _, error in ipairs(errors) do
+      table.insert(all_errors, error)
+    end
+  end
 
-  if #errors == 0 then
+  if #all_errors == 0 then
     vim.notify('No errors to display', vim.log.levels.INFO)
     return
   end
 
   local content = { 'Detailed Error Information:', '' }
 
-  for i, error in ipairs(errors) do
+  for i, error in ipairs(all_errors) do
     table.insert(content, string.format('=== Error %d ===', i))
-    table.insert(content, 'Module: ' .. error.module)
-    table.insert(content, 'Severity: ' .. error.severity)
-    table.insert(content, 'Time: ' .. error.timestamp)
-    table.insert(content, 'Error Message:')
-
-    -- Split long error messages
-    local lines = vim.split(error.error, '\n')
-    for _, line in ipairs(lines) do
-      table.insert(content, '  ' .. line)
+    table.insert(content, 'Module: ' .. (error.module or 'unknown'))
+    table.insert(content, 'Line: ' .. (error.line or 'unknown'))
+    table.insert(content, 'Category: ' .. (error.category or 'unknown'))
+    table.insert(content, 'Time: ' .. (error.time or 'unknown'))
+    table.insert(content, 'Message: ' .. (error.message or 'unknown'))
+    
+    if error.traceback and #error.traceback > 0 then
+      table.insert(content, 'Traceback:')
+      for _, trace in ipairs(error.traceback) do
+        table.insert(content, '  ' .. trace)
+      end
     end
-
+    
     table.insert(content, '')
   end
 
