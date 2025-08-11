@@ -52,23 +52,33 @@ function M.load_backup_config()
 
   -- Bypass the init guard completely and directly load backup configuration
   local ok, err = pcall(function()
+    print("DEBUG: Starting backup loading with path:", backup_lua_path)
+    
     -- Reset initialization flags to allow backup to run
     _G.SAFETY.initialized = false
     _G.SAFETY.summary_shown = false
     
     -- Clear globals and setup from backup version
+    print("DEBUG: Clearing and reloading globals from backup")
     package.loaded['globals'] = nil
     require('globals').setup()
+    print("DEBUG: Globals reloaded")
     
-    -- Load core backup modules directly using safety core from backup
+    -- Clear safety.core to get backup version
+    print("DEBUG: Clearing safety.core to load backup version")
+    package.loaded['safety.core'] = nil
     local backup_safety_core = require('safety.core')
+    print("DEBUG: Backup safety.core loaded")
     
     -- Load core configurations from backup
+    print("DEBUG: Loading core modules from backup...")
     local success, count = backup_safety_core.load_config_level('core', {
       'core.options',
       'core.keymaps', 
       'core.lsp',
     }, true)
+    
+    print("DEBUG: Backup core loading result:", success, "count:", count)
     
     if not success then
       error('Backup core configuration failed to load')

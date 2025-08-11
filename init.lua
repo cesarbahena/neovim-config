@@ -1,70 +1,71 @@
--- Initialize safety system
-_G.SAFETY = _G.SAFETY or {
-  mode = 'normal',        -- 'normal', 'backup', 'emergency'
-  initialized = false,
-  summary_shown = false,
-}
-
--- Prevent multiple executions
-if _G.SAFETY.initialized then
-  print("DEBUG: init.lua already executed, skipping")
-  return
-end
-_G.SAFETY.initialized = true
-
 vim.g.mapleader = ' '
 
--- Setup global variables and functions
+-- Setup global variables and functions first
 require('globals').setup()
 
--- Run tests for globals
-local globals_test = require 'tests.globals'
-if not globals_test.print_results() then
-  vim.notify('Global tests failed - config may not work properly', vim.log.levels.WARN)
+-- Simple backup loader using try function
+local function load_backup()
+  print("Loading backup configuration...")
+  
+  -- Clear error state
+  _G.Errors = {}
+  
+  -- Set backup mode
+  _G.SAFETY = { mode = 'backup' }
+  
+  -- Modify package path to load from backup
+  local backup_path = vim.fn.stdpath('config') .. '/lua/backup/lua'
+  local original_path = package.path
+  package.path = backup_path .. '/?.lua;' .. backup_path .. '/?/init.lua;' .. package.path
+  
+  -- Clear modules and load from backup using try function
+  local modules = { 'core.options', 'core.keymaps', 'core.lsp' }
+  local loaded = 0
+  
+  for _, module in ipairs(modules) do
+    package.loaded[module] = nil
+    local result = try(require, module):catch('BackupErrors')
+    if result.ok then
+      loaded = loaded + 1
+    end
+  end
+  
+  -- Restore path
+  package.path = original_path
+  
+  print("Backup loaded:", loaded, "modules")
+  return loaded > 0
 end
 
-local safety = {
-  errors = {},
-  config_path = vim.fn.stdpath 'config',
-  backup_path = vim.fn.stdpath 'config' .. '/backup',
-}
+-- Try to load main config first
+local main_result = try(function()
+  return require('core.package_manager') and 
+         require('core.options') and
+         require('core.keymaps') and
+         require('core.lsp')
+end):catch('MainErrors')
 
--- Load safety core system (built around your friend's try function)
-local safety_core = require('safety.core')
-
--- Main configuration loader using your friend's try function
-local function main_init()
-  -- Plugin configuration (important but not critical)
-  local plugin_success = safety_core.load_config_level('plugins', {
-    'core.package_manager',
-  }, false)
-
-  -- Core configuration (critical) - using try function
-  local core_success, core_count = safety_core.load_config_level('core', {
-    'core.options',
-    'core.keymaps', 
-    'core.lsp',
-  }, true)
-
-  if not core_success then return false, 'Critical core configuration failed' end
-
-  return true, 'Configuration loaded successfully'
-end
-
--- Execute main configuration with ultimate fallback protection  
-local init_ok, init_result = pcall(main_init)
-
-print("DEBUG: init_ok =", init_ok, "init_result =", init_result)
-
-if not init_ok then
-  print("DEBUG: Critical failure - activating your friend's safety system")
-  safety_core.handle_critical_failure()
+if not main_result.ok then
+  print("Main config failed, loading backup...")
+  if not load_backup() then
+    print("Backup also failed, using emergency settings")
+    vim.opt.number = true
+    vim.keymap.set('n', '<leader>q', ':q<CR>')
+  end
 else
-  print("DEBUG: Configuration loaded - checking with try function")
-  vim.schedule(function()
-    safety_core.handle_errors()
-  end)
+  print("Main config loaded successfully")
 end
 
--- Global error access for debugging
-_G.nvim_safety = safety
+-- Show errors if any
+vim.schedule(function()
+  local all_errors = {}
+  for category, errors in pairs(_G.Errors or {}) do
+    for _, error in ipairs(errors) do
+      table.insert(all_errors, error.module .. ': ' .. error.message)
+    end
+  end
+  
+  if #all_errors > 0 then
+    vim.notify(table.concat(all_errors, '\n'), vim.log.levels.WARN)
+  end
+end)
