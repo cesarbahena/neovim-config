@@ -1,17 +1,6 @@
-require 'config.keymaps.reset'
-local spec_gen = require 'utils.keymap_spec_generator'
-local motion = spec_gen.motion
-local edit = spec_gen.edit
-local normal = spec_gen.normal
-local visual = spec_gen.visual
-local insert = spec_gen.insert
-local command = spec_gen.command
+require 'core.keymaps.reset'
 
-local utils = require 'utils'
-local cmd = utils.cmd
-local fn = utils.fn
-
-return {
+keymap {
   motion { 'Next line', "v:count == 0 ? 'gj' : 'j'", expr = true, silent = true },
   motion { 'Next page', '<C-d>zz' },
   motion { 'prEv line', "v:count == 0 ? 'gk' : 'k'", expr = true, silent = true },

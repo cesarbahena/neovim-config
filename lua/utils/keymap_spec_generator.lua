@@ -1,16 +1,14 @@
 local M = {}
 
-local key_descriptions = require('config.keymaps.' .. _G.KeyboardLayout)
+local key_descriptions = require('core.keymaps.' .. _G.KeyboardLayout)
 
 -- Helper function to normalize description for lookup
-local function normalize_desc(desc)
-  return desc:lower():gsub('[%s%-_%*]', '')
-end
+local function normalize_desc(desc) return desc:lower():gsub('[%s%-_%*]', '') end
 
 -- Helper function to build key string from category and key
 local function build_key(category, key)
   if category == 'keys' then
-    return key  -- Use key as-is
+    return key -- Use key as-is
   elseif category == 'control' then
     return '<c-' .. key .. '>'
   elseif category == 'alt' then
@@ -33,29 +31,29 @@ for category, keys in pairs(key_descriptions) do
       local normalized = normalize_desc(desc_or_table)
       if description_to_key[normalized] then
         error(
-          'Duplicate description found: "' 
-          .. desc_or_table 
-          .. '" normalizes to "' 
-          .. normalized 
-          .. '" which conflicts with existing key "' 
-          .. description_to_key[normalized] 
-          .. '"'
+          'Duplicate description found: "'
+            .. desc_or_table
+            .. '" normalizes to "'
+            .. normalized
+            .. '" which conflicts with existing key "'
+            .. description_to_key[normalized]
+            .. '"'
         )
       end
       description_to_key[normalized] = full_key
-
     elseif type(desc_or_table) == 'table' then
       -- Multiple descriptions - add each to lookup
       for _, desc in pairs(desc_or_table) do
         local normalized = normalize_desc(desc)
         if description_to_key[normalized] then
           error(
-            'Duplicate description found: "' 
-            .. desc 
-            .. '" normalizes to "' 
-            .. normalized 
-            .. '" which conflicts with existing key "' 
-            .. description_to_key[normalized] .. '"'
+            'Duplicate description found: "'
+              .. desc
+              .. '" normalizes to "'
+              .. normalized
+              .. '" which conflicts with existing key "'
+              .. description_to_key[normalized]
+              .. '"'
           )
         end
         description_to_key[normalized] = full_key
@@ -81,16 +79,14 @@ local function make_spec(spec)
   local normalized = normalize_desc(spec[1])
 
   local lhs = description_to_key[normalized]
-  if not lhs then
-    error('No key found for description: ' .. spec[1])
-  end
+  if not lhs then error('No key found for description: ' .. spec[1]) end
 
   spec.desc = spec[1]
   spec[1] = lhs
 
   if not spec.details then return spec end
 
-  local separator = spec.details:match('^,') and '' or ' '
+  local separator = spec.details:match '^,' and '' or ' '
   spec.desc = spec.desc .. separator .. spec.details
   spec.details = nil
 
@@ -145,18 +141,12 @@ function M.edit(spec)
 end
 
 -- Helper functions
-function M.get_key(desc)
-  return description_to_key[desc]
-end
+function M.get_key(desc) return description_to_key[desc] end
 
-function M.get_description(key)
-  return key_descriptions[key]
-end
+function M.get_description(key) return key_descriptions[key] end
 
 function M.add_key_mapping(category, key, desc)
-  if not key_descriptions[category] then
-    key_descriptions[category] = {}
-  end
+  if not key_descriptions[category] then key_descriptions[category] = {} end
   key_descriptions[category][key] = desc
   rebuild_lookup()
 end
