@@ -22,10 +22,10 @@ return {
           'edit',
           'fn',
           'cmd',
+          'global',
           'Snacks',
         },
       },
     },
   },
 }
-

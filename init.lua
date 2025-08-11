@@ -87,6 +87,7 @@ local function main_init()
     'core.package_manager',
   }, false)
 
+  try(require, 'core.options'):catch 'Options'
   -- Core configuration (critical)
   local core_success, core_count = load_config_level('core', {
     'core.options',
