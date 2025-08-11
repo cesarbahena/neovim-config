@@ -31,11 +31,7 @@ end
 
 ---Clear saved errors file
 local function clear_saved_errors()
-  local file = io.open(error_file, 'w')
-  if file then
-    file:write('[]')
-    file:close()
-  end
+  os.remove(error_file)
 end
 
 ---Enable safe mode by prepending backup to path
@@ -55,7 +51,7 @@ end
 function M.check_startup_errors()
   local previous_errors = load_previous_errors()
   
-  if previous_errors and #previous_errors > 0 then
+  if previous_errors and type(previous_errors) == 'table' and #previous_errors > 0 then
     local error_count = #previous_errors
     local choice = vim.fn.confirm(
       'Previous session had ' .. error_count .. ' error(s). Start in safe mode?',

@@ -1,7 +1,7 @@
 require 'core.keymaps.reset'
 
 keymap {
-  motion { 'Next line', "v:count == 0 ? 'gj' : 'j'", expr = true, silent = true },
+  otion { 'Next line', "v:count == 0 ? 'gj' : 'j'", expr = true, silent = true },
   motion { 'Next page', '<C-d>zz' },
   motion { 'prEv line', "v:count == 0 ? 'gk' : 'k'", expr = true, silent = true },
   motion { 'prEv page', '<C-u>zz' },
