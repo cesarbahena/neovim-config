@@ -1,7 +1,5 @@
 local M = {}
 
-M.backup_module = 'backup.init' -- Your backup config at lua/backup/init.lua
-
 -- Check if backup config exists
 function M.backup_exists()
   local backup_path = vim.fn.stdpath 'config' .. '/lua/backup/init.lua'
@@ -18,44 +16,83 @@ function M.load_backup_config()
 
   vim.notify('Loading Vimotee\'s backup configuration...', vim.log.levels.INFO)
 
-  -- Backup configuration that loads nested modules correctly
-
-  -- Modify package.path to make backup directory act like root
-  local backup_path = vim.fn.stdpath 'config' .. '/lua/backup/lua'
-  local original_path = package.path
-
-  -- Prepend backup paths so require() finds modules in backup/ first
-  package.path = backup_path .. '/?.lua;' .. backup_path .. '/?/init.lua;' .. package.path
-
-  -- Set safety mode to backup
+  -- Set safety mode to backup first
   _G.SAFETY.mode = 'backup'
+  _G.SAFETY.backup_active = true
 
-  -- Clear any problematic modules from cache first
+  -- Clear ALL potentially problematic modules from cache
+  local modules_to_clear = {}
   for module_name, _ in pairs(package.loaded) do
-    if module_name:match '^core%.' or module_name:match '^plugins%.' or module_name:match '^ui%.' then
-      package.loaded[module_name] = nil
+    -- Clear all user modules except safety system itself
+    if not module_name:match '^safety%.' and 
+       not module_name:match '^vim%.' and 
+       not module_name:match '^luv$' and
+       not module_name == 'globals' then
+      table.insert(modules_to_clear, module_name)
     end
   end
+  
+  -- Clear modules 
+  for _, module_name in ipairs(modules_to_clear) do
+    package.loaded[module_name] = nil
+  end
 
-  -- Temporarily allow backup to initialize (bypass guard)
-  local backup_was_initialized = _G.SAFETY.initialized
-  _G.SAFETY.initialized = false
+  -- Clear error state before loading backup
+  _G.Errors = {}
+
+  -- Modify package.path to prioritize backup directory structure
+  local config_path = vim.fn.stdpath 'config'
+  local backup_lua_path = config_path .. '/lua/backup/lua'
+  local original_path = package.path
+
+  -- Prepend backup paths so require() finds modules in backup/lua/ first
+  package.path = backup_lua_path .. '/?.lua;' .. 
+                backup_lua_path .. '/?/init.lua;' .. 
+                package.path
+
+  -- Bypass the init guard completely and directly load backup configuration
+  local ok, err = pcall(function()
+    -- Reset initialization flags to allow backup to run
+    _G.SAFETY.initialized = false
+    _G.SAFETY.summary_shown = false
+    
+    -- Clear globals and setup from backup version
+    package.loaded['globals'] = nil
+    require('globals').setup()
+    
+    -- Load core backup modules directly using safety core from backup
+    local backup_safety_core = require('safety.core')
+    
+    -- Load core configurations from backup
+    local success, count = backup_safety_core.load_config_level('core', {
+      'core.options',
+      'core.keymaps', 
+      'core.lsp',
+    }, true)
+    
+    if not success then
+      error('Backup core configuration failed to load')
+    end
+    
+    return true
+  end)
+
+  -- Restore original package.path
+  package.path = original_path
   
-  -- Load backup.init directly (let it handle everything)
-  local ok, err = pcall(require, M.backup_module)
-  
-  -- Restore initialization state
-  _G.SAFETY.initialized = backup_was_initialized
+  -- Set backup mode after successful load
+  if ok then
+    _G.SAFETY.mode = 'backup'
+    _G.SAFETY.backup_active = true
+  end
 
   if not ok then
-    vim.notify('Vimotee\'s backup config failed to load: ' .. err, vim.log.levels.ERROR)
+    vim.notify('Vimotee\'s backup config failed to load: ' .. tostring(err), vim.log.levels.ERROR)
     M.apply_emergency_settings()
   else
     vim.notify('✓ Vimotee\'s backup configuration loaded successfully', vim.log.levels.INFO)
+    vim.notify('✓ Backup modules active - keymaps and options restored', vim.log.levels.INFO)
   end
-
-  -- Restore original package.path when done
-  package.path = original_path
 end
 
 -- Ultimate emergency fallback

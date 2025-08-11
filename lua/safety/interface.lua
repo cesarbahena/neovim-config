@@ -126,6 +126,9 @@ function M.confirm_backup_load()
     if choice and choice:match 'Yes' then 
       -- Clear existing errors before loading backup to avoid duplicates
       _G.Errors = {}
+      _G.SAFETY.summary_shown = false
+      
+      -- Load backup config which handles all module reloading
       require('safety.fallback').load_backup_config()
     end
   end)
@@ -150,12 +153,44 @@ end
 -- Retry loading failed modules
 function M.retry_failed_modules()
   vim.notify('Retrying failed modules...', vim.log.levels.INFO)
-  -- Clear module cache and retry
+  
+  -- Clear error state
+  _G.Errors = {}
+  
+  -- Clear problematic modules from cache
+  local modules_to_clear = {}
   for module_name, _ in pairs(package.loaded) do
-    if module_name:match '^core%.' or module_name:match '^plugins%.' then package.loaded[module_name] = nil end
+    if module_name:match '^core%.' or 
+       module_name:match '^plugins%.' or 
+       module_name:match '^actions%.' or
+       module_name:match '^utils%.' then
+      table.insert(modules_to_clear, module_name)
+    end
+  end
+  
+  for _, module_name in ipairs(modules_to_clear) do
+    package.loaded[module_name] = nil
   end
 
-  vim.notify('Module cache cleared. Restart Neovim to retry loading.', vim.log.levels.INFO)
+  -- Try to reload core modules using the safety system
+  vim.schedule(function()
+    local safety_core = require('safety.core')
+    local success, result = pcall(function()
+      -- Reload core modules
+      return safety_core.load_config_level('core', {
+        'core.options',
+        'core.keymaps', 
+        'core.lsp',
+      }, true)
+    end)
+    
+    if success then
+      vim.notify('✓ Modules reloaded successfully', vim.log.levels.INFO)
+    else
+      vim.notify('Failed to reload modules: ' .. tostring(result), vim.log.levels.ERROR)
+      vim.notify('Consider loading backup configuration or restarting Neovim', vim.log.levels.WARN)
+    end
+  end)
 end
 
 -- Show detailed error information
