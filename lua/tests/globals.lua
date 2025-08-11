@@ -16,6 +16,7 @@ function M.run_tests()
     local error_val, error_ok = try(function() error 'test error' end):catch 'TestError' 'fallback'
     if not (error_val == 'fallback' and error_ok == false) then return false end
 
+    global('Errors').TestError = nil
     return true
   end
 
@@ -88,4 +89,3 @@ function M.print_results()
 end
 
 return M
-
