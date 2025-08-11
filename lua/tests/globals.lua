@@ -121,10 +121,123 @@ function M.run_tests()
   -- Test utils functions
   local function test_utils() return type(_G.fn) == 'function' and type(_G.cmd) == 'function' end
 
+  -- Test try batching functionality
+  local function test_try_batching()
+    -- Clear errors for clean test
+    _G.Errors = {}
+    
+    -- Test 1: Basic sequential batching
+    local results1, ok1 = try {
+      { function(x) return x * 2 end, 5 },
+      { function(x) return x + 10 end, 3 },
+      { function(x, y) return x * y end, 4, 6 }
+    }
+    if not (ok1 == true and results1[1] == 10 and results1[2] == 13 and results1[3] == 24) then
+      return false, 'basic batching test failed'
+    end
+
+    -- Test 2: Batching with some errors (continue mode)
+    local results2, ok2 = try {
+      { function(x) return x * 2 end, 5 },
+      { function() error('batch error') end },
+      { function(x) return x + 1 end, 7 },
+      on_error = "continue"
+    }
+    if not (ok2 == false and results2[1] == 10 and results2[2] == nil and results2[3] == 8) then
+      return false, 'batching with errors (continue) test failed'
+    end
+
+    -- Test 3: Batching with stop on error
+    local results3, ok3 = try {
+      { function(x) return x * 2 end, 5 },
+      { function() error('stop error') end },
+      { function(x) return x + 1 end, 7 }, -- Should not execute
+      on_error = "stop"
+    }
+    if not (ok3 == false and results3[1] == 10 and results3[2] == nil and #results3 == 1) then
+      return false, 'batching with stop on error test failed'
+    end
+
+    -- Test 4: any_success mode
+    local result4, ok4 = try {
+      { function() error('first error') end },
+      { function() return 'success!' end },
+      { function() return 'second success' end }, -- Should not execute
+      mode = "any_success"
+    }
+    if not (ok4 == true and result4 == 'success!') then
+      return false, 'any_success mode test failed'
+    end
+
+    -- Test 5: Batching with or_else fallback (all fail)
+    local result5, ok5 = try {
+      { function() error('error 1') end },
+      { function() error('error 2') end },
+      or_else = function() return 'batch fallback' end
+    }
+    if not (ok5 == false and result5 == 'batch fallback') then
+      return false, 'batching or_else fallback test failed'
+    end
+
+    -- Test 6: Batching with catch handler
+    local catch_called = false
+    local results6, ok6 = try {
+      { function(x) return x * 2 end, 5 },
+      { function() error('caught error') end },
+      catch = function(e, index) 
+        catch_called = true
+        e.batch_index = index
+        return e -- Store the error
+      end
+    }
+    if not (ok6 == false and results6[1] == 10 and catch_called) then
+      return false, 'batching with catch handler test failed'
+    end
+
+    -- Test 7: Batching without collecting results
+    local result7, ok7 = try {
+      { function(x) return x * 2 end, 5 },
+      { function(x) return x + 10 end, 3 },
+      collect_results = false
+    }
+    if not (ok7 == true and result7 == nil) then
+      return false, 'batching without collecting results test failed'
+    end
+
+    -- Test 8: Per-operation or_else
+    local results8, ok8 = try {
+      { function(x) return x * 2 end, 5 },
+      { function() error('op error') end, or_else = 'per-op fallback' },
+      { function(x) return x + 1 end, 7 }
+    }
+    if not (ok8 == true and results8[1] == 10 and results8[2] == 'per-op fallback' and results8[3] == 8) then
+      return false, 'per-operation or_else test failed'
+    end
+
+    -- Test 9: Per-operation catch
+    local per_op_catch_called = false
+    local results9, ok9 = try {
+      { function(x) return x * 2 end, 5 },
+      { function() error('per-op error') end, catch = function(e) 
+        per_op_catch_called = true
+        return nil -- Don't store
+      end },
+      { function(x) return x + 1 end, 7 }
+    }
+    if not (ok9 == false and results9[1] == 10 and results9[3] == 8 and per_op_catch_called) then
+      return false, 'per-operation catch test failed'
+    end
+
+    -- Clear errors after test
+    _G.Errors = {}
+    return true
+  end
+
   -- Run all tests
   local tests = {
     { name = 'KeyboardLayout', test = test_keyboard_layout },
     { name = 'try', test = test_try },
+    { name = 'try_batching', test = test_try_batching },
     { name = 'keymap', test = test_keymap },
     { name = 'autocmd', test = test_autocmd },
     { name = 'global', test = test_global },

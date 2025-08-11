@@ -100,6 +100,150 @@ local function create_error(err, fn)
   }
 end
 
+-- Helper function to detect if a table represents batching (contains subtables)
+local function is_batching_table(config)
+  -- Check if the first element is a table (indicating batching)
+  if type(config[1]) == 'table' then
+    return true
+  end
+  return false
+end
+
+-- Execute a single operation with error handling
+local function execute_single(operation_config)
+  local fn = operation_config[1]
+  local fn_args = {}
+  for i = 2, #operation_config do
+    -- Skip named parameters
+    if type(i) == 'number' and not operation_config.or_else and not operation_config.catch then
+      table.insert(fn_args, operation_config[i])
+    elseif type(operation_config[i]) ~= 'string' or 
+           (operation_config[i] ~= 'or_else' and operation_config[i] ~= 'catch') then
+      table.insert(fn_args, operation_config[i])
+    end
+  end
+  
+  if type(fn) ~= 'function' then
+    error('Operation first element must be a function')
+  end
+  
+  local ok, result = xpcall(function()
+    return fn(unpack(fn_args))
+  end, function(err)
+    return create_error(err, fn)
+  end)
+  
+  if not ok then
+    local error_obj = result
+    
+    -- Handle per-operation catch
+    if operation_config.catch then
+      if type(operation_config.catch) == 'function' then
+        local modified_error = operation_config.catch(error_obj)
+        if modified_error then
+          table.insert(_G.Errors, modified_error)
+        end
+      end
+    else
+      -- Store error if no catch handler
+      table.insert(_G.Errors, error_obj)
+    end
+    
+    -- Handle per-operation or_else
+    if operation_config.or_else then
+      if type(operation_config.or_else) == 'function' then
+        return true, operation_config.or_else()
+      else
+        return true, operation_config.or_else
+      end
+    end
+  end
+  
+  return ok, result
+end
+
+-- Execute batch operations
+local function execute_batch(config)
+  local mode = config.mode or "sequential"
+  local on_error = config.on_error or "continue"
+  local collect_results = config.collect_results ~= false -- default true
+  
+  local results = {}
+  local errors = {}
+  local all_ok = true
+  
+  for i, operation in ipairs(config) do
+    if type(operation) == 'table' then
+      local ok, result = execute_single(operation)
+      
+      if ok then
+        if collect_results then
+          results[i] = result
+        end
+      else
+        all_ok = false
+        local error_obj = result
+        
+        -- Handle batch-level catch (only if operation didn't have its own catch)
+        if config.catch and not operation.catch then
+          if type(config.catch) == 'function' then
+            local modified_error = config.catch(error_obj, i)
+            if modified_error then
+              table.insert(_G.Errors, modified_error)
+            end
+          end
+        end
+        
+        table.insert(errors, {index = i, error = error_obj})
+        
+        -- Stop on first error if configured
+        if on_error == "stop" then
+          break
+        end
+        
+        -- For any_success mode, continue until we get one success
+        if mode == "any_success" and next(results) then
+          break
+        end
+      end
+    end
+  end
+  
+  -- Handle results based on mode
+  if mode == "any_success" then
+    -- Find first successful result
+    for i = 1, #config do
+      if results[i] ~= nil then
+        return results[i], true
+      end
+    end
+    -- No successes, handle fallback
+    if config.or_else then
+      if type(config.or_else) == 'function' then
+        return config.or_else(), false
+      else
+        return config.or_else, false
+      end
+    end
+    return nil, false
+  end
+  
+  -- For sequential/parallel modes
+  if collect_results then
+    -- Handle or_else fallback if all operations failed
+    if not all_ok and #results == 0 and config.or_else then
+      if type(config.or_else) == 'function' then
+        return config.or_else(), false
+      else
+        return config.or_else, false
+      end
+    end
+    return results, all_ok
+  else
+    return nil, all_ok
+  end
+end
+
 -- Try function with multiple overloads
 local function try(...)
   local args = {...}
@@ -125,9 +269,16 @@ local function try(...)
     end
   end
   
-  -- Overload 2-5: try { ... } -> table-based overloads
+  -- Overload 2-6: try { ... } -> table-based overloads
   if type(first_arg) == 'table' then
     local config = first_arg
+    
+    -- Check if this is batching (table of tables)
+    if is_batching_table(config) then
+      return execute_batch(config)
+    end
+    
+    -- Single operation mode
     local fn = config[1]
     -- Extract function arguments from the table (config[2], config[3], etc.)
     local fn_args = {}
