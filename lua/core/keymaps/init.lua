@@ -1,4 +1,4 @@
-require 'core.keymaps.reset'
+require 'core.keymaps.eset'
 
 keymap {
   motion { 'Next line', "v:count == 0 ? 'gj' : 'j'", expr = true, silent = true },
