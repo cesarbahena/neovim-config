@@ -12,7 +12,7 @@ if file then
   if ok and errors and #errors > 0 then
     local choice = vim.fn.confirm('Previous session had ' .. #errors .. ' error(s). Start in safe mode?', '&Yes\n&No', 1)
     if choice == 1 then
-      package.path = backup_root .. '/?.lua;' .. backup_root .. '/?/init.lua;' .. package.path
+      package.path = backup_root .. '/lua/?.lua;' .. backup_root .. '/lua/?/init.lua;' .. package.path
       vim.notify('Safe mode enabled - loading from backup', vim.log.levels.WARN)
       os.remove(error_file)
     end
