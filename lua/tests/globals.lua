@@ -121,6 +121,124 @@ function M.run_tests()
   -- Test utils functions
   local function test_utils() return type(_G.fn) == 'function' and type(_G.cmd) == 'function' end
 
+  -- Test try function-with-arg-tables functionality
+  local function test_try_function_with_arg_tables()
+    -- Clear errors for clean test
+    _G.Errors = {}
+    
+    -- Test 1: Basic function with multiple arg sets
+    local results1, ok1 = try {
+      function(x, y) return x + y end,
+      { 5, 3 },
+      { 10, 20 },
+      { 1, 2 }
+    }
+    if not (ok1 == true and results1[1] == 8 and results1[2] == 30 and results1[3] == 3) then
+      return false, 'basic function with arg tables test failed'
+    end
+
+    -- Test 2: require pattern with actual error
+    local results2, ok2 = try {
+      function(name) 
+        if name == 'bad_module' then error('module not found') end
+        return { module = name, loaded = true } 
+      end,
+      { 'module1' },
+      { 'bad_module', catch = function(e) return { message = 'hello, world' } end }
+    }
+    if not (ok2 == false and results2[1].module == 'module1' and results2[2].message == 'hello, world') then
+      return false, 'require pattern test failed'
+    end
+
+    -- Test 3: Function with arg tables and errors
+    local results3, ok3 = try {
+      function(x) 
+        if x == 'error' then error('test error') end
+        return x .. '_processed'
+      end,
+      { 'success1' },
+      { 'error' },
+      { 'success2' }
+    }
+    if not (ok3 == false and results3[1] == 'success1_processed' and results3[2] == nil and results3[3] == 'success2_processed') then
+      return false, 'function with arg tables and errors test failed'
+    end
+
+    -- Test 4: Function with per-arg-set or_else
+    local results4, ok4 = try {
+      function(x) 
+        if x == 'fail' then error('intentional error') end
+        return x * 2
+      end,
+      { 5 },
+      { 'fail', or_else = 'fallback_value' },
+      { 7 }
+    }
+    if not (ok4 == false and results4[1] == 10 and results4[2] == 'fallback_value' and results4[3] == 14) then
+      return false, 'function with per-arg-set or_else test failed'
+    end
+
+    -- Test 5: Function with per-arg-set catch
+    local catch_called = false
+    local results5, ok5 = try {
+      function(x) 
+        if x == 'catch_me' then error('caught error') end
+        return x .. '_ok'
+      end,
+      { 'normal' },
+      { 'catch_me', catch = function(e) 
+        catch_called = true
+        e.handled_by = 'per_arg_catch'
+        return e
+      end },
+      { 'another' }
+    }
+    if not (ok5 == false and results5[1] == 'normal_ok' and results5[2] == nil and results5[3] == 'another_ok' and catch_called) then
+      return false, 'function with per-arg-set catch test failed'
+    end
+
+    -- Test 6: Function with global or_else fallback
+    local result6, ok6 = try {
+      function(x) error('always fails') end,
+      { 'arg1' },
+      { 'arg2' },
+      or_else = function() return 'global_fallback' end
+    }
+    if not (ok6 == false and result6 == 'global_fallback') then
+      return false, 'function with global or_else fallback test failed'
+    end
+
+    -- Test 7: Function without collecting results
+    local result7, ok7 = try {
+      function(x) return x * 2 end,
+      { 5 },
+      { 10 },
+      collect_results = false
+    }
+    if not (ok7 == true and result7 == nil) then
+      return false, 'function without collecting results test failed'
+    end
+
+    -- Test 8: Function with on_error = 'stop'
+    local results8, ok8 = try {
+      function(x) 
+        if x == 'stop_here' then error('stop error') end
+        return x .. '_processed'
+      end,
+      { 'first' },
+      { 'stop_here' },
+      { 'should_not_execute' }, -- This should not be processed
+      on_error = 'stop'
+    }
+    if not (ok8 == false and results8[1] == 'first_processed' and results8[2] == nil and results8[3] == nil) then
+      return false, 'function with on_error stop test failed'
+    end
+
+    -- Clear errors after test
+    _G.Errors = {}
+    return true
+  end
+
   -- Test try batching functionality
   local function test_try_batching()
     -- Clear errors for clean test
@@ -238,6 +356,7 @@ function M.run_tests()
     { name = 'KeyboardLayout', test = test_keyboard_layout },
     { name = 'try', test = test_try },
     { name = 'try_batching', test = test_try_batching },
+    { name = 'try_function_with_arg_tables', test = test_try_function_with_arg_tables },
     { name = 'keymap', test = test_keymap },
     { name = 'autocmd', test = test_autocmd },
     { name = 'global', test = test_global },

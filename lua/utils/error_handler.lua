@@ -100,13 +100,18 @@ local function create_error(err, fn)
   }
 end
 
--- Helper function to detect if a table represents batching (contains subtables)
-local function is_batching_table(config)
-  -- Check if the first element is a table (indicating batching)
-  if type(config[1]) == 'table' then
-    return true
+-- Helper function to detect table type
+local function detect_table_type(config)
+  -- Check if first element is a function and second is a table
+  if type(config[1]) == 'function' and type(config[2]) == 'table' then
+    return 'function_with_arg_tables'
   end
-  return false
+  -- Check if first element is a table (traditional batching)
+  if type(config[1]) == 'table' then
+    return 'batching'
+  end
+  -- Single operation
+  return 'single_operation'
 end
 
 -- Execute a single operation with error handling
@@ -160,6 +165,90 @@ local function execute_single(operation_config)
   end
   
   return ok, result
+end
+
+-- Execute function with multiple argument sets
+local function execute_function_with_arg_tables(config)
+  local fn = config[1]
+  local results = {}
+  local all_ok = true
+  local collect_results = config.collect_results ~= false
+  local on_error = config.on_error or "continue"
+  
+  -- Process each argument table
+  for i = 2, #config do
+    local arg_config = config[i]
+    if type(arg_config) == 'table' then
+      -- Extract arguments (skip named parameters)
+      local fn_args = {}
+      for j = 1, #arg_config do
+        table.insert(fn_args, arg_config[j])
+      end
+      
+      local ok, result = xpcall(function()
+        return fn(unpack(fn_args))
+      end, function(err)
+        return create_error(err, fn)
+      end)
+      
+      if ok then
+        if collect_results then
+          results[i-1] = result -- Adjust index since we start at 2
+        end
+      else
+        all_ok = false
+        local error_obj = result
+        
+        -- Handle per-arg-set catch
+        if arg_config.catch then
+          if type(arg_config.catch) == 'function' then
+            local catch_result = arg_config.catch(error_obj)
+            if catch_result then
+              -- If catch returns something, use it as both error storage and result value
+              table.insert(_G.Errors, catch_result)
+              if collect_results then
+                results[i-1] = catch_result
+              end
+            end
+          end
+        else
+          -- Store error if no catch handler
+          table.insert(_G.Errors, error_obj)
+        end
+        
+        -- Handle per-arg-set or_else (only if no catch handler provided a result)
+        if arg_config.or_else and (not arg_config.catch or not results[i-1]) then
+          if collect_results then
+            if type(arg_config.or_else) == 'function' then
+              results[i-1] = arg_config.or_else()
+            else
+              results[i-1] = arg_config.or_else
+            end
+          end
+        end
+        
+        -- Stop on first error if configured
+        if on_error == "stop" then
+          break
+        end
+      end
+    end
+  end
+  
+  -- Handle global or_else fallback if all failed
+  if not all_ok and collect_results and not next(results) and config.or_else then
+    if type(config.or_else) == 'function' then
+      return config.or_else(), false
+    else
+      return config.or_else, false
+    end
+  end
+  
+  if collect_results then
+    return results, all_ok
+  else
+    return nil, all_ok
+  end
 end
 
 -- Execute batch operations
@@ -269,12 +358,15 @@ local function try(...)
     end
   end
   
-  -- Overload 2-6: try { ... } -> table-based overloads
+  -- Overload 2-7: try { ... } -> table-based overloads
   if type(first_arg) == 'table' then
     local config = first_arg
     
-    -- Check if this is batching (table of tables)
-    if is_batching_table(config) then
+    -- Detect table type and handle accordingly
+    local table_type = detect_table_type(config)
+    if table_type == 'function_with_arg_tables' then
+      return execute_function_with_arg_tables(config)
+    elseif table_type == 'batching' then
       return execute_batch(config)
     end
     
