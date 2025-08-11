@@ -16,49 +16,46 @@ function M.load_backup_config()
     return
   end
 
-  vim.notify('Loading your friend\'s backup configuration...', vim.log.levels.INFO)
-  
-  -- Set safety mode to backup
-  _G.SAFETY.mode = 'backup'
-  _G.SAFETY.backup_active = true
+  vim.notify('Loading Vimotee\'s backup configuration...', vim.log.levels.INFO)
 
-  -- Modify package.path to prioritize backup modules  
+  -- Backup configuration that loads nested modules correctly
+
+  -- Modify package.path to make backup directory act like root
   local backup_path = vim.fn.stdpath 'config' .. '/lua/backup/lua'
   local original_path = package.path
+
+  -- Prepend backup paths so require() finds modules in backup/ first
   package.path = backup_path .. '/?.lua;' .. backup_path .. '/?/init.lua;' .. package.path
 
-  -- Clear problematic modules from cache so backup versions load
+  -- Set safety mode to backup
+  _G.SAFETY.mode = 'backup'
+
+  -- Clear any problematic modules from cache first
   for module_name, _ in pairs(package.loaded) do
-    if module_name:match '^core%.' or module_name:match '^plugins%.' then
+    if module_name:match '^core%.' or module_name:match '^plugins%.' or module_name:match '^ui%.' then
       package.loaded[module_name] = nil
     end
   end
 
-  -- Load backup core modules using try function (honoring your friend's design)
-  local core = require('safety.core')
-  local backup_modules = { 'core.options', 'core.keymaps', 'core.lsp' }
-  local loaded_count = 0
+  -- Temporarily allow backup to initialize (bypass guard)
+  local backup_was_initialized = _G.SAFETY.initialized
+  _G.SAFETY.initialized = false
   
-  vim.notify('Executing backup modules with try function...', vim.log.levels.INFO)
+  -- Load backup.init directly (let it handle everything)
+  local ok, err = pcall(require, M.backup_module)
   
-  for _, module in ipairs(backup_modules) do
-    local result, error = core.safe_require(module, { required = false, category = 'BackupModules' })
-    if result then
-      loaded_count = loaded_count + 1
-      vim.notify('✓ Loaded backup ' .. module, vim.log.levels.INFO)
-    else
-      vim.notify('✗ Backup ' .. module .. ' failed: ' .. (error and error.message or 'unknown'), vim.log.levels.WARN)
-    end
-  end
-  
-  vim.notify(string.format('✓ Backup loaded %d/%d core modules using try function', loaded_count, #backup_modules), vim.log.levels.INFO)
+  -- Restore initialization state
+  _G.SAFETY.initialized = backup_was_initialized
 
-  -- DON'T restore package path yet - backup modules need to stay accessible
-  
-  -- Mark backup as successfully loaded
-  if loaded_count > 0 then
-    vim.notify('✓ Your friend\'s backup system is protecting you', vim.log.levels.INFO)
+  if not ok then
+    vim.notify('Vimotee\'s backup config failed to load: ' .. err, vim.log.levels.ERROR)
+    M.apply_emergency_settings()
+  else
+    vim.notify('✓ Vimotee\'s backup configuration loaded successfully', vim.log.levels.INFO)
   end
+
+  -- Restore original package.path when done
+  package.path = original_path
 end
 
 -- Ultimate emergency fallback

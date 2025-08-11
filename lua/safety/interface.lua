@@ -82,7 +82,7 @@ function M.show_error_summary(errors)
 
   for i, error in ipairs(errors) do
     table.insert(content, string.format('Error %d: %s', i, error.module))
-    table.insert(content, '  ' .. error.error:sub(1, 80) .. (error.error:len() > 80 and '...' or ''))
+    table.insert(content, '  ' .. error.message:sub(1, 80) .. (error.message:len() > 80 and '...' or ''))
     table.insert(content, '')
   end
 
