@@ -44,6 +44,9 @@ function M.load_backup_config()
     M.apply_emergency_settings()
   else
     vim.notify('✓ Your backup configuration loaded successfully', vim.log.levels.INFO)
+    
+    -- Now reload the original core modules to get proper config
+    M.reload_core_modules()
   end
 
   -- Restore original package.path when done (optional)
@@ -67,6 +70,55 @@ function M.apply_emergency_settings()
 
   vim.keymap.set('n', '<leader>q', ':q<CR>')
   vim.keymap.set('n', '<leader>w', ':w<CR>')
+end
+
+-- Reload core modules after backup is loaded
+function M.reload_core_modules()
+  vim.notify('Reloading core modules...', vim.log.levels.INFO)
+  
+  -- Temporarily disable backup mode to allow normal loading
+  local original_mode = _G.SAFETY.mode
+  _G.SAFETY.mode = 'normal'
+  
+  -- Clear module cache for core modules
+  for module_name, _ in pairs(package.loaded) do
+    if module_name:match('^core%.') then
+      print('DEBUG: Clearing cache for', module_name)
+      package.loaded[module_name] = nil
+    end
+  end
+  
+  -- Reset package.path to prioritize main config over backup
+  local config_path = vim.fn.stdpath('config') .. '/lua'
+  local backup_path = vim.fn.stdpath('config') .. '/lua/backup/lua'
+  
+  -- Put main config first in path
+  package.path = config_path .. '/?.lua;' .. config_path .. '/?/init.lua;' .. package.path
+  print('DEBUG: New package.path:', package.path)
+  
+  -- Try to reload core modules with try function for better error handling
+  local core_modules = { 'core.options', 'core.keymaps', 'core.lsp' }
+  local success_count = 0
+  
+  for _, module in ipairs(core_modules) do
+    print('DEBUG: Attempting to reload', module)
+    local result = try(require, module):catch('ReloadErrors')
+    
+    if result.ok then
+      success_count = success_count + 1
+      vim.notify('✓ Reloaded ' .. module .. ' from main config', vim.log.levels.INFO)
+    else
+      print('DEBUG: Main config failed for', module, ':', result.error.message)
+      -- Keep the backup version that's already loaded and working
+      vim.notify('→ Keeping backup version of ' .. module, vim.log.levels.INFO)
+      success_count = success_count + 1  -- Count as success since backup is working
+    end
+  end
+  
+  -- Restore backup mode
+  _G.SAFETY.mode = original_mode
+  
+  vim.notify(string.format('Reloaded %d/%d core modules', success_count, #core_modules), vim.log.levels.INFO)
 end
 
 -- Handle critical failures
