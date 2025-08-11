@@ -15,49 +15,37 @@ local safety = {
   backup_path = vim.fn.stdpath 'config' .. '/backup',
 }
 
--- Track all errors with context
-local function track_error(module, error_msg, severity)
-  table.insert(safety.errors, {
-    module = module,
-    error = error_msg,
-    severity = severity or 'ERROR',
-    timestamp = os.date '%Y-%m-%d %H:%M:%S',
-    stack = debug.traceback(),
-  })
-
-  vim.notify(
-    string.format("Module '%s' failed: %s", module, error_msg),
-    severity == 'WARN' and vim.log.levels.WARN or vim.log.levels.ERROR,
-    { title = 'Config Safety' }
-  )
-end
-
--- Safe module loader with syntax/runtime error detection
-local function safe_require(module, required)
-  required = required or false
-
-  -- First attempt - catches both syntax and runtime errors
-  local ok, result = pcall(require, module)
-  if not ok then
-    -- Determine error type
-    local error_type = 'RUNTIME_ERROR'
-    if string.match(result, 'module.*not found') then
-      error_type = 'MODULE_NOT_FOUND'
-    elseif string.match(result, 'syntax error') or string.match(result, 'expected') then
-      error_type = 'SYNTAX_ERROR'
-    end
-
-    track_error(module, result, required and 'ERROR' or 'WARN')
-
-    if required then
-      return false, result
-    else
-      vim.notify('Optional module ' .. module .. ' skipped', vim.log.levels.WARN)
-      return nil, result
+-- Get all errors from try function's error storage
+local function get_all_errors()
+  local all_errors = {}
+  for category, errors in pairs(_G.Errors or {}) do
+    for _, error in ipairs(errors) do
+      table.insert(all_errors, {
+        category = category,
+        module = error.module,
+        error = error.message,
+        severity = error.category == 'syntax_error' and 'CRITICAL' or 'ERROR',
+        timestamp = error.time,
+        line = error.line,
+        traceback = error.traceback,
+      })
     end
   end
+  return all_errors
+end
 
-  return result, nil
+-- Simplified require using try function
+local function safe_require(module, required)
+  local result = try(require, module):catch(required and 'CriticalErrors' or 'OptionalErrors')
+  
+  if result.ok then
+    return result.value, nil
+  else
+    if not required then
+      vim.notify('Optional module ' .. module .. ' skipped', vim.log.levels.WARN)
+    end
+    return required and false or nil, result.error
+  end
 end
 
 -- Progressive configuration loader
@@ -107,10 +95,11 @@ if not init_ok then
   track_error('main_init', init_result, 'CRITICAL')
   vim.schedule(function() require('safety.fallback').handle_critical_failure(safety.errors) end)
 else
-  -- Schedule success notification and error summary
+  -- Schedule success notification and error summary  
   vim.schedule(function()
-    if #safety.errors > 0 then
-      require('safety.interface').show_error_summary(safety.errors)
+    local all_errors = get_all_errors()
+    if #all_errors > 0 then
+      require('safety.interface').show_error_summary(all_errors)
     else
       vim.notify('✓ Configuration loaded successfully!', vim.log.levels.INFO)
     end
