@@ -23,7 +23,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local lazy, ok = try(require, 'lazy'):catch 'LoadPluginError'()
+local lazy, ok = try(require, 'lazy')
 if ok then
   lazy.setup {
     spec = {

@@ -38,16 +38,15 @@ function M.add(tbl, inherited_opts)
   -- Recurse into child tables
   for _, v in ipairs(tbl) do
     if type(v) == "table" then
-      require 'utils.error_handler'
-        .try(
-          M.add, 
-          v, 
-          vim.tbl_extend(
-            "force", 
-            { mode = tbl.mode or inherited_opts.mode }, 
-            opts
+      try(
+        M.add, 
+        v, 
+        vim.tbl_extend(
+          "force", 
+          { mode = tbl.mode or inherited_opts.mode }, 
+          opts
         )
-      ):catch 'KeymapError'
+      )
     end
   end
 end

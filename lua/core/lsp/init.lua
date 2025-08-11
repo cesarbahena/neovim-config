@@ -25,7 +25,7 @@ local servers = {
 }
 
 for _, server in ipairs(servers) do
-  local server_config = try(require, 'lsp.' .. server):catch 'ServerConfigNotFound' {}
+  local server_config = try { require, 'lsp.' .. server, or_else = {} }
 
   vim.lsp.config[server] = vim.tbl_deep_extend('force', {
     capabilities = updated_capabilities,

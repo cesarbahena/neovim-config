@@ -2,10 +2,8 @@ local M = {}
 
 -- Default keymapper
 function M.map(spec)
-  try(require, 'which-key')
-    :catch'MissingKeymappingLibrary'(
-      require'utils.fallback_keymapper'
-    ).add(spec)
+  local which_key, ok = try { require, 'which-key', or_else = require'utils.fallback_keymapper' }
+  which_key.add(spec)
 end
 
 return M

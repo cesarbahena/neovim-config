@@ -76,59 +76,108 @@ function M.format_traceback(traceback_lines)
   return formatted
 end
 
--- Try class
-local Try = {}
-Try.__index = Try
+-- Initialize global errors table
+_G.Errors = _G.Errors or {}
 
-function Try.new(fn, ...)
-  if type(fn) ~= 'function' then error 'Wrong use of try(fn, ...): fn must be a function' end
-
-  local self = {}
-  setmetatable(self, {
-    __index = Try,
-    __call = function(self, fallback)
-      if self.ok then return self.value, self.ok end
-
-      if type(fallback) == 'function' then return fallback(), self.ok end
-
-      return fallback, self.ok
-    end,
-  })
-
-  local args = { ... }
-  self.ok = xpcall(function() self.value = fn(unpack(args)) end, function(err)
-    local first_line, details = M.split_error_message(err)
-    local full_traceback = debug.traceback('', 2)
-    local _, raw_traceback = M.split_error_message(full_traceback)
-    
-    -- Extract source info from original error message (before cleaning)
-    local source_info = M.extract_source_info(full_traceback, fn, first_line)
-    local category = M.categorize_error(first_line, source_info)
-    
-    -- Format traceback for better readability
-    local formatted_traceback = M.format_traceback(raw_traceback)
-    
-    self.error = {
-      message = M.clean_error_message(first_line),
-      details = details,
-      traceback = formatted_traceback,
-      module = source_info.module,
-      line = source_info.line,
-      category = category,
-      time = os.date '%Y-%m-%d %H:%M:%S',
-    }
-  end)
-  return self
+-- Create error object helper
+local function create_error(err, fn)
+  local first_line, details = M.split_error_message(err)
+  local full_traceback = debug.traceback('', 2)
+  local _, raw_traceback = M.split_error_message(full_traceback)
+  
+  local source_info = M.extract_source_info(full_traceback, fn, first_line)
+  local category = M.categorize_error(first_line, source_info)
+  local formatted_traceback = M.format_traceback(raw_traceback)
+  
+  return {
+    message = M.clean_error_message(first_line),
+    details = details,
+    traceback = formatted_traceback,
+    module = source_info.module,
+    line = source_info.line,
+    category = category,
+    time = os.date '%Y-%m-%d %H:%M:%S',
+  }
 end
 
-function Try:catch(handler)
-  if self.ok then return self end
-  if type(handler) == 'string' then
-    table.insert(global('Errors.' .. handler), self.error)
-  elseif type(handler) == 'function' then
-    handler(self.error)
+-- Try function with multiple overloads
+local function try(...)
+  local args = {...}
+  local first_arg = args[1]
+  
+  -- Overload 1: try(function, args...) -> (value, ok)
+  if type(first_arg) == 'function' then
+    local fn = first_arg
+    local fn_args = {select(2, ...)}
+    
+    local ok, result = xpcall(function()
+      return fn(unpack(fn_args))
+    end, function(err)
+      local error_obj = create_error(err, fn)
+      table.insert(_G.Errors, error_obj)
+      return nil
+    end)
+    
+    if ok then
+      return result, true
+    else
+      return nil, false
+    end
   end
-  return self
+  
+  -- Overload 2-5: try { ... } -> table-based overloads
+  if type(first_arg) == 'table' then
+    local config = first_arg
+    local fn = config[1]
+    -- Extract function arguments from the table (config[2], config[3], etc.)
+    local fn_args = {}
+    for i = 2, #config do
+      table.insert(fn_args, config[i])
+    end
+    
+    if type(fn) ~= 'function' then
+      error('try table: first element must be a function')
+    end
+    
+    local ok, result = xpcall(function()
+      return fn(unpack(fn_args))
+    end, function(err)
+      return create_error(err, fn)
+    end)
+    
+    if ok then
+      return result, true
+    else
+      local error_obj = result
+      
+      -- Handle catch callback
+      if config.catch then
+        if type(config.catch) == 'function' then
+          local modified_error = config.catch(error_obj)
+          -- Only store error if catch function returns it (modified or not)
+          if modified_error then
+            table.insert(_G.Errors, modified_error)
+          end
+        end
+      else
+        -- No catch handler, automatically store error
+        table.insert(_G.Errors, error_obj)
+      end
+      
+      -- Handle or_else fallback
+      if config.or_else then
+        if type(config.or_else) == 'function' then
+          return config.or_else(), false
+        else
+          return config.or_else, false
+        end
+      end
+      
+      return nil, false
+    end
+  end
+  
+  error('Invalid try usage. Expected try(function, args...) or try { function, ... }')
 end
 
 -- Extract source information from traceback and error message
@@ -196,7 +245,7 @@ function M.categorize_error(message, source_info)
   end
 end
 
--- Try instance factory
-function M.try(fn, ...) return Try.new(fn, ...) end
+-- Export the try function
+M.try = try
 
 return M
