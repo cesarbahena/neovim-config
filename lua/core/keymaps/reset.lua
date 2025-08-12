@@ -72,4 +72,3 @@ local mappings_to_disable = {
 for _, mapping in ipairs(mappings_to_disable) do
   pcall(vim.keymap.del, 'n', mapping)
 end
-

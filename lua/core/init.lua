@@ -5,8 +5,8 @@ require('globals').setup()
 
 try {
   require,
-  { 'core.package_manager' },
-  { 'core.options' },
   { 'core.keymaps' },
+  { 'core.options' },
   { 'core.lsp' },
+  { 'core.package_manager' },
 }
