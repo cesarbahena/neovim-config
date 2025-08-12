@@ -63,7 +63,7 @@ function M.retry_failed_modules()
   if not _G.Errors or #_G.Errors == 0 then return { total = 0, successful = 0, failed = 0 } end
 
   -- Prepend backup path for retry attempts
-  local backup_path = vim.fn.expand '~/.config/nvim_backup'
+  local backup_path = vim.env.NVIM_BACKUP_PATH or vim.fn.expand('~/.config/nvim_backup')
   vim.opt.rtp:prepend(backup_path)
 
   print(string.format('🔄 Attempting to retry %d failed modules...', #_G.Errors))

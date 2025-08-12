@@ -26,7 +26,7 @@
 ---@field or_else? any|function Fallback value if this operation fails
 ---@field catch? function(error: ErrorInfo): ErrorInfo? Error handler for this operation
 
-local error_formatter = require('utils.error_formatter')
+local error_formatter = require 'utils.error_formatter'
 
 local M = {}
 
@@ -38,16 +38,14 @@ _G.Errors = _G.Errors or {}
 ---@param ... any Arguments to pass to the function
 ---@return any result, boolean success
 function M.safe_call(fn, ...)
-  local args = {...}
-  
-  local success, result = xpcall(function()
-    return fn(unpack(args))
-  end, function(err)
+  local args = { ... }
+
+  local success, result = xpcall(function() return fn(unpack(args)) end, function(err)
     local error_info = error_formatter.create_error(err, fn)
     table.insert(_G.Errors, error_info)
     return nil
   end)
-  
+
   if success then
     return result, true
   else
@@ -64,52 +62,45 @@ function M.safe_batch(operations, config)
   local mode = config.mode or 'sequential'
   local on_error = config.on_error or 'continue'
   local collect_results = config.collect_results ~= false
-  
+
   local results = {}
   local all_success = true
-  
+
   for i, operation in ipairs(operations) do
     local fn = operation[1]
     local args = {}
     for j = 2, #operation do
       table.insert(args, operation[j])
     end
-    
-    local success, result = xpcall(function()
-      return fn(unpack(args))
-    end, function(err)
-      return error_formatter.create_error(err, fn)
-    end)
-    
+
+    local success, result = xpcall(
+      function() return fn(unpack(args)) end,
+      function(err) return error_formatter.create_error(err, fn) end
+    )
+
     if success then
-      if collect_results then
-        results[i] = result
-      end
+      if collect_results then results[i] = result end
     else
       all_success = false
       local error_info = result
-      
+
       -- Handle per-operation catch
       if operation.catch then
         local catch_result = operation.catch(error_info)
         if catch_result then
           table.insert(_G.Errors, catch_result)
-          if collect_results then
-            results[i] = catch_result
-          end
+          if collect_results then results[i] = catch_result end
         end
       else
         -- Handle batch-level catch
         if config.catch and not operation.catch then
           local modified_error = config.catch(error_info, i)
-          if modified_error then
-            table.insert(_G.Errors, modified_error)
-          end
+          if modified_error then table.insert(_G.Errors, modified_error) end
         else
           table.insert(_G.Errors, error_info)
         end
       end
-      
+
       -- Handle per-operation or_else
       if operation.or_else and (not operation.catch or not results[i]) then
         if collect_results then
@@ -120,25 +111,19 @@ function M.safe_batch(operations, config)
           end
         end
       end
-      
+
       -- Stop on error if configured
-      if on_error == 'stop' then
-        break
-      end
-      
+      if on_error == 'stop' then break end
+
       -- For any_success mode, stop after first success
-      if mode == 'any_success' and next(results) then
-        break
-      end
+      if mode == 'any_success' and next(results) then break end
     end
   end
-  
+
   -- Handle mode-specific results
   if mode == 'any_success' then
     for i = 1, #operations do
-      if results[i] ~= nil then
-        return results[i], true
-      end
+      if results[i] ~= nil then return results[i], true end
     end
     -- No successes, handle fallback
     if config.or_else then
@@ -150,7 +135,7 @@ function M.safe_batch(operations, config)
     end
     return nil, false
   end
-  
+
   -- For sequential mode
   if collect_results then
     -- Handle global or_else if all failed
@@ -176,43 +161,38 @@ function M.safe_multi_call(fn, arg_sets, config)
   config = config or {}
   local on_error = config.on_error or 'continue'
   local collect_results = config.collect_results ~= false
-  
+
   local results = {}
   local all_success = true
-  
+
   for i, arg_config in ipairs(arg_sets) do
     local args = {}
     for j = 1, #arg_config do
       table.insert(args, arg_config[j])
     end
-    
-    local success, result = xpcall(function()
-      return fn(unpack(args))
-    end, function(err)
-      return error_formatter.create_error(err, fn)
-    end)
-    
+
+    local success, result = xpcall(
+      function() return fn(unpack(args)) end,
+      function(err) return error_formatter.create_error(err, fn) end
+    )
+
     if success then
-      if collect_results then
-        results[i] = result
-      end
+      if collect_results then results[i] = result end
     else
       all_success = false
       local error_info = result
-      
+
       -- Handle per-arg-set catch
       if arg_config.catch then
         local catch_result = arg_config.catch(error_info)
         if catch_result then
           table.insert(_G.Errors, catch_result)
-          if collect_results then
-            results[i] = catch_result
-          end
+          if collect_results then results[i] = catch_result end
         end
       else
         table.insert(_G.Errors, error_info)
       end
-      
+
       -- Handle per-arg-set or_else
       if arg_config.or_else and (not arg_config.catch or not results[i]) then
         if collect_results then
@@ -223,14 +203,12 @@ function M.safe_multi_call(fn, arg_sets, config)
           end
         end
       end
-      
+
       -- Stop on first error if configured
-      if on_error == 'stop' then
-        break
-      end
+      if on_error == 'stop' then break end
     end
   end
-  
+
   -- Handle global or_else if all failed
   if not all_success and collect_results and not next(results) and config.or_else then
     if type(config.or_else) == 'function' then
@@ -239,7 +217,7 @@ function M.safe_multi_call(fn, arg_sets, config)
       return config.or_else, false
     end
   end
-  
+
   if collect_results then
     return results, all_success
   else
@@ -248,3 +226,4 @@ function M.safe_multi_call(fn, arg_sets, config)
 end
 
 return M
+
