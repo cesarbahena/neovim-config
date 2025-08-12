@@ -40,7 +40,7 @@ plugin/
 after/plugin/packer_compiled.lua
 
 # Backup directory (unmodified clone fallback)
-lua/backup/
+backup/
 
 # Local configuration overrides
 local.lua
