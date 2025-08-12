@@ -203,7 +203,7 @@ All errors captured by the Try API are automatically processed and stored in `_G
   message = "Clean error message",
   details = { "Additional error details..." },
   traceback = { "Formatted stack trace..." },
-  module = "source_module_name",
+  source = "source_file_path",
   line = "line_number",
   category = "error_category", -- 'module_missing', 'function_error', etc.
   time = "2024-01-01 12:00:00"

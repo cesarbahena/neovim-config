@@ -254,7 +254,7 @@ describe('Try API', function()
       assert.is_string(err.time)
       assert.is_string(err.category)
       assert.is_table(err.traceback)
-      assert.is_string(err.module)
+      assert.is_string(err.source)
     end)
 
     it('should categorize different error types', function()

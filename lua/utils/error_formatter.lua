@@ -99,12 +99,11 @@ function M.extract_source_info(traceback, fn, error_message)
   -- Use the last match (most specific/actual source)
   if #all_matches > 0 then
     local full_path_match = all_matches[#all_matches]
-    local filename = full_path_match:match('([^/]+)%.lua:(%d+)')
-    if filename then
-      local module = filename or 'unknown'
-      local line = full_path_match:match(':(%d+)') or 'unknown'
+    local full_path = full_path_match:match('([^:]+%.lua)')
+    local line = full_path_match:match(':(%d+)') or 'unknown'
+    if full_path then
       return {
-        module = module,
+        source = full_path,
         line = line
       }
     end
@@ -112,19 +111,21 @@ function M.extract_source_info(traceback, fn, error_message)
   
   -- Fallback: Get the first user code line from traceback
   local source_line = traceback:match('([^/\n]*%.lua):(%d+)') or 'unknown'
-  local module = source_line:match('([^/]+)') or 'unknown'
+  local full_path = source_line:match('([^:]+)') or 'unknown'
   local line = source_line:match(':(%d+)') or 'unknown'
   
-  -- For require calls, try to get the module being required
+  -- For require calls, try to get the module being required and convert to file path
   if fn == require then
     local required_module = traceback:match("module '([^']+)' not found")
     if required_module then
-      module = required_module:match('([^%.]+)$') or required_module
+      -- Convert module name to potential file path
+      local module_path = required_module:gsub('%.', '/')
+      full_path = 'lua/' .. module_path .. '.lua'
     end
   end
   
   return {
-    module = module,
+    source = full_path,
     line = line
   }
 end
@@ -146,9 +147,9 @@ function M.categorize_error(message, source_info)
          message:match('<eof> expected') or
          message:match("'end' expected") then
     return 'syntax_error'
-  elseif source_info.module:match('lsp') then
+  elseif source_info.source:match('lsp') then
     return 'lsp_error'
-  elseif source_info.module:match('plugin') then
+  elseif source_info.source:match('plugin') then
     return 'plugin_error'
   else
     return 'general_error'
@@ -172,7 +173,7 @@ function M.create_error(err, fn)
     message = M.clean_error_message(first_line),
     details = details,
     traceback = formatted_traceback,
-    module = source_info.module,
+    source = source_info.source,
     line = source_info.line,
     category = category,
     time = os.date('%Y-%m-%d %H:%M:%S'),
