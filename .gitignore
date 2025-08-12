@@ -39,8 +39,7 @@ Thumbs.db
 plugin/
 after/plugin/packer_compiled.lua
 
-# Backup directory (unmodified clone fallback)
-backup/
+# Backup directory is now external to this repo
 
 # Local configuration overrides
 local.lua
