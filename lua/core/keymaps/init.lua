@@ -74,6 +74,4 @@ keymap {
   -- ?
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
-  key { 'To', fn 'actions.to' },
-  key { 'back To', fn 'actions.back_to' },
 }

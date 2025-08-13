@@ -34,7 +34,6 @@ function M.toggle_macro_recording()
 end
 
 function M.to()
-  local flash = require 'flash'
   local flash_char = require 'flash.plugins.char'
 
   local function handle_state(action, hide)
@@ -61,7 +60,6 @@ function M.to()
 end
 
 function M.back_to()
-  local flash = require 'flash'
   local flash_char = require 'flash.plugins.char'
 
   local function handle_state(action, hide)
