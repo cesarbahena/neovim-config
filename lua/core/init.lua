@@ -1,4 +1,4 @@
--- Safe try assignment with backup fallback using dofile approach
+--[[ Safe try assignment with backup fallback using dofile approach
 local success, try_module = pcall(require, 'utils.try')
 if success then
   -- Test if the try function actually works
@@ -17,7 +17,9 @@ if not success then
   try_module = dofile(backup_file)
   _G.try = try_module.try
 end
+]]
 
+_G.try = require('utils.try').try
 try {
   require,
   { 'core.globals' },

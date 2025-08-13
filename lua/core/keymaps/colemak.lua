@@ -1,5 +1,6 @@
 return {
   keys = {
+    ['<F9>'] = 'Hello',
     -- nox
     n = 'Next line',
     N = 'Next page',
@@ -84,7 +85,6 @@ return {
     y = 'Yes',
   },
   leader = {
-    ['<F9>'] = 'Hello',
     w = 'Harpoon 1',
     f = 'Harpoon 2',
     p = 'Harpoon 3',

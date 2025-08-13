@@ -22,27 +22,21 @@ return {
       local function map(mode, l, r, desc) vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc }) end
       keymap {
         normal {
-          'Next Hunk',
+          'next Hunk',
           fn {
-            cond = 'vim.wo.diff',
-            function ()
-              vim.cmd.normal { ']c', bang = true }
-            end, 
-            fallback = function ()
-              gs.nav_hunk 'next'
-            end
-          }
+            { vim.cmd.normal, { ']c', bang = true } },
+            when = 'vim.wo.diff',
+            or_else = { 'gitsigns.nav_hunk', 'next' },
+          },
         },
 
         normal {
-          'Prev hunK',
-          function()
-            if vim.wo.diff then
-              vim.cmd.normal { '[c', bang = true }
-            else
-              gs.nav_hunk 'prev'
-            end
-          end,
+          'next Hunk',
+          fn {
+            { vim.cmd.normal, { '[c', bang = true } },
+            when = 'vim.wo.diff',
+            or_else = { 'gitsigns.nav_hunk', 'prev' },
+          },
         },
       }
     end,

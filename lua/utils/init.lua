@@ -20,52 +20,100 @@ function M.fn(fn_or_module_path, ...)
   if type(fn_or_module_path) == 'table' then
     local args = { ... }
 
-    -- Conditional table: { cond = condition, [1] = fn, fallback = fn }
-    if fn_or_module_path['cond'] and fn_or_module_path[1] then
+    -- Conditional table: { when = condition, [1] = fn, or_else = fn }
+    if fn_or_module_path['when'] ~= nil and fn_or_module_path[1] then
       return function()
-        local condition = fn_or_module_path['cond']
+        local condition = fn_or_module_path['when']
         local condition_result = false
 
         -- Evaluate condition
         if type(condition) == 'string' then
-          -- Path to boolean value
-          local current = _G
-          for part in string.gmatch(condition, '[^%.]+') do
-            current = current[part]
-            if current == nil then
-              condition_result = false
-              break
-            end
+          -- Lazy evaluation: execute the string as Lua code
+          local func, err = load('return ' .. condition)
+          if func then
+            local success, result = pcall(func)
+            condition_result = success and not not result
+          else
+            condition_result = false
           end
-          condition_result = not not current
+        elseif type(condition) == 'function' then
+          -- Lazy evaluation: call the function
+          local success, result = pcall(condition)
+          condition_result = success and not not result
         elseif type(condition) == 'boolean' then
+          -- Immediate evaluation
           condition_result = condition
         end
 
-        local target_fn = condition_result and fn_or_module_path[1] or fn_or_module_path['fallback']
+        local target_fn = condition_result and fn_or_module_path[1] or fn_or_module_path['or_else']
         if not target_fn then return nil end
 
         -- Execute the selected function
-        return M.fn(target_fn, unpack(args))()
+        if type(target_fn) == 'table' then
+          local fn_args = {}
+          for i = 2, #target_fn do
+            table.insert(fn_args, target_fn[i])
+          end
+          for i = 1, #args do
+            table.insert(fn_args, args[i])
+          end
+          if type(target_fn[1]) == 'string' then
+            return M.fn(target_fn[1], unpack(fn_args))()
+          else
+            return target_fn[1](unpack(fn_args))
+          end
+        else
+          return M.fn(target_fn, unpack(args))()
+        end
       end
     end
 
-    -- Try/catch table: { [1] = fn, fallback = fn }
+    -- Try/catch table: { [1] = fn, or_else = fn }
     if fn_or_module_path[1] then
       return function()
-        local success, result = pcall(function() return M.fn(fn_or_module_path[1], unpack(args))() end)
+        local main_fn = fn_or_module_path[1]
+        local success, result
+
+        if type(main_fn) == 'table' then
+          local fn_args = {}
+          for i = 2, #main_fn do
+            table.insert(fn_args, main_fn[i])
+          end
+          for i = 1, #args do
+            table.insert(fn_args, args[i])
+          end
+          success, result = pcall(main_fn[1], unpack(fn_args))
+        else
+          success, result = pcall(function() return M.fn(main_fn, unpack(args))() end)
+        end
 
         if success then
           return result
-        elseif fn_or_module_path['fallback'] then
-          return M.fn(fn_or_module_path['fallback'], unpack(args))()
+        elseif fn_or_module_path['or_else'] then
+          local or_else_fn = fn_or_module_path['or_else']
+          if type(or_else_fn) == 'table' then
+            local fn_args = {}
+            for i = 2, #or_else_fn do
+              table.insert(fn_args, or_else_fn[i])
+            end
+            for i = 1, #args do
+              table.insert(fn_args, args[i])
+            end
+            if type(or_else_fn[1]) == 'string' then
+              return M.fn(or_else_fn[1], unpack(fn_args))()
+            else
+              return or_else_fn[1](unpack(fn_args))
+            end
+          else
+            return M.fn(or_else_fn, unpack(args))()
+          end
         else
           error(result)
         end
       end
     end
 
-    error 'Invalid table format. Expected { cond = condition, [1] = fn, fallback = fn } or { [1] = fn, fallback = fn }'
+    error 'Invalid table format. Expected { when = condition, [1] = fn, or_else = fn } or { [1] = fn, or_else = fn }'
   end
 
   -- Direct function case: wrap it with args

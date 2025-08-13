@@ -1,5 +1,3 @@
-require 'core.keymaps.reset'
-
 keymap {
   motion { 'Next line', "v:count == 0 ? 'gj' : 'j'", expr = true, silent = true },
   motion { 'Next page', '<C-d>zz' },
