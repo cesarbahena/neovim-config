@@ -15,6 +15,13 @@ end
 -- Helper for command strings with <CR>
 function M.cmd(command) return '<cmd>' .. command .. '<cr>' end
 
+-- Helper for vim.cmd.normal with bang
+function M.bang(command)
+  return function()
+    vim.cmd.normal({ command, bang = true })
+  end
+end
+
 function M.fn(fn_or_module_path, ...)
   -- Table case: conditional or try/catch
   if type(fn_or_module_path) == 'table' then

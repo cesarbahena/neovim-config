@@ -20,6 +20,7 @@ return {
           'edit',
           'fn',
           'cmd',
+          'bang',
           'global',
           'Snacks',
         },

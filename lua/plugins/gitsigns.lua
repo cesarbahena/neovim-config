@@ -17,27 +17,33 @@ return {
       changedelete = { text = '▎' },
     },
     on_attach = function(buffer)
-      local gs = package.loaded.gitsigns
-
-      local function map(mode, l, r, desc) vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc }) end
       keymap {
-        key {
-          'next Hunk',
-          fn {
-            { vim.cmd.normal, { ']c', bang = true } },
-            when = 'vim.wo.diff',
-            or_else = { 'gitsigns.nav_hunk', 'next' },
-          },
-        },
+        buffer = buffer,
 
-        key {
-          'prev Hunk',
-          fn {
-            { vim.cmd.normal, { '[c', bang = true } },
-            when = 'vim.wo.diff',
-            or_else = { 'gitsigns.nav_hunk', 'prev' },
-          },
-        },
+        -- Navigation
+        key { 'next Hunk', fn { bang ']c', when = 'vim.wo.diff', or_else = { 'gitsigns.nav_hunk', 'next' } } },
+        key { 'prev Hunk', fn { bang '[c', when = 'vim.wo.diff', or_else = { 'gitsigns.nav_hunk', 'prev' } } },
+        key { 'last Hunk', fn('gitsigns.nav_hunk', 'last') },
+        key { 'first Hunk', fn('gitsigns.nav_hunk', 'first') },
+
+        -- Stage/Reset operations
+        edit { 'Stage hunk', cmd 'Gitsigns stage_hunk' },
+        edit { 'Reset hunk', cmd 'Gitsigns reset_hunk' },
+        key { 'Stage buffer', fn 'gitsigns.stage_buffer' },
+        key { 'Reset buffer', fn 'gitsigns.reset_buffer' },
+        key { 'Undo stage hunk', fn 'gitsigns.undo_stage_hunk' },
+
+        -- Preview and blame
+        key { 'Preview hunk inline', fn 'gitsigns.preview_hunk_inline' },
+        key { 'Blame line', fn('gitsigns.blame_line', { full = true }) },
+        key { 'Blame buffer', fn 'gitsigns.blame' },
+
+        -- Diff operations
+        key { 'diff This', fn 'gitsigns.diffthis' },
+        key { 'diff This ~', fn('gitsigns.diffthis', '~') },
+
+        -- Text object
+        operator { 'Inner Hunk', cmd 'Gitsigns select_hunk' },
       }
     end,
   },

@@ -15,3 +15,4 @@ _G.edit = spec_gen.edit
 local utils = require 'utils'
 _G.fn = utils.fn
 _G.cmd = utils.cmd
+_G.bang = utils.bang
