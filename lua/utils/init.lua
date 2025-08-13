@@ -115,7 +115,9 @@ function M.fn(fn_or_module_path, ...)
             return M.fn(or_else_fn, unpack(args))()
           end
         else
-          error(result)
+          -- Show error as notification instead of throwing
+          vim.notify(tostring(result), vim.log.levels.ERROR)
+          return nil
         end
       end
     end
@@ -123,10 +125,17 @@ function M.fn(fn_or_module_path, ...)
     error 'Invalid table format. Expected { when = condition, [1] = fn, or_else = fn } or { [1] = fn, or_else = fn }'
   end
 
-  -- Direct function case: wrap it with args
+  -- Direct function case: wrap it with args and error handling
   if type(fn_or_module_path) == 'function' then
     local args = { ... }
-    return function() return fn_or_module_path(unpack(args)) end
+    return function() 
+      local success, result = pcall(fn_or_module_path, unpack(args))
+      if not success then
+        vim.notify(tostring(result), vim.log.levels.WARN)
+        return nil
+      end
+      return result
+    end
   end
 
   -- Module.function path case
@@ -145,12 +154,25 @@ function M.fn(fn_or_module_path, ...)
   local args = { ... }
 
   return function()
-    local module = require(module_path)
+    local success, module = pcall(require, module_path)
+    if not success then
+      vim.notify('Module not found: ' .. module_path, vim.log.levels.ERROR)
+      return nil
+    end
+
     local module_fn = module[function_name]
+    if not module_fn then 
+      vim.notify('Function ' .. function_name .. ' not found in module ' .. module_path, vim.log.levels.ERROR)
+      return nil
+    end
 
-    if not module_fn then error('Function ' .. function_name .. ' not found in module ' .. module_path) end
+    local fn_success, result = pcall(module_fn, unpack(args))
+    if not fn_success then
+      vim.notify(tostring(result), vim.log.levels.ERROR)
+      return nil
+    end
 
-    return module_fn(unpack(args))
+    return result
   end
 end
 

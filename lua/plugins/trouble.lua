@@ -16,29 +16,21 @@ return {
       { '<leader>cS', '<cmd>Trouble lsp toggle<cr>', desc = 'LSP references/definitions/... (Trouble)' },
       { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List (Trouble)' },
       { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)' },
-      {
-        'x',
-        function()
-          if require('trouble').is_open() then
-            require('trouble').prev { skip_groups = true, jump = true }
-          else
-            local ok, err = pcall(vim.cmd.cprev)
-            if not ok then vim.notify(err, vim.log.levels.ERROR) end
-          end
-        end,
-        desc = 'Previous Trouble/Quickfix Item',
+      key {
+        'Prev dx',
+        fn {
+          when = 'require("trouble").is_open()',
+          { 'trouble.prev', { skip_groups = true, jump = true } },
+          or_else = vim.cmd.cprev,
+        },
       },
-      {
-        'X',
-        function()
-          if require('trouble').is_open() then
-            require('trouble').next { skip_groups = true, jump = true }
-          else
-            local ok, err = pcall(vim.cmd.cnext)
-            if not ok then vim.notify(err, vim.log.levels.ERROR) end
-          end
-        end,
-        desc = 'Next Trouble/Quickfix Item',
+      key {
+        'Next dx',
+        fn {
+          when = 'require("trouble").is_open()',
+          { 'trouble.next', { skip_groups = true, jump = true } },
+          or_else = vim.cmd.cnext,
+        },
       },
     },
   },
