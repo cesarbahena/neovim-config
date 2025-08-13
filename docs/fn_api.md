@@ -41,7 +41,7 @@ Handle function errors with configurable notifications:
 local try_fn = fn {
   main_function,              -- function to try first
   or_else = fallback,         -- function to call if main fails
-  notify = 'fallback'         -- notification strategy
+  notify = 'fallback'         -- notification strategy ('main'|'fallback'|'both')
 }
 ```
 
@@ -70,7 +70,6 @@ The `notify` option controls when and how errors are reported:
 | `'main'` | Notify only main errors | ✅ Notified | ❌ Silent (propagates) |
 | `'fallback'` | Notify only fallback errors (default) | ❌ Silent | ✅ Notified |
 | `'both'` | Notify both main and fallback errors | ✅ Notified | ✅ Notified |
-| `false` | Silent mode - no notifications | ❌ Silent (propagates) | ❌ Silent (propagates) |
 
 ### Notification Behavior Details
 
@@ -129,15 +128,6 @@ local safe_require = fn {
   function() return require('optional_module') end,
   notify = 'main',  -- Show error if module not found
   or_else = function() return {} end,  -- Return empty table as fallback
-}
-```
-
-#### Silent Error Handling
-```lua
-local quiet_operation = fn {
-  function() risky_operation() end,
-  notify = false,  -- No notifications
-  or_else = function() return 'fallback_result' end,
 }
 ```
 
@@ -222,7 +212,7 @@ Creates a lazy function wrapper.
 {
   [1] = main_function,       -- function|string|table
   or_else = fallback,        -- function|string|table (optional)
-  notify = notification_mode -- 'main'|'fallback'|'both'|false (optional)
+  notify = notification_mode -- 'main'|'fallback'|'both' (optional, default: 'fallback')
 }
 ```
 

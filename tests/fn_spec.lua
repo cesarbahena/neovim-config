@@ -173,31 +173,17 @@ describe('fn API', function()
       end)
     end)
 
-    describe('notify = false (silent mode)', function()
-      it('should not notify any errors', function()
+    describe('notify option validation', function()
+      it('should validate notify option and reject invalid values', function()
         local test_fn = fn {
           function() error('Main error') end,
-          notify = false,
-          or_else = function() error('Or_else error') end,
+          notify = 'invalid',
+          or_else = function() return 'fallback' end,
         }
         
-        -- Should error because or_else is not pcalled in silent mode
         local success, err = pcall(test_fn)
         is_false(success)
-        assert.truthy(string.find(err, 'Or_else error'))
-        eq(0, #notifications) -- No notifications in silent mode
-      end)
-
-      it('should execute or_else successfully without notifications', function()
-        local test_fn = fn {
-          function() error('Main error') end,
-          notify = false,
-          or_else = function() return 'silent_success' end,
-        }
-        
-        local result = test_fn()
-        eq('silent_success', result)
-        eq(0, #notifications)
+        assert.truthy(string.find(err, 'Invalid notify option'))
       end)
     end)
   end)

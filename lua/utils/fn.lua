@@ -194,7 +194,7 @@ local function should_pcall_fallback(notify_option)
   return notify_option == 'fallback' or notify_option == 'both'
 end
 
----Handle try/notify execution: { [1] = fn, or_else = fn, notify = 'main'|'fallback'|'both'|false }
+---Handle try/notify execution: { [1] = fn, or_else = fn, notify = 'main'|'fallback'|'both' }
 ---@param spec table The try/notify specification
 ---@param args table Arguments passed to the fn call
 ---@param fn_resolver function The fn resolver function
@@ -203,6 +203,11 @@ local function handle_try_notify(spec, args, fn_resolver)
   return function()
     local main_fn = spec[1]
     local notify_option = spec['notify'] or 'fallback'
+    
+    -- Validate notify option
+    if notify_option ~= 'main' and notify_option ~= 'fallback' and notify_option ~= 'both' then
+      error("Invalid notify option: '" .. tostring(notify_option) .. "'. Expected 'main', 'fallback', or 'both'")
+    end
     
     -- Execute main function with pcall
     local success, result = execute_function(main_fn, args, true, fn_resolver)
@@ -235,7 +240,7 @@ local function handle_try_notify(spec, args, fn_resolver)
       end
       return or_else_result
     else
-      -- Call directly - let errors propagate naturally
+      -- Call directly - let errors propagate naturally (for 'main' mode)
       if type(or_else_fn) == 'table' then
         local fn_args = merge_function_args(or_else_fn, args)
         if type(or_else_fn[1]) == 'string' then
@@ -248,7 +253,6 @@ local function handle_try_notify(spec, args, fn_resolver)
       elseif type(or_else_fn) == 'function' then
         return or_else_fn(unpack(args))
       else
-        -- For other types, call directly to avoid pcall in fn_resolver
         error('Unsupported or_else type: ' .. type(or_else_fn))
       end
     end
@@ -305,7 +309,7 @@ end
 ---
 ---### 2. Try/Notify with Error Handling
 ---```lua
----fn { main_function, or_else = fallback, notify = 'main'|'fallback'|'both'|false }
+---fn { main_function, or_else = fallback, notify = 'main'|'fallback'|'both' }
 ---```
 ---
 ---### 3. Direct Function Call
@@ -323,7 +327,6 @@ end
 ---• **'main'**: Only notify errors from the main function, or_else errors propagate
 ---• **'fallback'** (default): Only notify errors from the fallback function, main errors are silent
 ---• **'both'**: Notify errors from both main and fallback functions
----• **false**: Silent mode - no error notifications, or_else errors propagate
 ---
 ---@param fn_or_module_path function|string|table The function, module path, or specification table
 ---@param ... any Arguments to pass to the function
