@@ -34,7 +34,6 @@ return {
           { 'trouble.next', { skip_groups = true, jump = true } },
           or_else = fn {
             vim.cmd.cnext,
-            catch = false,
             or_else = vim.diagnostic.goto_next,
           },
         },

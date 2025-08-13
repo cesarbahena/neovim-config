@@ -75,12 +75,12 @@ function M.fn(fn_or_module_path, ...)
       end
     end
 
-    -- Try/catch table: { [1] = fn, or_else = fn, catch = bool|function }
+    -- Try/notify table: { [1] = fn, or_else = fn, notify = 'main'|'fallback'|'both'|false }
     if fn_or_module_path[1] then
       return function()
         local main_fn = fn_or_module_path[1]
-        local catch_option = fn_or_module_path['catch']
-        if catch_option == nil then catch_option = true end -- default to true
+        local notify_option = fn_or_module_path['notify']
+        if notify_option == nil then notify_option = 'fallback' end -- default to 'fallback'
         local success, result
 
         -- Always use pcall to detect success/failure
@@ -110,9 +110,16 @@ function M.fn(fn_or_module_path, ...)
           return result
         end
 
-        -- Handle failure - try or_else first
+        -- Handle failure according to notify option
+        if notify_option == 'main' or notify_option == 'both' then
+          vim.notify(tostring(result), vim.log.levels.ERROR)
+        end
+
+        -- Execute or_else if available
         if fn_or_module_path['or_else'] then
           local or_else_fn = fn_or_module_path['or_else']
+          local or_else_success, or_else_result
+          
           if type(or_else_fn) == 'table' then
             local fn_args = {}
             for i = 2, #or_else_fn do
@@ -121,23 +128,80 @@ function M.fn(fn_or_module_path, ...)
             for i = 1, #args do
               table.insert(fn_args, args[i])
             end
-            if type(or_else_fn[1]) == 'string' then
-              return M.fn(or_else_fn[1], unpack(fn_args))()
+            
+            if notify_option == 'fallback' or notify_option == 'both' then
+              -- Use pcall for or_else and notify on failure
+              if type(or_else_fn[1]) == 'string' then
+                or_else_success, or_else_result = pcall(function() return M.fn(or_else_fn[1], unpack(fn_args))() end)
+              else
+                or_else_success, or_else_result = pcall(or_else_fn[1], unpack(fn_args))
+              end
+              if not or_else_success then
+                vim.notify(tostring(or_else_result), vim.log.levels.ERROR)
+                return nil
+              end
+              return or_else_result
             else
-              return or_else_fn[1](unpack(fn_args))
+              -- Don't use pcall for or_else (main/false modes) - call directly
+              if type(or_else_fn[1]) == 'string' then
+                -- Module path - resolve and call directly
+                local last_dot = or_else_fn[1]:match '.*()%.'
+                if last_dot then
+                  local module_path = or_else_fn[1]:sub(1, last_dot - 1)
+                  local function_name = or_else_fn[1]:sub(last_dot + 1)
+                  local module = require(module_path)
+                  return module[function_name](unpack(fn_args))
+                else
+                  error('Invalid module path: ' .. or_else_fn[1])
+                end
+              else
+                return or_else_fn[1](unpack(fn_args))
+              end
             end
           else
-            return M.fn(or_else_fn, unpack(args))()
+            if notify_option == 'fallback' or notify_option == 'both' then
+              -- Use pcall for or_else and notify on failure
+              if type(or_else_fn) == 'string' then
+                -- Module path - resolve and call with pcall
+                local last_dot = or_else_fn:match '.*()%.'
+                if last_dot then
+                  local module_path = or_else_fn:sub(1, last_dot - 1)
+                  local function_name = or_else_fn:sub(last_dot + 1)
+                  or_else_success, or_else_result = pcall(function()
+                    local module = require(module_path)
+                    return module[function_name](unpack(args))
+                  end)
+                else
+                  or_else_success, or_else_result = false, 'Invalid module path: ' .. or_else_fn
+                end
+              else
+                or_else_success, or_else_result = pcall(or_else_fn, unpack(args))
+              end
+              
+              if not or_else_success then
+                vim.notify(tostring(or_else_result), vim.log.levels.ERROR)
+                return nil
+              end
+              return or_else_result
+            else
+              -- Don't use pcall for or_else (main/false modes) - call directly
+              if type(or_else_fn) == 'string' then
+                -- Module path - resolve and call directly
+                local last_dot = or_else_fn:match '.*()%.'
+                if last_dot then
+                  local module_path = or_else_fn:sub(1, last_dot - 1)
+                  local function_name = or_else_fn:sub(last_dot + 1)
+                  local module = require(module_path)
+                  return module[function_name](unpack(args))
+                else
+                  error('Invalid module path: ' .. or_else_fn)
+                end
+              else
+                return or_else_fn(unpack(args))
+              end
+            end
           end
         end
-
-        -- No or_else available - handle error according to catch option
-        if type(catch_option) == 'function' then
-          catch_option(result)
-        elseif catch_option == true then
-          vim.notify(tostring(result), vim.log.levels.ERROR)
-        end
-        -- catch_option == false means silent failure
         
         return nil
       end
