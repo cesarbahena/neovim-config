@@ -19,17 +19,24 @@ return {
       key {
         'Prev dx',
         fn {
-          when = 'require("trouble").is_open()',
+          when = fn 'trouble.is_open',
           { 'trouble.prev', { skip_groups = true, jump = true } },
-          or_else = vim.cmd.cprev,
+          or_else = fn {
+            vim.cmd.cprev,
+            or_else = vim.diagnostic.goto_prev,
+          },
         },
       },
       key {
         'Next dx',
         fn {
-          when = 'require("trouble").is_open()',
+          when = fn 'trouble.is_open',
           { 'trouble.next', { skip_groups = true, jump = true } },
-          or_else = vim.cmd.cnext,
+          or_else = fn {
+            vim.cmd.cnext,
+            catch = false,
+            or_else = vim.diagnostic.goto_next,
+          },
         },
       },
     },

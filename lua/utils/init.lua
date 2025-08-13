@@ -75,12 +75,15 @@ function M.fn(fn_or_module_path, ...)
       end
     end
 
-    -- Try/catch table: { [1] = fn, or_else = fn }
+    -- Try/catch table: { [1] = fn, or_else = fn, catch = bool|function }
     if fn_or_module_path[1] then
       return function()
         local main_fn = fn_or_module_path[1]
+        local catch_option = fn_or_module_path['catch']
+        if catch_option == nil then catch_option = true end -- default to true
         local success, result
 
+        -- Always use pcall to detect success/failure
         if type(main_fn) == 'table' then
           local fn_args = {}
           for i = 2, #main_fn do
@@ -89,14 +92,26 @@ function M.fn(fn_or_module_path, ...)
           for i = 1, #args do
             table.insert(fn_args, args[i])
           end
-          success, result = pcall(main_fn[1], unpack(fn_args))
+          if type(main_fn[1]) == 'string' then
+            success, result = pcall(function() return M.fn(main_fn[1], unpack(fn_args))() end)
+          else
+            success, result = pcall(main_fn[1], unpack(fn_args))
+          end
         else
-          success, result = pcall(function() return M.fn(main_fn, unpack(args))() end)
+          if type(main_fn) == 'string' then
+            success, result = pcall(function() return M.fn(main_fn, unpack(args))() end)
+          else
+            success, result = pcall(main_fn, unpack(args))
+          end
         end
 
+        -- Handle success
         if success then
           return result
-        elseif fn_or_module_path['or_else'] then
+        end
+
+        -- Handle failure - try or_else first
+        if fn_or_module_path['or_else'] then
           local or_else_fn = fn_or_module_path['or_else']
           if type(or_else_fn) == 'table' then
             local fn_args = {}
@@ -114,11 +129,17 @@ function M.fn(fn_or_module_path, ...)
           else
             return M.fn(or_else_fn, unpack(args))()
           end
-        else
-          -- Show error as notification instead of throwing
-          vim.notify(tostring(result), vim.log.levels.ERROR)
-          return nil
         end
+
+        -- No or_else available - handle error according to catch option
+        if type(catch_option) == 'function' then
+          catch_option(result)
+        elseif catch_option == true then
+          vim.notify(tostring(result), vim.log.levels.ERROR)
+        end
+        -- catch_option == false means silent failure
+        
+        return nil
       end
     end
 
