@@ -21,7 +21,7 @@ return {
 
       local function map(mode, l, r, desc) vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc }) end
       keymap {
-        normal {
+        key {
           'next Hunk',
           fn {
             { vim.cmd.normal, { ']c', bang = true } },
@@ -30,8 +30,8 @@ return {
           },
         },
 
-        normal {
-          'next Hunk',
+        key {
+          'prev Hunk',
           fn {
             { vim.cmd.normal, { '[c', bang = true } },
             when = 'vim.wo.diff',

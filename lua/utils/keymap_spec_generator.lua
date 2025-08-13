@@ -75,7 +75,7 @@ local function rebuild_lookup()
 end
 
 -- Core spec generator function
-local function make_spec(spec)
+function M.key(spec)
   local normalized = normalize_desc(spec[1])
 
   local lhs = description_to_key[normalized]
@@ -94,50 +94,32 @@ local function make_spec(spec)
 end
 
 -- Mode-specific helper functions
-function M.normal(spec)
-  spec.mode = 'n'
-  return make_spec(spec)
-end
 
 function M.insert(spec)
   spec.mode = 'i'
-  return make_spec(spec)
+  return M.key(spec)
 end
 
-function M.visual(spec)
+function M.selection(spec)
   spec.mode = 'x'
-  return make_spec(spec)
+  return M.key(spec)
 end
 
-function M.command(spec)
-  spec.mode = 'c'
-  return make_spec(spec)
-end
-
-function M.terminal(spec)
-  spec.mode = 't'
-  return make_spec(spec)
-end
-
-function M.pending(spec)
-  spec.mode = 'o'
-  return make_spec(spec)
-end
 
 -- Mode combinations
 function M.motion(spec)
   spec.mode = { 'n', 'o', 'x' }
-  return make_spec(spec)
+  return M.key(spec)
 end
 
 function M.operator(spec)
   spec.mode = { 'o', 'x' }
-  return make_spec(spec)
+  return M.key(spec)
 end
 
 function M.edit(spec)
   spec.mode = { 'n', 'x' }
-  return make_spec(spec)
+  return M.key(spec)
 end
 
 -- Helper functions
@@ -160,9 +142,5 @@ function M.update_key_mapping(category, old_key, new_key)
   end
 end
 
--- Expose internals
-M.key_descriptions = key_descriptions
-M.rebuild_lookup = rebuild_lookup
-M.make_spec = make_spec
 
 return M

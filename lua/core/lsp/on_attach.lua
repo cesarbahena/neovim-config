@@ -1,7 +1,7 @@
 return function(_, bufnr)
   local function map(spec)
     spec.buffer = bufnr
-    keymap(normal(spec))
+    keymap(key(spec))
   end
 
   -- Navigation (using existing keys)

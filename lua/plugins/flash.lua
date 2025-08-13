@@ -24,10 +24,10 @@ return {
   },
   keys = {
     motion { 'Find in screen', fn 'flash.jump' },
-    pending { 'Remote', fn 'flash.remote' },
+    key { 'Remote', fn 'flash.remote', mode = 'o' },
     -- operator { 'Till', fn ('flash.jump', { mode = 'char' }) },
-    -- normal { 'Treesitter search', fn 'flash.treesitter_search' },
-    normal {
+    -- key { 'Treesitter search', fn 'flash.treesitter_search' },
+    key {
       'Visual mode',
       function()
         vim.cmd 'normal! v'

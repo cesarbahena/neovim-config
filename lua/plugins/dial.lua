@@ -4,14 +4,14 @@ return {
   desc = 'Increment and decrement numbers, dates, and more',
   -- stylua: ignore
   keys = {
-    normal { 'Add', fn('dial.map.manipulate', 'increment', 'normal') },
-    normal { 'Xtract', fn('dial.map.manipulate', 'decrement', 'normal') },
-    normal { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gnormal') },
-    normal { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gnormal') },
-    visual { 'Add', fn('dial.map.manipulate', 'increment', 'visual') },
-    visual { 'Xtract', fn('dial.map.manipulate', 'decrement', 'visual') },
-    visual { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gvisual') },
-    visual { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gvisual') },
+    key { 'Add', fn('dial.map.manipulate', 'increment', 'normal') },
+    key { 'Xtract', fn('dial.map.manipulate', 'decrement', 'normal') },
+    key { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gnormal') },
+    key { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gnormal') },
+    selection { 'Add', fn('dial.map.manipulate', 'increment', 'visual') },
+    selection { 'Xtract', fn('dial.map.manipulate', 'decrement', 'visual') },
+    selection { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gvisual') },
+    selection { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gvisual') },
   },
   opts = function()
     local augend = require 'dial.augend'
