@@ -8,10 +8,10 @@ return {
     key { 'Xtract', fn('dial.map.manipulate', 'decrement', 'normal') },
     key { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gnormal') },
     key { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gnormal') },
-    selection { 'Add', fn('dial.map.manipulate', 'increment', 'visual') },
-    selection { 'Xtract', fn('dial.map.manipulate', 'decrement', 'visual') },
-    selection { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gvisual') },
-    selection { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gvisual') },
+    on_selection { 'Add', fn('dial.map.manipulate', 'increment', 'visual') },
+    on_selection { 'Xtract', fn('dial.map.manipulate', 'decrement', 'visual') },
+    on_selection { 'dynamic Add', fn('dial.map.manipulate', 'increment', 'gvisual') },
+    on_selection { 'dynamic Xtract', fn('dial.map.manipulate', 'decrement', 'gvisual') },
   },
   opts = function()
     local augend = require 'dial.augend'

@@ -27,8 +27,8 @@ return {
         key { 'first Hunk', fn('gitsigns.nav_hunk', 'first') },
 
         -- Stage/Reset operations
-        edit { 'Stage hunk', cmd 'Gitsigns stage_hunk' },
-        edit { 'Reset hunk', cmd 'Gitsigns reset_hunk' },
+        auto_select { 'Stage hunk', cmd 'Gitsigns stage_hunk' },
+        auto_select { 'Reset hunk', cmd 'Gitsigns reset_hunk' },
         key { 'Stage buffer', fn 'gitsigns.stage_buffer' },
         key { 'Reset buffer', fn 'gitsigns.reset_buffer' },
         key { 'Undo stage hunk', fn 'gitsigns.undo_stage_hunk' },

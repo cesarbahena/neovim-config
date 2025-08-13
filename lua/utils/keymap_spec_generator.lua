@@ -100,7 +100,7 @@ function M.insert(spec)
   return M.key(spec)
 end
 
-function M.selection(spec)
+function M.on_selection(spec)
   spec.mode = 'x'
   return M.key(spec)
 end
@@ -117,7 +117,7 @@ function M.operator(spec)
   return M.key(spec)
 end
 
-function M.edit(spec)
+function M.auto_select(spec)
   spec.mode = { 'n', 'x' }
   return M.key(spec)
 end

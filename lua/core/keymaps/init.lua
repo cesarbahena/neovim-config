@@ -19,8 +19,8 @@ keymap {
   key { 'Find in document', '/' },
   key { 'Add argument', fn 'actions.treesitter.add_argument' },
 
-  edit { 'Substitute', [["_c]] },
-  edit { 'Command line mode', ':' },
+  auto_select { 'Substitute', [["_c]] },
+  auto_select { 'Command line mode', ':' },
 
   key { 'Yank line', 'yy' },
   key { 'Yank to eol', 'y$' },
@@ -47,16 +47,16 @@ keymap {
   key { 'Toggle macro recording', fn 'actions.toggle_macro_recording' },
   key { 'Repeat macro', '@q' },
 
-  selection { 'Yank', 'y`>' },
-  selection { 'Paste', 'P' },
-  selection { 'Indent', '>gv' },
-  selection { 'Deindent', '<gv' },
-  selection { 'Uppercase', 'U' },
-  selection { 'Lowercase', 'u' },
-  selection { 'Move line down', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv" },
-  selection { 'Move line up', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv" },
-  selection { 'Change visual mode', fn 'actions.change_visual_mode', expr = true },
-  selection { 'Visual mode', '<Esc>', details = '(exit)' },
+  on_selection { 'Yank', 'y`>' },
+  on_selection { 'Paste', 'P' },
+  on_selection { 'Indent', '>gv' },
+  on_selection { 'Deindent', '<gv' },
+  on_selection { 'Uppercase', 'U' },
+  on_selection { 'Lowercase', 'u' },
+  on_selection { 'Move line down', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv" },
+  on_selection { 'Move line up', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv" },
+  on_selection { 'Change visual mode', fn 'actions.change_visual_mode', expr = true },
+  on_selection { 'Visual mode', '<Esc>', details = '(exit)' },
 
   insert { 'Escape to normal mode', fn 'actions.treesitter.clean_exit' },
   insert { 'Move line down', '<esc>' .. cmd 'm .+1' .. '==gi' },
@@ -69,7 +69,7 @@ keymap {
   key { 'Undo jump', '<C-t>' },
 
   -- alt
-  edit { 'Quit', vim.cmd.q },
+  auto_select { 'Quit', vim.cmd.q },
 
   -- ?
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
