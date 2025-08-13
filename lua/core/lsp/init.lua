@@ -16,7 +16,7 @@ vim.lsp.config('*', {
   },
 })
 
--- Load server configurations
+-- Enable servers (configs will be loaded from lsp/ directory automatically)
 local servers = {
   'lua_ls',
   'ts_ls',
@@ -25,11 +25,7 @@ local servers = {
 }
 
 for _, server in ipairs(servers) do
-  local server_config = try { require, 'lsp.' .. server, or_else = {} }
-
-  vim.lsp.config[server] = vim.tbl_deep_extend('force', {
-    capabilities = updated_capabilities,
-  }, server_config)
+  vim.lsp.enable(server)
 end
 
 -- Load diagnostics
