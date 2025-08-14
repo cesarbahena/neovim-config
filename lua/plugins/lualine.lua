@@ -13,29 +13,13 @@ for hl_group, hl in pairs(hl_groups) do
   vim.api.nvim_set_hl(0, hl_group, hl)
 end
 
--- Force lualine transparency with multiple methods
-local function force_lualine_transparency()
-  -- Method 1: Clear all existing lualine highlights
-  vim.cmd('highlight clear lualine_a_normal')
-  vim.cmd('highlight clear lualine_b_normal') 
-  vim.cmd('highlight clear lualine_c_normal')
-  
-  -- Method 2: Set StatusLine itself to transparent
-  vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE' })
-  vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE' })
-  
-  -- Method 3: Nuclear option - clear ALL lualine highlights
-  local all_highlights = vim.fn.getcompletion('', 'highlight')
-  for _, hl in ipairs(all_highlights) do
-    if hl:match('^lualine_') then
-      vim.api.nvim_set_hl(0, hl, { bg = 'NONE' })
-    end
-  end
-end
-
+-- Minimal lualine transparency - just clear StatusLine
 vim.api.nvim_create_autocmd({"ColorScheme", "VimEnter"}, {
   callback = function()
-    vim.schedule(force_lualine_transparency)
+    vim.schedule(function()
+      vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE' })
+      vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE' })
+    end)
   end,
 })
 
@@ -48,55 +32,21 @@ local sections = {
   lualine_z = {},
 }
 
--- Create fully transparent theme
-local transparent_theme = {
-  normal = {
-    a = { bg = 'NONE', fg = 'white', gui = 'bold' },
-    b = { bg = 'NONE', fg = 'white' },
-    c = { bg = 'NONE', fg = 'white' },
-    x = { bg = 'NONE', fg = 'white' },
-    y = { bg = 'NONE', fg = 'white' },
-    z = { bg = 'NONE', fg = 'white' },
+-- Minimal theme to fix component spacing
+local minimal_theme = {
+  normal = { 
+    c = { bg = 'NONE' },
+    x = { bg = 'NONE' } 
   },
-  inactive = {
-    a = { bg = 'NONE', fg = 'gray' },
-    b = { bg = 'NONE', fg = 'gray' },
-    c = { bg = 'NONE', fg = 'gray' },
-    x = { bg = 'NONE', fg = 'gray' },
-    y = { bg = 'NONE', fg = 'gray' },
-    z = { bg = 'NONE', fg = 'gray' },
+  inactive = { 
+    c = { bg = 'NONE' },
+    x = { bg = 'NONE' }
   },
-  insert = {
-    a = { bg = 'NONE', fg = 'white', gui = 'bold' },
-    b = { bg = 'NONE', fg = 'white' },
-    c = { bg = 'NONE', fg = 'white' },
-  },
-  visual = {
-    a = { bg = 'NONE', fg = 'white', gui = 'bold' },
-    b = { bg = 'NONE', fg = 'white' },
-    c = { bg = 'NONE', fg = 'white' },
-  },
-  replace = {
-    a = { bg = 'NONE', fg = 'white', gui = 'bold' },
-    b = { bg = 'NONE', fg = 'white' },
-    c = { bg = 'NONE', fg = 'white' },
-  },
-  command = {
-    a = { bg = 'NONE', fg = 'white', gui = 'bold' },
-    b = { bg = 'NONE', fg = 'white' },
-    c = { bg = 'NONE', fg = 'white' },
-  },
-}
-
--- Create minimal empty theme to avoid warnings
-local empty_theme = {
-  normal = { c = { fg = 'white', bg = 'NONE' } },
-  inactive = { c = { fg = 'gray', bg = 'NONE' } },
 }
 
 local opts = {
   options = {
-    theme = empty_theme,
+    theme = minimal_theme,
     component_separators = '',
     section_separators = '',
     globalstatus = true,
@@ -124,7 +74,7 @@ end
 return {
   'nvim-lualine/lualine.nvim',
   lazy = false,
-  dependencies = { 'echasnovski/mini.icons', 'xiyaowong/transparent.nvim' },
+  dependencies = { 'echasnovski/mini.icons' },
   opts = function()
     component('sections', 'c', 'file_info', 'cwd')
     component('sections', 'c', 'file_info', 'git')

@@ -15,18 +15,6 @@ return {
     init = function() vim.cmd 'colorscheme kanagawa' end,
     opts = {
       transparent = true,
-      colors = {
-        theme = {
-          all = {
-            ui = {
-              bg_gutter = 'none',
-              bg = 'none',           -- Remove main background
-              bg_dim = 'none',       -- Remove dimmed background  
-              bg_sidebar = 'none',   -- Remove sidebar background
-            },
-          },
-        },
-      },
     },
   },
 }
