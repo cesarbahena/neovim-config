@@ -13,15 +13,6 @@ for hl_group, hl in pairs(hl_groups) do
   vim.api.nvim_set_hl(0, hl_group, hl)
 end
 
--- Minimal lualine transparency - just clear StatusLine
-vim.api.nvim_create_autocmd({"ColorScheme", "VimEnter"}, {
-  callback = function()
-    vim.schedule(function()
-      vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE' })
-      vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE' })
-    end)
-  end,
-})
 
 local sections = {
   lualine_a = {},
