@@ -1,6 +1,17 @@
 local M = {}
 
-local key_descriptions = require('core.keymaps.' .. _G.KeyboardLayout)
+-- Load key descriptions from JSON
+local function load_key_descriptions()
+  local config_path = vim.fn.stdpath('config') .. '/json/' .. _G.KeyboardLayout .. '.json'
+  if vim.fn.filereadable(config_path) == 1 then
+    local content = table.concat(vim.fn.readfile(config_path), '')
+    return vim.json.decode(content)
+  end
+  return {}
+end
+
+local key_descriptions = load_key_descriptions()
+_G.key_descriptions = key_descriptions
 
 -- Helper function to normalize description for lookup
 local function normalize_desc(desc) return desc:lower():gsub('[%s%-_%*]', '') end

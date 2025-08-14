@@ -27,6 +27,7 @@ if ok then
     spec = {
       { import = 'plugins' },
     },
+    lockfile = vim.fn.stdpath('config') .. '/json/lazy-lock.json',
     checker = { enabled = true },
     install = { colorscheme = { 'kanagawa' } },
     performance = {
