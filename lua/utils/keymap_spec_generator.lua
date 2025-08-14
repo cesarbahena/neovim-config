@@ -14,7 +14,11 @@ local key_descriptions = load_key_descriptions()
 _G.key_descriptions = key_descriptions
 
 -- Helper function to normalize description for lookup
-local function normalize_desc(desc) return desc:lower():gsub('[%s%-_%*]', '') end
+local function normalize_desc(desc) 
+  -- Convert numbers to strings first
+  desc = tostring(desc)
+  return desc:lower():gsub('[%s%-_%*]', '') 
+end
 
 -- Helper function to build key string from category and key
 local function build_key(category, key)
@@ -34,6 +38,8 @@ end
 -- Build initial lookup from structured table
 local description_to_key = {}
 for category, keys in pairs(key_descriptions) do
+  -- Skip meta section as it's configuration, not keybindings
+  if category ~= 'meta' then
   for key, desc_or_table in pairs(keys) do
     local full_key = build_key(category, key)
 
@@ -71,6 +77,7 @@ for category, keys in pairs(key_descriptions) do
       end
     end
   end
+  end -- Close the meta skip condition
 end
 
 -- vim.print(description_to_key)
@@ -78,9 +85,18 @@ end
 local function rebuild_lookup()
   description_to_key = {}
   for category, keys in pairs(key_descriptions) do
-    for key, desc in pairs(keys) do
-      local full_key = build_key(category, key)
-      description_to_key[normalize_desc(desc)] = full_key
+    if category ~= 'meta' then
+      for key, desc_or_table in pairs(keys) do
+        local full_key = build_key(category, key)
+        
+        if type(desc_or_table) == 'string' then
+          description_to_key[normalize_desc(desc_or_table)] = full_key
+        elseif type(desc_or_table) == 'table' then
+          for _, desc in pairs(desc_or_table) do
+            description_to_key[normalize_desc(desc)] = full_key
+          end
+        end
+      end
     end
   end
 end

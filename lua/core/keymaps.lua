@@ -75,6 +75,9 @@ keymap {
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
 }
 
+-- Setup numeric keymaps
+require('utils.numeric_keymaps').setup()
+
 local mappings_to_disable = {}
 
 for mode, keys in pairs(mappings_to_disable) do

@@ -27,7 +27,17 @@
     "=":"Evenly distributed windows",
     "_":"Move window to bottom",
     "<c-x>":"dynamic Xtract",
-    "l":"add Line below"
+    "l":"add Line below",
+    "a":"1",
+    "r":"2", 
+    "s":"3",
+    "t":"4",
+    "g":"5",
+    "m":"6",
+    "n":"7",
+    "e":"8",
+    "i":"9",
+    "o":"0"
   },
   "keys":{
     "gr":"Reset hunk",
@@ -115,5 +125,8 @@
   "alt":{
     "e":"Move line up",
     "n":"Move line down"
+  },
+  "meta": {
+    "tens": [1, 2, 3]
   }
 }
