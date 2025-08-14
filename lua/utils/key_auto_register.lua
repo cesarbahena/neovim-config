@@ -38,7 +38,16 @@ end
 function M.scan_for_missing_keys(content)
   local missing = {}
   
-  for desc in content:gmatch("key%s*{%s*['\"]([^'\"]+)['\"]") do
+  -- List of all helper functions that use the key system
+  local key_functions = {
+    'key', 'motion', 'operator', 'auto_select', 'on_selection', 'insert'
+  }
+  
+  -- Create pattern to match any of these functions
+  local pattern = '(' .. table.concat(key_functions, '|') .. ')%s*{%s*[\'"]([^\'"]+)[\'"]'
+  
+  for func_name, desc in content:gmatch(pattern) do
+    -- Test if the description exists in the lookup table
     local success = pcall(spec_gen.key, { desc })
     if not success then
       table.insert(missing, desc)
