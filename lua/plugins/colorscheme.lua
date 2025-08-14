@@ -18,6 +18,12 @@ return {
         'SnacksPickerDir',
         'SnacksPickerPrompt',
         'SnacksPickerList',
+        'GitSignsAdd',
+        'GitSignsChange',
+        'GitSignsDelete',
+        'GitSignsTopDelete',
+        'GitSignsChangeDelete',
+        'GitSignsUntracked',
       },
     },
     config = function(_, opts)
