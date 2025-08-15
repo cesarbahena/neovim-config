@@ -31,10 +31,10 @@ return {
         swap = {
           enable = true,
           swap_next = {
-            ['<m-h>'] = '@parameter.inner',
+            ['<c-h>'] = '@parameter.inner',
           },
           swap_previous = {
-            ['<m-k>'] = '@parameter.inner',
+            ['<c-k>'] = '@parameter.inner',
           },
         },
         move = {

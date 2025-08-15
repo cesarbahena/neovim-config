@@ -96,7 +96,7 @@ function M.add_file_at_pos(position)
 
   -- Use proper Harpoon 2 API to set at position
   list:replace_at(position, new_mark)
-  
+
   -- If we moved an item, add it back
   if move then
     local empty_slot = #list.items + 1

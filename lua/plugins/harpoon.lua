@@ -8,30 +8,13 @@ return {
     motion { 'Harpoon 2', function() require('harpoon'):list():select(2) end },
     motion { 'Harpoon 3', function() require('harpoon'):list():select(3) end },
     motion { 'Harpoon 4', function() require('harpoon'):list():select(4) end },
-    motion { 'Harpoon 5', function() require('harpoon'):list():select(5) end },
     motion {
       'Harpoon menu',
       function() require('harpoon').ui:toggle_quick_menu(require('harpoon'):list()) end,
     },
     motion {
-      'Harpoon add to 1',
-      fn('actions.harpoon.add_file_at_pos', 1),
-    },
-    motion {
-      'Harpoon add to 2',
-      fn('actions.harpoon.add_file_at_pos', 2),
-    },
-    motion {
-      'Harpoon add to 3',
-      fn('actions.harpoon.add_file_at_pos', 3),
-    },
-    motion {
-      'Harpoon add to 4',
-      fn('actions.harpoon.add_file_at_pos', 4),
-    },
-    motion {
-      'Harpoon add to 5',
-      fn('actions.harpoon.add_file_at_pos', 5),
+      'Harpoon add',
+      function() require('harpoon'):list():add() end,
     },
   },
 }
