@@ -11,12 +11,10 @@ return {
     },
     watch_for_changes = false,
     keymaps = {
-      ['<c-u>'] = { 'actions.close', mode = 'n', opts = { exit_if_last_buf = true } },
-      ['<c-y>'] = { 'actions.select', mode = 'n' },
-      ['<cr>'] = ':',
+      q = { 'actions.close', mode = 'n', opts = { exit_if_last_buf = true } },
     },
   },
   keys = {
-    { '-', '<cmd>Oil<cr>', desc = 'Open parent directory' },
+    key { 'parent directory', cmd 'Oil' },
   },
 }
