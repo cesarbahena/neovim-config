@@ -43,14 +43,26 @@ function M.scan_for_missing_keys(content)
     'key', 'motion', 'operator', 'auto_select', 'on_selection', 'insert'
   }
   
-  -- Create pattern to match any of these functions
-  local pattern = '(' .. table.concat(key_functions, '|') .. ')%s*{%s*[\'"]([^\'"]+)[\'"]'
-  
-  for func_name, desc in content:gmatch(pattern) do
-    -- Test if the description exists in the lookup table
-    local success = pcall(spec_gen.key, { desc })
-    if not success then
-      table.insert(missing, desc)
+  -- Check each function individually since Lua patterns don't support | alternation
+  for _, func_name in ipairs(key_functions) do
+    local pattern = func_name .. '%s*{%s*[\'"]([^\'",]+)[\'"]*'
+    
+    for desc in content:gmatch(pattern) do
+      -- Test if the description exists in the lookup table
+      local success = pcall(spec_gen.key, { desc })
+      if not success then
+        -- Check if already added to avoid duplicates
+        local already_added = false
+        for _, existing in ipairs(missing) do
+          if existing == desc then
+            already_added = true
+            break
+          end
+        end
+        if not already_added then
+          table.insert(missing, desc)
+        end
+      end
     end
   end
   
@@ -93,22 +105,10 @@ function M.handle_missing_keys(missing_keys)
   end
 end
 
--- Setup autocommand
+-- Setup autocommand (deprecated - now handled in core/autocmd.lua)
 function M.setup()
-  vim.api.nvim_create_autocmd('BufWritePost', {
-    pattern = '*.lua',
-    group = vim.api.nvim_create_augroup('KeyAutoRegister', { clear = true }),
-    callback = function()
-      local content = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\n')
-      local missing = scan_for_missing_keys(content)
-      
-      if #missing > 0 then
-        vim.schedule(function()
-          M.handle_missing_keys(missing)
-        end)
-      end
-    end,
-  })
+  -- This function is kept for backwards compatibility but does nothing
+  -- The autocommand is now set up in core/autocmd.lua
 end
 
 return M
