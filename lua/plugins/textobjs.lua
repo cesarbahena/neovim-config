@@ -52,7 +52,7 @@ local textobjs = {
     desc = 'XML/HTML attribute',
     { ' ()%w+=["{]().-()["}]()' },
   },
-  Z = {
+  n = {
     desc = 'Subword',
     {
       {
@@ -129,28 +129,19 @@ return {
       { desc = 'Indentation and line above', 'agi', VTO:format [[indentation('outer', 'inner')]], mode = { 'o', 'x' } },
       { desc = 'Rest of indentation', 'iI', VTO:format [[restOfIndentation()]], mode = { 'o', 'x' } },
       { desc = 'Greedy outer indentation', 'aI', VTO:format [[outerIndentation 'inner']], mode = { 'o', 'x' } },
-      {
-        desc = 'Subword',
-        'iz',
-        function()
-          vim.print 'Hello'
-          return VTO:format [[subword 'inner']]
-        end,
-        expr = true,
-        mode = { 'o', 'x' },
-      },
-      { desc = 'Subword and hyphens', 'az', VTO:format [[subword 'outer']], mode = { 'o', 'x' } },
+      { desc = 'Subword', 'in', VTO:format [[subword 'inner']], mode = { 'o', 'x' } },
+      { desc = 'Subword and hyphens', 'an', VTO:format [[subword 'outer']], mode = { 'o', 'x' } },
 
       {
-        desc = 'Next Subword',
-        'z',
-        function() require('mini.ai').move_cursor('left', 'i', 'Z', { search_method = 'next' }) end,
+        desc = 'next Subword',
+        'N',
+        function() require('mini.ai').move_cursor('left', 'i', 'n', { search_method = 'next' }) end,
         mode = { 'n', 'x', 'o' },
       },
       {
-        desc = 'Next Subword',
-        'Z',
-        function() require('mini.ai').move_cursor('left', 'i', 'Z', { search_method = 'prev' }) end,
+        desc = 'prev Subword',
+        'E',
+        function() require('mini.ai').move_cursor('left', 'i', 'n', { search_method = 'prev' }) end,
         mode = { 'n', 'x', 'o' },
       },
 

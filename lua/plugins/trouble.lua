@@ -33,11 +33,10 @@ return {
         },
       },
       key {
-        'Quit',
+        'clean',
         fn {
           'trouble.close',
           when = fn 'trouble.is_open',
-          or_else = vim.cmd.q,
         },
       },
     },

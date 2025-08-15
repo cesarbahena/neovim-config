@@ -87,8 +87,22 @@ local function prompt_for_key(desc)
     return
   end
   
-  -- Use existing add_key_mapping to update in-memory
-  spec_gen.add_key_mapping(category, key, desc)
+  -- Always handle multiple descriptions - never override existing keys
+  if _G.key_descriptions[category] and _G.key_descriptions[category][key] then
+    local existing = _G.key_descriptions[category][key]
+    if type(existing) == 'string' then
+      -- Convert single description to array and add new one
+      _G.key_descriptions[category][key] = { existing, desc }
+    elseif type(existing) == 'table' then
+      -- Add to existing array
+      table.insert(_G.key_descriptions[category][key], desc)
+    end
+    -- Update the mapping (this calls rebuild_lookup internally)
+    spec_gen.add_key_mapping(category, key, _G.key_descriptions[category][key])
+  else
+    -- Use existing add_key_mapping for new keys
+    spec_gen.add_key_mapping(category, key, desc)
+  end
   
   -- Save to JSON
   save_to_json()
