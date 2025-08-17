@@ -16,3 +16,4 @@ local utils = require 'utils'
 _G.fn = utils.fn
 _G.cmd = utils.cmd
 _G.bang = utils.bang
+_G.proc = utils.proc

@@ -22,6 +22,13 @@ function M.bang(command)
   end
 end
 
+-- Execute functions sequentially
+function M.proc(funcs)
+  for _, func in ipairs(funcs) do
+    func()
+  end
+end
+
 -- Import fn module
 M.fn = require('utils.fn').fn
 
