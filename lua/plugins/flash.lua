@@ -17,8 +17,7 @@ return {
     },
   },
   keys = {
-    motion { 'Find in screen', fn 'flash.jump' },
-    key { 'Remote', fn 'flash.remote', mode = 'o' },
+    key { 'Remote', fn 'flash.remote' },
     key {
       'Visual mode',
       function()

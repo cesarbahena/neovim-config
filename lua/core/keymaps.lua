@@ -19,7 +19,7 @@ keymap {
   key { 'Quit!', cmd 'q!' },
   key { 'Replace', 'r' },
   key { 'Delete one', [["_x]], details = '(no yank)' },
-  key { 'Find in document', '/' },
+  key { 'Find', '/' },
   key { 'Add argument', fn 'actions.treesitter.add_argument' },
   key { 'swapcase', '~' },
 
@@ -80,7 +80,12 @@ keymap {
 -- Setup numeric keymaps
 require('utils.numeric_keymaps').setup()
 
-local mappings_to_disable = {}
+local mappings_to_disable = {
+  x = {
+    'u',
+    'U',
+  },
+}
 
 for mode, keys in pairs(mappings_to_disable) do
   for _, key in ipairs(keys) do
@@ -90,7 +95,7 @@ end
 
 -- Set with defer to override plugins
 
-vim.defer_fn(function() 
+vim.defer_fn(function()
   vim.keymap.set('i', '<CR>', function()
     -- Try blink-pairs enter first
     local ok, blink_pairs_mappings = pcall(require, 'blink.pairs.mappings')
@@ -103,9 +108,7 @@ vim.defer_fn(function()
         if config_ok then
           local rules = rule_lib.get_all(rule_lib.parse(config.mappings.pairs))
           local rule = rule_lib.get_surrounding(context, rules, 'enter')
-          if rule ~= nil then
-            return blink_pairs_mappings.enter(rules)()
-          end
+          if rule ~= nil then return blink_pairs_mappings.enter(rules)() end
         end
       end
     end
