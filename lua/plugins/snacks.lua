@@ -22,9 +22,9 @@ return {
         },
       },
     },
-    quickfile = { enabled = true },
+    quickfile = { enabled = false },
     statuscolumn = { enabled = true },
-    words = { enabled = true },
+    words = { enabled = false },
     styles = {
       notification = {
         wo = { wrap = true },
@@ -42,7 +42,7 @@ return {
     -- git
     key { 'Git Branches', fn 'snacks.picker.git_branches' },
     key { 'Git Browse', fn 'snacks.picker.gitbrowse' },
-    key { 'LazyGit', fn 'snacks.picker.lazygit' },
+    key { 'LazyGit', fn 'snacks.lazygit' },
     key { 'Git Log', fn 'snacks.picker.git_log' },
     key { 'Git Log line', fn 'snacks.picker.git_log_line' },
     key { 'Git Status', fn 'snacks.picker.git_status' },
@@ -72,14 +72,24 @@ return {
     motion { 'dismiss all Notifications', fn 'snacks.notifier.hide' },
     motion { 'delete buffer', fn 'snacks.bufdelete' },
     key { 'file Rename', fn 'snacks.rename.rename_file' },
+    key {
+      'find in history',
+      function()
+        -- Escape command mode first
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, false, true), 'n', false)
+        -- Then call the appropriate picker
+        if vim.fn.getcmdtype() == '/' or vim.fn.getcmdtype() == '?' then
+          require('snacks').picker.search_history()
+        else
+          require('snacks').picker.command_history()
+        end
+      end,
+      mode = 'c',
+    },
     -- { '/', function() Snacks.picker.smart() end, desc = 'Smart Find Files' },
     -- { '<leader>fr', function() Snacks.picker.recent() end, desc = 'Recent' },
   },
   init = function()
-    local keybinds = {
-      key { 'find in command history', fn 'snacks.picker.command_history' },
-      key { 'find in search history', fn 'snacks.picker.search_history' },
-    }
     vim.api.nvim_create_autocmd('User', {
       pattern = 'VeryLazy',
       callback = function()
