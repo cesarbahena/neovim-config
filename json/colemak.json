@@ -1,5 +1,7 @@
 {
   "keys": {
+    "=": "increment",
+    "-": "decrement",
     ".": ["Add argument", "Dot with auto undo breakpoints"],
     "bq": "delete buffer",
     "x": "Next dx",
@@ -61,7 +63,7 @@
     "ss": "Replace",
     "`": ["swapcase", "uppercase"],
     "gb": "Blame line",
-    "-": "parent directory",
+    "\\": "parent directory",
     "T": "back To",
     "s": "Substitute",
     "cd": "Code Definition",
@@ -90,10 +92,8 @@
     ",,": "Insert comma at the end"
   },
   "control": {
-    "f": "find in history",
-    "a": "Add",
+    "f": "reFine search",
     "d": "Deindent",
-    "x": "Xtract",
     "t": "indenT",
     "y": "Yes",
     "r": "Toggle macro recording",
@@ -101,6 +101,8 @@
     "u": "Undo jump"
   },
   "leader": {
+    "=": "fixed increment",
+    "-": "fixed decrement",
     "f": "grep lines",
     "a": "1",
     "x": "find diagnostics",
@@ -111,7 +113,6 @@
     "n": "7",
     "b": "find Buffers",
     "gB": "Git Browse",
-    "=": "Evenly distributed windows",
     ",": "Repeat macro",
     "gh": "Git  Hunks",
     "<c-x>": "dynamic Xtract",
@@ -136,7 +137,7 @@
     "<cr>": "find commands",
     "_": "Move window to bottom",
     "B": "grep buffers",
-    "-": "find projects",
+    "/": "find projects",
     "<leader>": "resume picker",
     "h": "harpoon menu",
     "X": "find diagnostics in buffer",

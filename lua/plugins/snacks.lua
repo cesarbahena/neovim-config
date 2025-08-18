@@ -178,7 +178,7 @@ return {
     motion { 'delete buffer', fn 'snacks.bufdelete' },
     key { 'file Rename', fn 'snacks.rename.rename_file' },
     key {
-      'find in history',
+      'reFine search',
       function()
         -- Escape command mode first
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, false, true), 'n', false)
