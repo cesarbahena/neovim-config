@@ -89,16 +89,8 @@
     "p": "Paste",
     "cs": "Code Suggestions",
     "gS": "Stage buffer",
-    ",,": "Insert comma at the end"
-  },
-  "control": {
-    "f": "reFine search",
-    "d": "Deindent",
-    "t": "indenT",
-    "y": "Yes",
-    "r": "Toggle macro recording",
-    "e": "Signature",
-    "u": "Undo jump"
+    ",,": "Insert comma at the end",
+    "cx": "quiCkfiX list"
   },
   "leader": {
     "=": "fixed increment",
@@ -144,6 +136,15 @@
     "r": "2",
     "g": "5",
     "l": "add Line below"
+  },
+  "control": {
+    "f": "reFine search",
+    "d": "Deindent",
+    "t": "indenT",
+    "y": "Yes",
+    "r": "Toggle macro recording",
+    "e": "Signature",
+    "u": "Undo jump"
   },
   "alt": {
     "j": "harpoon 4",

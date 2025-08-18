@@ -30,6 +30,11 @@ local function save_to_json()
     end
   end
   
+  -- Preserve meta section if it exists
+  if _G.key_descriptions.meta then
+    sorted_data.meta = _G.key_descriptions.meta
+  end
+  
   local encoded = vim.json.encode(sorted_data)
   vim.fn.writefile(vim.split(encoded, '\n'), config_path)
 end
