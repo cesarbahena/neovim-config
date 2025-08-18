@@ -158,5 +158,8 @@
     "n": "botom window",
     "m": "left window",
     "l": "harpoon 3"
+  },
+  "meta": {
+    "tens": [1, 2, 3]
   }
 }
