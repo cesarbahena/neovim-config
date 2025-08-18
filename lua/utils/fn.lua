@@ -4,14 +4,25 @@ local M = {}
 -- Helper Functions --
 
 ---Parse a module path string into module and function name
----@param module_path string The module.function path
+---@param module_path string The module.function or module::nested.property.path
 ---@return string|nil module_name The module name
----@return string|nil function_name The function name
+---@return string|nil function_name The function name or property path
 ---@return string|nil error_msg Error message if parsing fails
 local function parse_module_path(module_path)
+  -- Check for :: syntax for nested properties
+  if module_path:find('::') then
+    local module_name, property_path = module_path:match('^(.-)::(.+)$')
+    if module_name and property_path then
+      return module_name, property_path, nil
+    else
+      return nil, nil, 'Invalid :: syntax in: "' .. module_path .. '"'
+    end
+  end
+  
+  -- Legacy single-level syntax (only last dot)
   local last_dot = module_path:match '.*()%.'
   if not last_dot then
-    return nil, nil, 'Module path must include function name: "module.function", got "' .. module_path .. '"'
+    return nil, nil, 'Module path must include function name: "module.function" or "module::nested.property", got "' .. module_path .. '"'
   end
 
   local module_name = module_path:sub(1, last_dot - 1)
@@ -30,10 +41,29 @@ local function resolve_module_function(module_path)
   local success, module = pcall(require, module_name)
   if not success then return nil, 'Module not found: ' .. module_name end
 
-  local module_fn = module[function_name]
-  if not module_fn then return nil, 'Function ' .. function_name .. ' not found in module ' .. module_name end
-
-  return module_fn, nil
+  -- Handle nested property access for :: syntax
+  if module_path:find('::') then
+    local current = module
+    local properties = vim.split(function_name, '.', { plain = true })
+    
+    for i, property in ipairs(properties) do
+      if current == nil then
+        return nil, 'Property path broken at step ' .. i .. ' (' .. property .. ') in ' .. module_path
+      end
+      current = current[property]
+    end
+    
+    if current == nil then
+      return nil, 'Property ' .. function_name .. ' not found in module ' .. module_name
+    end
+    
+    return current, nil
+  else
+    -- Legacy single-level access (last dot only)
+    local module_fn = module[function_name]
+    if not module_fn then return nil, 'Function ' .. function_name .. ' not found in module ' .. module_name end
+    return module_fn, nil
+  end
 end
 
 ---Call a module function directly (without pcall)

@@ -20,6 +20,7 @@ return {
           'operator',
           'edit',
           'fn',
+          'proc',
           'cmd',
           'bang',
           'global',

@@ -14,6 +14,9 @@ return {
     },
     picker = {
       enabled = true,
+      actions = {
+        trouble_open = fn 'trouble.sources.snacks::actions.trouble_open.action',
+      },
       toggles = {
         follow = false,
         hidden = false,
@@ -70,7 +73,7 @@ return {
             ['<leader>'] = 'cancel',
             h = { { 'cycle_win', 'cycle_win', 'preview_scroll_down' } },
             gG = 'select_all',
-            x = 'qflist',
+            x = 'trouble_open',
             ['_'] = 'edit_split',
             ['|'] = 'edit_vsplit',
             ['<F35>'] = 'toggle_maximize',

@@ -24,8 +24,10 @@ end
 
 -- Execute functions sequentially
 function M.proc(funcs)
-  for _, func in ipairs(funcs) do
-    func()
+  return function()
+    for _, func in ipairs(funcs) do
+      func()
+    end
   end
 end
 
