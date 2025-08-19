@@ -25,6 +25,10 @@ return {
         'GitSignsTopDelete',
         'GitSignsChangeDelete',
         'GitSignsUntracked',
+        'DiagnosticSignError',
+        'DiagnosticSignWarn',
+        'DiagnosticSignInfo',
+        'DiagnosticSignHint',
       },
       exclude_groups = {
         'CursorLine',
