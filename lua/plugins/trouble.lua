@@ -3,11 +3,8 @@ return {
     'folke/trouble.nvim',
     cmd = { 'Trouble' },
     opts = {
-      modes = {
-        lsp = {
-          win = { position = 'right' },
-        },
-      },
+      follow = true,
+      auto_preview = true,
     },
     keys = {
       { '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Diagnostics (Trouble)' },

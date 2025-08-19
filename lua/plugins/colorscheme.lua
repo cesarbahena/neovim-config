@@ -10,6 +10,7 @@ return {
   },
   {
     'xiyaowong/transparent.nvim',
+    enabled = true,
     opts = {
       extra_groups = {
         'NormalFloat',
@@ -24,6 +25,9 @@ return {
         'GitSignsTopDelete',
         'GitSignsChangeDelete',
         'GitSignsUntracked',
+      },
+      exclude_groups = {
+        'CursorLine',
       },
     },
     config = function(_, opts)
