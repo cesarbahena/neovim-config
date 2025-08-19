@@ -17,11 +17,11 @@ return {
       key { 'quiCkfiX list', cmd 'Trouble qflist toggle' },
       key {
         'Next dx',
-        fn 'utils.trouble_cycle.next_with_cycle',
+        fn 'utils.trouble_cycle.next',
       },
       key {
         'Prev dx',
-        fn 'utils.trouble_cycle.prev_with_cycle',
+        fn 'utils.trouble_cycle.prev',
       },
       key {
         'clean',

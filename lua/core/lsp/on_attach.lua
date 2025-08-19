@@ -15,7 +15,7 @@ return function(_, bufnr)
     key { 'Code Format', vim.lsp.buf.format },
 
     -- Hover and signature
-    key { 'hover', vim.lsp.buf.hover },
+    key { 'hover', fn(vim.lsp.buf.hover, { border = 'rounded', focusable = false }) },
     key { 'signature', vim.lsp.buf.signature_help },
   }
 
