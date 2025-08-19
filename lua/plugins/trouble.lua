@@ -16,26 +16,12 @@ return {
       { '<leader>cS', '<cmd>Trouble lsp toggle<cr>', desc = 'LSP references/definitions/... (Trouble)' },
       key { 'quiCkfiX list', cmd 'Trouble qflist toggle' },
       key {
-        'Prev dx',
-        fn {
-          { 'trouble.prev', { skip_groups = true, jump = true } },
-          when = fn 'trouble.is_open',
-          or_else = proc {
-            fn('trouble.open', 'diagnostics'),
-            fn('trouble.prev', { skip_groups = true, jump = true }),
-          },
-        },
+        'Next dx',
+        fn 'utils.trouble_cycle.next_with_cycle',
       },
       key {
-        'Next dx',
-        fn {
-          { 'trouble.next', { skip_groups = true, jump = true } },
-          when = fn 'trouble.is_open',
-          or_else = proc {
-            fn('trouble.open', 'diagnostics'),
-            fn('trouble.next', { skip_groups = true, jump = true }),
-          },
-        },
+        'Prev dx',
+        fn 'utils.trouble_cycle.prev_with_cycle',
       },
       key {
         'clean',
