@@ -15,8 +15,10 @@ return function(_, bufnr)
     key { 'Code Format', vim.lsp.buf.format },
 
     -- Hover and signature
-    key { 'hover', fn(vim.lsp.buf.hover, { border = 'rounded', focusable = false }) },
-    key { 'signature', vim.lsp.buf.signature_help },
+    -- key { 'hover', fn(vim.lsp.buf.hover, { border = 'rounded', focusable = false }) },
+    key { 'hover', fn 'actions.hover_overload.hover_handler' },
+    key { 'signature', fn(vim.lsp.buf.signature_help, { border = 'rounded' }) },
+    insert { 'signature', fn(vim.lsp.buf.signature_help, { border = 'rounded' }) },
   }
 
   -- Enable completion triggered by <c-x><c-o>
