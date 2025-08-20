@@ -20,7 +20,7 @@ return {
       toggles = {
         follow = false,
         hidden = false,
-        ignored = false,
+        ignored = 'i',
       },
       win = {
         input = {
@@ -71,7 +71,7 @@ return {
         list = {
           keys = {
             ['<leader>'] = 'cancel',
-            h = { { 'cycle_win', 'cycle_win', 'preview_scroll_down' } },
+            k = { { 'cycle_win', 'cycle_win', 'preview_scroll_down' } },
             gG = 'select_all',
             x = 'trouble_open',
             ['_'] = 'edit_split',
