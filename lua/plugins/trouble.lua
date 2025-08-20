@@ -20,13 +20,7 @@ return {
         'Prev dx',
         fn 'utils.trouble_cycle.prev',
       },
-      key {
-        'clean',
-        fn {
-          'trouble.close',
-          when = fn 'trouble.is_open',
-        },
-      },
+      key { 'clean', fn 'actions.clean' },
     },
   },
 }

@@ -85,4 +85,17 @@ function M.back_to()
   end
 end
 
+-- Clean function that closes trouble if open and clears highlights
+function M.clean()
+  if require('trouble').is_open() then
+    require('trouble').close()
+  end
+  vim.cmd('nohl')
+end
+
+-- Exit visual mode using guaranteed method
+function M.exit_visual()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', false)
+end
+
 return M

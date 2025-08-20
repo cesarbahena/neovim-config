@@ -31,6 +31,16 @@ function M.proc(funcs)
   end
 end
 
+-- Feed keys with sensible defaults for nvim_replace_termcodes
+-- Uses pattern: (str, true, false, true) - standard key feeding
+-- Note: If you need do_lt=true for <lt> sequences, use vim.api.nvim_replace_termcodes directly
+function M.feed(keys)
+  return function()
+    local termcodes = vim.api.nvim_replace_termcodes(keys, true, false, true)
+    vim.api.nvim_feedkeys(termcodes, 'n', false)
+  end
+end
+
 -- Import fn module
 M.fn = require('utils.fn').fn
 

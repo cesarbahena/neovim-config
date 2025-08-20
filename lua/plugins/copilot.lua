@@ -4,11 +4,7 @@ return {
     cmd = 'Copilot',
     build = ':Copilot auth',
     event = 'BufReadPost',
-    opts = {
-      suggestion = {
-        enabled = false,
-      },
-    },
+    opts = {},
   },
   {
     'saghen/blink.cmp',

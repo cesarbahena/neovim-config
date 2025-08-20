@@ -60,9 +60,8 @@ keymap {
   on_selection { 'Move line down', ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv" },
   on_selection { 'Move line up', ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv" },
   on_selection { 'Change visual mode', fn 'actions.change_visual_mode', expr = true },
-  on_selection { 'Visual mode', '<Esc>', details = '(exit)' },
+  on_selection { 'clean', '<Esc>', details = '(exit visual mode)' },
 
-  -- insert { 'Escape to normal mode', fn 'actions.treesitter.clean_exit' },
   insert { 'Comma with auto undo breakpoints', ',<C-g>u' },
   insert { 'Semicolon with auto undo breakpoints', ';<C-g>u' },
   insert { 'Dot with auto undo breakpoints', '.<C-g>u' },
@@ -72,7 +71,6 @@ keymap {
   key { 'Undo jump', '<C-t>' },
 
   -- alt
-  auto_select { 'clean', cmd 'nohl' },
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
 }

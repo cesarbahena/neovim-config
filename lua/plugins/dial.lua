@@ -4,10 +4,8 @@ return {
   desc = 'Increment and decrement numbers, dates, and more',
   -- stylua: ignore
   keys = {
-    key { 'fixed increment', fn('dial.map.manipulate', 'increment', 'normal') },
-    key { 'fixed decrement', fn('dial.map.manipulate', 'decrement', 'normal') },
-    key { 'increment', fn('dial.map.manipulate', 'increment', 'gnormal') },
-    key { 'decrement', fn('dial.map.manipulate', 'decrement', 'gnormal') },
+    key { 'increment', fn('dial.map.manipulate', 'increment', 'normal') },
+    key { 'decrement', fn('dial.map.manipulate', 'decrement', 'normal') },
     on_selection { 'fixed increment', fn('dial.map.manipulate', 'increment', 'visual') },
     on_selection { 'fixed decrement', fn('dial.map.manipulate', 'decrement', 'visual') },
     on_selection { 'increment', fn('dial.map.manipulate', 'increment', 'gvisual') },
