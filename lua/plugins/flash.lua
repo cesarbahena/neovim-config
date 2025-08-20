@@ -5,19 +5,20 @@ return {
     modes = {
       char = {
         enabled = true,
+        jump_labels = true,
         keys = { 't', 'T' },
       },
       search = {
         enabled = true,
       },
       treesitter = {
-        labels = '123456789',
+        labels = 'NEIOH"MKARST',
         jump = { autojump = false },
       },
     },
   },
   keys = {
-    key { 'Remote', fn 'flash.remote' },
+    key { 'Remote', fn 'flash.remote', mode = 'o' },
     key {
       'Visual mode',
       function()

@@ -19,45 +19,14 @@ return {
         enable = true,
         additional_vim_regex_highlighting = false,
       },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          node_incremental = false,
-          scope_incremental = 'U',
-          node_decremental = 'u',
-        },
-      },
       textobjects = {
         swap = {
           enable = true,
           swap_next = {
-            ['<c-h>'] = '@parameter.inner',
+            ['<m-o>'] = '@parameter.inner',
           },
           swap_previous = {
-            ['<c-k>'] = '@parameter.inner',
-          },
-        },
-        move = {
-          enable = true,
-          goto_next_start = {
-            ['gnf'] = '@function.outer',
-            ['gnc'] = '@class.outer',
-            ['gna'] = '@parameter.inner',
-          },
-          goto_next_end = {
-            ['gof'] = '@function.outer',
-            ['goc'] = '@class.outer',
-            ['goa'] = '@parameter.inner',
-          },
-          goto_previous_start = {
-            ['gef'] = '@function.outer',
-            ['gec'] = '@class.outer',
-            ['gea'] = '@parameter.inner',
-          },
-          goto_previous_end = {
-            ['gmf'] = '@function.outer',
-            ['gmc'] = '@class.outer',
-            ['gma'] = '@parameter.inner',
+            ['<m-h>'] = '@parameter.inner',
           },
         },
         lsp_interop = {

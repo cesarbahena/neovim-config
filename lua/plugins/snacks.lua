@@ -152,13 +152,13 @@ return {
           find_files = function(picker)
             local current_prompt = picker.input:get()
             picker:close()
-            require('snacks').picker.files({ pattern = current_prompt })
+            require('snacks').picker.files { pattern = current_prompt }
           end,
         },
         win = {
           input = {
             keys = {
-              ['<c-f>'] = { 'find_files', mode = 'i' },
+              ['<F3>'] = { 'find_files', mode = 'i' },
             },
           },
         },

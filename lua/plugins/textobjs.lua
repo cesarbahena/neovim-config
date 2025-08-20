@@ -52,7 +52,7 @@ local textobjs = {
     desc = 'XML/HTML attribute',
     { ' ()%w+=["{]().-()["}]()' },
   },
-  [';'] = {
+  ["'"] = {
     desc = 'Subword',
     {
       {
@@ -134,14 +134,14 @@ return {
 
       {
         desc = 'next Subword',
-        ';',
-        function() require('mini.ai').move_cursor('left', 'i', ';', { search_method = 'next' }) end,
+        "'",
+        function() require('mini.ai').move_cursor('left', 'i', "'", { search_method = 'next' }) end,
         mode = { 'n', 'x', 'o' },
       },
       {
         desc = 'prev Subword',
         'z',
-        function() require('mini.ai').move_cursor('left', 'i', ';', { search_method = 'prev' }) end,
+        function() require('mini.ai').move_cursor('left', 'i', "'", { search_method = 'prev' }) end,
         mode = { 'n', 'x', 'o' },
       },
 
