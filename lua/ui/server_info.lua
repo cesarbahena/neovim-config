@@ -8,7 +8,7 @@ if mini_icons_available then
   local servers = {
     lua_ls = 'lua',
     emmet_ls = 'xml',
-    tsserver = 'typescript',
+    intelephense = 'php',
     ts_ls = 'typescript',
     html = 'html',
     cssls = 'css',

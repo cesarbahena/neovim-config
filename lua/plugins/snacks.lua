@@ -145,7 +145,25 @@ return {
       end,
     },
     key { 'find Files', fn 'snacks.picker.files' },
-    key { 'find git files', fn 'snacks.picker.git_files' },
+    key {
+      'find git files',
+      fn('snacks.picker.git_files', {
+        actions = {
+          find_files = function(picker)
+            local current_prompt = picker.input:get()
+            picker:close()
+            require('snacks').picker.files({ pattern = current_prompt })
+          end,
+        },
+        win = {
+          input = {
+            keys = {
+              ['<c-f>'] = { 'find_files', mode = 'i' },
+            },
+          },
+        },
+      }),
+    },
     key { 'find projects', fn 'snacks.picker.projects' },
     -- git
     key { 'Git Branches', fn 'snacks.picker.git_branches' },

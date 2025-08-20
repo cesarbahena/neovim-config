@@ -33,8 +33,8 @@ return {
       )
     end
 
-    map(']', 'next')
-    map('[', 'prev')
+    map(']]', 'next')
+    map('[[', 'prev')
 
     -- also set it after loading ftplugins, since a lot overwrite [[ and ]]
     vim.api.nvim_create_autocmd('FileType', {
