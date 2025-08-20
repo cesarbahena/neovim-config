@@ -15,11 +15,11 @@ local opts = {
   wrap = false,
 
   -- Search
-  hlsearch = false,
   incsearch = true,
   updatetime = 50,
   ignorecase = true, -- Ignore case when searching...
   smartcase = true, -- ... unless there is a capital letter in the query
+  wildignorecase = true, -- Case insensitive command-line completion
 
   -- Clipboard
   clipboard = 'unnamedplus',
