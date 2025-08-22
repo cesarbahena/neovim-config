@@ -137,4 +137,14 @@ function M.clean_exit()
   end, 10)
 end
 
+function M.find()
+  if vim.v.hlsearch == 1 and vim.fn.getreg('/') ~= '' and vim.fn.searchcount().total > 0 then
+    -- Search highlights are visible, go to next match
+    vim.cmd 'normal! n'
+  else
+    -- No search highlights visible, start new search
+    vim.api.nvim_feedkeys('/', 'n', false)
+  end
+end
+
 return M
