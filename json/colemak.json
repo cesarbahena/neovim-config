@@ -1,5 +1,9 @@
 {
   "keys": {
+    "1": "harpoon 1",
+    "2": "harpoon 2",
+    "3": "harpoon 3",
+    "4": "harpoon 4",
     "=": "increment",
     "-": "decrement",
     ".": ["Add argument", "Dot with auto undo breakpoints"],
@@ -13,7 +17,7 @@
     "r": "Remote",
     "e": "prEv line",
     "ih": "inner Hunk",
-    "H": "Home",
+    "K": "beginning of line",
     "g|": "diff this ~",
     "gu": "Undo stage hunk",
     "o": "move right",
@@ -22,7 +26,7 @@
     "cR": "file Rename",
     "cD": "Code Declaration",
     "O": "eoL",
-    "h": "Move left",
+    "k": "Move left",
     "W": "rest of W.ord",
     "y": "Yank",
     "yy": "Yank to eol",
@@ -36,7 +40,7 @@
     "z": "prev word",
     "*": "grep selection or word",
     "gK": "first hunK",
-    "E": "hover",
+    "H": "hover",
     "U": "Unundo",
     "J": "Join/Merge lines (pretty)",
     "i": "Insert mode",
@@ -55,7 +59,7 @@
     "L": "Open Line above",
     "t": "To",
     "gs": "Stage hunk",
-    "n": "Next line",
+    "h": "Next line",
     "<F35>": "zoom",
     "gJ": "Join/Merge lines (raw)",
     "<F12>": "find dot files",
@@ -84,7 +88,7 @@
     "gr": "Reset hunk",
     "X": "Prev dx",
     "gH": "last Hunk",
-    "k": "Next page",
+    "n": "Next page",
     "p": "Paste",
     "cs": "Code Suggestions",
     "gS": "Stage buffer",
@@ -150,14 +154,10 @@
   "alt": {
     "n": "move line down",
     "e": "move line up",
-    "j": "harpoon 4",
-    "y": "harpoon 1",
     "down": "resize botom",
     "up": "resize top",
     "right": "resize right",
-    "u": "harpoon 2",
-    "left": "resize left",
-    "l": "harpoon 3"
+    "left": "resize left"
   },
   "meta": {
     "tens": [1, 2, 3]

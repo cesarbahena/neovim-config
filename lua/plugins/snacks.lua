@@ -71,7 +71,7 @@ return {
         list = {
           keys = {
             ['<leader>'] = 'cancel',
-            k = { { 'cycle_win', 'cycle_win', 'preview_scroll_down' } },
+            n = { { 'cycle_win', 'cycle_win', 'preview_scroll_down' } },
             gG = 'select_all',
             x = 'trouble_open',
             ['_'] = 'edit_split',

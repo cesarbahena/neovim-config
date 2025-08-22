@@ -10,6 +10,7 @@ return {
       'icon',
     },
     watch_for_changes = false,
+    skip_confirm_for_simple_edits = true,
     keymaps = {
       q = { 'actions.close', mode = 'n', opts = { exit_if_last_buf = true } },
     },

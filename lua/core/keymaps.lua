@@ -10,7 +10,7 @@ keymap {
   motion { 'next word', 'w' },
   motion { 'next w.ord', 'W' },
   motion { 'move left', 'h' },
-  motion { 'hoMe', '^' },
+  motion { 'beginning of line', '^' },
   motion { 'move right', 'l' },
   motion { 'eoL', '$' },
   motion { 'next match', 'n' },
