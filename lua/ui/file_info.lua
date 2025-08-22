@@ -15,12 +15,12 @@ M.cwd = {
 	color = function()
 		local dx = vim.diagnostic
 		if #dx.get(nil, { severity = dx.severity.ERROR }) > 0 then
-			return "StatuslineError"
+			return { fg = '#f38ba8', gui = 'bold' }
 		end
 		if #dx.get(nil, { severity = dx.severity.WARN }) > 0 then
-			return "StatuslineWarn"
+			return { fg = 'Orange', gui = 'bold' }
 		end
-		return "StatuslineNormal"
+		return { fg = 'white', gui = 'bold' }
 	end,
 }
 
@@ -30,18 +30,18 @@ M.git = {
 	color = function()
 		local git_status = vim.fn.systemlist("git status --porcelain " .. vim.fn.expand("%:p"))
 		if type(git_status) ~= "table" then
-			return "StatuslineError"
+			return { fg = '#f38ba8', gui = 'bold' }
 		end
 
 		if #git_status == 0 then
-			return "StatuslineNormal"
+			return { fg = 'white', gui = 'bold' }
 		end
 
 		if git_status[1]:sub(1, 1) == "?" then
-			return "StatuslineError"
+			return { fg = '#f38ba8', gui = 'bold' }
 		end
 
-		return "StatuslineOk"
+		return { fg = 'LightGreen', gui = 'bold' }
 	end,
 }
 
@@ -95,15 +95,15 @@ M.filename = {
 	color = function()
 		local dx = vim.diagnostic
 		if #dx.get(0, { severity = dx.severity.ERROR }) > 0 then
-			return "StatuslineError"
+			return { fg = '#f38ba8', gui = 'bold' }
 		end
 		if #dx.get(0, { severity = dx.severity.WARN }) > 0 then
-			return "StatuslineWarn"
+			return { fg = 'Orange', gui = 'bold' }
 		end
 		if vim.o.modified then
-			return "StatuslineOk"
+			return { fg = 'LightGreen', gui = 'bold' }
 		end
-		return "StatuslineNormal"
+		return { fg = 'white', gui = 'bold' }
 	end,
 }
 
@@ -129,15 +129,15 @@ M.inactive_filename = {
 	color = function()
 		local dx = vim.diagnostic
 		if #dx.get(0, { severity = dx.severity.ERROR }) > 0 then
-			return "StatuslineErrorInactive"
+			return { fg = '#f38ba8' }
 		end
 		if #dx.get(0, { severity = dx.severity.WARN }) > 0 then
-			return "StatuslineWarnInactive"
+			return { fg = 'Orange' }
 		end
 		if vim.o.modified then
-			return "StatuslineOkInactive"
+			return { fg = 'LightGreen' }
 		end
-		return "StatuslineNormalInactive"
+		return { fg = 'white' }
 	end,
 }
 
@@ -148,15 +148,15 @@ M.unsaved = {
 		end
 		return ""
 	end,
-	color = "StatuslineOk",
+	color = { fg = 'LightGreen', gui = 'bold' },
 }
 
 M.diff = {
 	"diff",
 	diff_color = {
-		added = "StatuslineOk",
-		modified = "StatuslineWarn",
-		removed = "StatuslineError",
+		added = { fg = 'LightGreen', gui = 'bold' },
+		modified = { fg = 'Orange', gui = 'bold' },
+		removed = { fg = '#f38ba8', gui = 'bold' },
 	},
 }
 

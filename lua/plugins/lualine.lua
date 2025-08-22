@@ -35,6 +35,10 @@ local minimal_theme = {
   },
 }
 
+-- Add custom colors to theme
+minimal_theme.normal.StatuslineError = { fg = '#f38ba8', gui = 'bold' }
+minimal_theme.inactive.StatuslineError = { fg = '#f38ba8' }
+
 local opts = {
   options = {
     theme = minimal_theme,
@@ -71,6 +75,7 @@ return {
     component('sections', 'c', 'file_info', 'git')
     component('sections', 'c', 'file_info', 'diff')
     component('sections', 'c', 'file_info', 'diagnostics')
+    component('sections', 'x', 'nvim_info', 'global_errors')
     component('sections', 'x', 'server_info', 'plugins')
     component('sections', 'x', 'server_info', 'lsp', 5)
     component('sections', 'x', 'server_info', 'lsp_error')

@@ -45,7 +45,7 @@ for i = 1, 5, 1 do
       return server.attached_buffers[buffer]
     end,
 
-    color = 'StatuslineNormal',
+    color = { fg = 'white', gui = 'bold' },
   }
 end
 
@@ -79,7 +79,7 @@ M.lsp_error = {
   end,
 
   icon = ' ',
-  color = 'StatuslineError',
+  color = { fg = '#f38ba8', gui = 'bold' },
 }
 
 M.plugins = {
@@ -99,12 +99,12 @@ M.plugins = {
     local has_errors = require('lazy.core.plugin').has_errors
 
     for _, plugin in pairs(plugins) do
-      if has_errors(plugin) then return 'StatuslineError' end
+      if has_errors(plugin) then return { fg = '#f38ba8', gui = 'bold' } end
     end
 
-    if require('lazy.status').has_updates() then return 'StatuslineOk' end
+    if require('lazy.status').has_updates() then return { fg = 'LightGreen', gui = 'bold' } end
 
-    return 'StatuslineNormal'
+    return { fg = 'white', gui = 'bold' }
   end,
 }
 
