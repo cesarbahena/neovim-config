@@ -94,7 +94,8 @@
     "gS": "Stage buffer",
     ",,": "Insert comma at the end",
     "'": "subword",
-    "cx": "quiCkfiX list"
+    "cx": "quiCkfiX list",
+    "<": "Repeat macro"
   },
   "leader": {
     "=": "fixed increment",
@@ -104,12 +105,12 @@
     "x": "find diagnostics",
     "U": "find in undo history",
     "<F2>": "select scratch buffer",
+    ",": "Toggle macro recording",
     "i": "9",
     "'": "find jumps",
     "n": "7",
     "b": "find Buffers",
     "gB": "Git Browse",
-    ",": "Repeat macro",
     "gh": "Git  Hunks",
     "gS": "Git Stash",
     "L": "add Line above",
@@ -142,14 +143,12 @@
   "control": {
     "d": "Deindent",
     "t": "indenT",
-    "y": "Yes",
-    "r": "Toggle macro recording",
     "<F1>": "Signature",
     "u": "Undo jump",
-    "n": "botom window",
+    "h": "botom window",
     "e": "top window",
     "o": "right window",
-    "h": "left window"
+    "k": "left window"
   },
   "alt": {
     "n": "move line down",
