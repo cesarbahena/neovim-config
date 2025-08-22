@@ -161,26 +161,26 @@ return {
       layouts = {
         {
           elements = {
-            { id = 'scopes', size = 0.6 },
-            { id = 'watches', size = 0.4 },
-          },
-          size = 50,
-          position = 'right',
-        },
-        {
-          elements = {
-            { id = 'stacks', size = 0.4 },
-            { id = 'breakpoints', size = 0.6 },
+            { id = 'scopes', size = 0.7 },
+            { id = 'watches', size = 0.3 },
           },
           size = 40,
           position = 'left',
         },
         {
           elements = {
-            { id = 'repl', size = 0.6 },
-            { id = 'console', size = 0.4 },
+            { id = 'stacks', size = 0.7 },
+            { id = 'breakpoints', size = 0.3 },
           },
-          size = 0.3,
+          size = 40,
+          position = 'right',
+        },
+        {
+          elements = {
+            { id = 'repl', size = 0.5 },
+            { id = 'console', size = 0.5 },
+          },
+          size = 10,
           position = 'bottom',
         },
       },
