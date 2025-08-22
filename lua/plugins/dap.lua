@@ -116,7 +116,7 @@ return {
           port = 9003,
           hostname = '0.0.0.0',
           pathMappings = {
-            ['/var/www/html'] = '${workspaceFolder}/src',
+            ['/var/www/html'] = '${workspaceFolder}',
           },
         },
         {
@@ -150,7 +150,12 @@ return {
     },
     opts = {
       mappings = {
-        edit = 'i',
+        edit = 's',
+        expand = 'i',
+        open = '<cr>',
+        remove = 'd',
+        toggle = 'c',
+        repl = 'r',
       },
       expand_lines = true,
       layouts = {
