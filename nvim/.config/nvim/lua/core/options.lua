@@ -44,6 +44,6 @@ local opts = {
   foldenable = false,
 }
 
-or k, v in pairs(opts) do
+for k, v in pairs(opts) do
   vim.opt[k] = v
 end
