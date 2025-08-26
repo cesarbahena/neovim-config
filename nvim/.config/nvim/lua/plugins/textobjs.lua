@@ -21,7 +21,7 @@ local textobjs = {
     treesitter = true,
     { a = '@block.outer', i = '@block.inner' },
   },
-  ['<C-a>'] = {
+  ['='] = {
     desc = 'Number',
     treesitter = true,
     { a = '@number.inner', i = '@number.inner' },
@@ -30,11 +30,6 @@ local textobjs = {
     desc = 'Regex',
     treesitter = true,
     { a = '@regex.outer', i = '@regex.inner' },
-  },
-  ['='] = {
-    desc = 'Assignment',
-    treesitter = true,
-    { a = '@assignment.outer', i = '@assignment.inner' },
   },
   k = {
     desc = 'Bracket',
@@ -52,7 +47,7 @@ local textobjs = {
     desc = 'XML/HTML attribute',
     { ' ()%w+=["{]().-()["}]()' },
   },
-  ["'"] = {
+  N = {
     desc = 'Subword',
     {
       {
@@ -129,19 +124,19 @@ return {
       { desc = 'Indentation and line above', 'agi', VTO:format [[indentation('outer', 'inner')]], mode = { 'o', 'x' } },
       { desc = 'Rest of indentation', 'iI', VTO:format [[restOfIndentation()]], mode = { 'o', 'x' } },
       { desc = 'Greedy outer indentation', 'aI', VTO:format [[outerIndentation 'inner']], mode = { 'o', 'x' } },
-      { desc = 'Subword', 'in', VTO:format [[subword 'inner']], mode = { 'o', 'x' } },
-      { desc = 'Subword and hyphens', 'an', VTO:format [[subword 'outer']], mode = { 'o', 'x' } },
+      { desc = 'Subword', 'iN', VTO:format [[subword 'inner']], mode = { 'o', 'x' } },
+      { desc = 'Subword and hyphens', 'aN', VTO:format [[subword 'outer']], mode = { 'o', 'x' } },
 
       {
         desc = 'next Subword',
-        "'",
-        function() require('mini.ai').move_cursor('left', 'i', "'", { search_method = 'next' }) end,
+        'N',
+        function() require('mini.ai').move_cursor('left', 'i', 'N', { search_method = 'next' }) end,
         mode = { 'n', 'x', 'o' },
       },
       {
         desc = 'prev Subword',
-        'z',
-        function() require('mini.ai').move_cursor('left', 'i', "'", { search_method = 'prev' }) end,
+        'M',
+        function() require('mini.ai').move_cursor('left', 'i', 'N', { search_method = 'prev' }) end,
         mode = { 'n', 'x', 'o' },
       },
 
