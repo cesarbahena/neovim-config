@@ -27,7 +27,15 @@ return {
       --
       -- See :h blink-cmp-config-keymap for defining your own keymap
       keymap = {
-        preset = 'super-tab',
+        -- Enter confirms the currently selected item (AI included if it's in the menu),
+        -- otherwise falls back to newline
+        ['<CR>'] = { 'accept', 'fallback' },
+
+        -- Tab cycles forward, or snippet jump, or fallback to literal tab
+        ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+
+        -- Shift-Tab cycles backward, or snippet backjump
+        ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
       },
 
       appearance = {
@@ -37,7 +45,7 @@ return {
       },
 
       -- (Default) Only show the documentation popup when manually triggered
-      completion = { 
+      completion = {
         documentation = { auto_show = false },
         ghost_text = { enabled = true },
       },
@@ -83,7 +91,9 @@ return {
         disabled_filetypes = {},
         -- see the defaults:
         -- https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L14
-        pairs = {},
+        pairs = {
+          ["'"] = { "'", pair = "''", jump_right = true },
+        },
       },
       highlights = {
         enabled = true,

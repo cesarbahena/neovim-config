@@ -18,6 +18,8 @@ keymap {
 
   auto_select { 'Substitute', [["_c]] },
   auto_select { 'Command line mode', ':' },
+  key { 'execute command', '<cr>', mode = 'c' },
+  key { 'literal ;', ';', mode = 'c' },
 
   key { 'Yank line', 'yy' },
   key { 'copy down', 'Yp' },
@@ -57,7 +59,7 @@ keymap {
   insert { 'Comma with auto undo breakpoints', ',<C-g>u' },
   insert { 'Semicolon with auto undo breakpoints', ';<C-g>u' },
   insert { 'Dot with auto undo breakpoints', '.<C-g>u' },
-  insert { 'enter', '<cr>' },
+  insert { 'escape to normal mode', fn 'actions.treesitter.clean_exit' },
 
   -- control
   key { 'Undo jump', '<C-t>' },
@@ -82,27 +84,3 @@ for mode, keys in pairs(mappings_to_disable) do
     pcall(vim.keymap.del, mode, key)
   end
 end
-
--- Set with defer to override plugins
-
-vim.defer_fn(function()
-  vim.keymap.set('i', '<CR>', function()
-    -- Try blink-pairs enter first
-    local ok, blink_pairs_mappings = pcall(require, 'blink.pairs.mappings')
-    if ok and blink_pairs_mappings.is_enabled() then
-      local ctx_ok, ctx = pcall(require, 'blink.pairs.context')
-      local rule_lib_ok, rule_lib = pcall(require, 'blink.pairs.rule')
-      if ctx_ok and rule_lib_ok then
-        local context = ctx.new()
-        local config_ok, config = pcall(require, 'blink.pairs.config')
-        if config_ok then
-          local rules = rule_lib.get_all(rule_lib.parse(config.mappings.pairs))
-          local rule = rule_lib.get_surrounding(context, rules, 'enter')
-          if rule ~= nil then return blink_pairs_mappings.enter(rules)() end
-        end
-      end
-    end
-    -- If no blink-pairs handling, exit insert mode
-    return require('actions.treesitter').clean_exit()
-  end, { expr = true, silent = true })
-end, 100)
