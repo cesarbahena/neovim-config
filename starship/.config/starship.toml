@@ -1,0 +1,54 @@
+# ~/.config/starship.toml
+
+# Two-line prompt
+add_newline = true
+
+# =========================
+# Left line: project info
+# =========================
+[directory]
+style = "bold blue"
+read_only = " "
+truncation_length = 3
+
+[git_branch]
+symbol = " "
+style = "bold magenta"
+
+[git_state]
+format = "[$all_statuses]($style)"
+style = "yellow"
+
+[python]
+symbol = "🐍 "
+format = "$symbol$version"
+style = "yellow"
+disabled = false
+
+[nodejs]
+symbol = "⬢ "
+format = "$symbol$version"
+style = "green"
+disabled = false
+
+# Docker: no native module, use [custom]
+[custom.docker]
+command = "test -f Dockerfile && echo '🐳'"
+when = "test -f Dockerfile"
+style = "cyan"
+
+# =========================
+# Second line: shell prompt + command duration
+# =========================
+[cmd_duration]
+min_time = 2
+format = "[$duration]($style)"
+style = "bold red"
+
+[status]
+style = "bold green"
+
+[character]
+success_symbol = "[❯](green)"
+error_symbol   = "[❯](red)"
+vicmd_symbol   = "[❮](blue)"
