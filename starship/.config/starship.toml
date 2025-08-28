@@ -16,38 +16,64 @@ format = "[$all_statuses]($style)"
 style = "yellow"
 
 [custom.nodejs]
-command = """
-if test -f Dockerfile; then
-  grep -E '^FROM node:[0-9]+' Dockerfile* | head -n1 | sed -E 's/FROM node:([0-9]+).*/\\1/' | to-subscript
-else
-  node -v | sed 's/^v//' | to-subscript
+detect_files = ["package.json", "*.js", "*.ts"]
+detect_folders = ["node_modules"]
+format = "[$symbol$output]($style) "
+symbol = " "
+style = "green bold"
+command = '''
+version=""
+# Check Dockerfile first
+if [ -f "Dockerfile" ]; then
+    version=$(grep -E '^FROM node:[0-9.]+' Dockerfile 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
 fi
-"""
-detect_files = ["package.json"]
-symbol = " "
-style = "green"
+# Check .nvmrc file
+if [ -z "$version" ] && [ -f ".nvmrc" ]; then
+    version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//')
+fi
+# Check system Node as fallback
+if [ -z "$version" ] && command -v node >/dev/null 2>&1; then
+    version=$(node -v 2>/dev/null | sed 's/^v//')
+fi
+# Output with formatting
+if [ -n "$version" ]; then
+    echo "$version" | to-subscript 2>/dev/null || echo "$version"
+fi
+'''
 
 [custom.php]
-command = """
-if test -f Dockerfile; then
-  grep -E '^FROM php:[0-9.]+' Dockerfile* | head -n1 | sed -E 's/FROM php:([0-9.]+).*/\\1/' | to-subscript
-else
-  php -v | head -n1 | awk '{print $2}' | to-subscript
+detect_files = ["composer.json", "index.php", "*.php"]
+format = "[$symbol$output]($style) "
+symbol = " "
+style = "blue bold"
+command = '''
+version=""
+
+# Check Dockerfile first
+if [ -f "Dockerfile" ]; then
+    version=$(grep -E '^FROM php:[0-9.]+' Dockerfile 2>/dev/null | head -n1 | sed -E 's/FROM php:([0-9.]+).*/\1/')
 fi
-"""
-detect_files = ["composer.json", "index.php"]
-symbol = " "
-style = "blue"
+
+# Check system PHP as fallback
+if [ -z "$version" ] && command -v php >/dev/null 2>&1; then
+    version=$(php -v 2>/dev/null | head -n1 | awk '{print $2}' | cut -d'-' -f1)
+fi
+
+# Output: try to-subscript first, fallback to normal numbers
+if [ -n "$version" ]; then
+    echo "$version" | to-subscript 2>/dev/null || echo "$version"
+fi
+'''
 
 [docker_context]
-disabled = false
 format = "[$context]($style)"
 style = "blue bold"
-only_with_files = false
 
 [custom.docker]
-command = "echo '🐳'"
 when = "test -f Dockerfile || test -f Dockerfile.dev"
+format = "[$symbol]($style)"
+symbol = " "
+style = "blue bold"
 
 [cmd_duration]
 min_time = 1
