@@ -8,6 +8,8 @@ return {
       javascript = { 'prettier' },
       javascriptreact = { 'prettier' },
       json = { 'prettier' },
+      yaml = { 'prettier' },
+      toml = { 'taplo' },
     },
     format_on_save = {
       timeout_ms = 500,

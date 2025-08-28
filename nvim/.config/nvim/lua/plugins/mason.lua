@@ -12,6 +12,8 @@ return {
         'ts_ls',
         'pyright',
         'jsonls',
+        'yamlls',
+        'taplo',
       },
     },
   },

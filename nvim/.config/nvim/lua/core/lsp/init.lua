@@ -22,6 +22,8 @@ local servers = {
   'ts_ls',
   'pyright',
   'jsonls',
+  'yamlls',
+  'taplo',
 }
 
 for _, server in ipairs(servers) do
