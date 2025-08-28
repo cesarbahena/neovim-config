@@ -2,8 +2,8 @@
 # Global settings
 # =========================
 add_newline = true
-format = "$directory$git_branch$git_state$character"   # left prompt
-right_format = "$custom"         # right prompt
+format = "$directory$git_branch$git_state$character" # left prompt
+right_format = "$custom"                             # right prompt
 
 # =========================
 # Directory module
@@ -60,6 +60,21 @@ when = "test -f Dockerfile || test -f Dockerfile.dev"
 style = "cyan"
 
 # =========================
+# PHP module
+# =========================
+[custom.php]
+command = """
+if test -f Dockerfile; then
+  grep -E '^FROM php:[0-9.]+' Dockerfile* | head -n1 | sed -E 's/FROM php:([0-9.]+).*/\\1/' | to-subscript
+else
+  php -v | head -n1 | awk '{print $2}' | to-subscript
+fi
+"""
+detect_files = ["composer.json", "index.php"]
+symbol = " "
+style = "blue"
+
+# =========================
 # Command duration (second line)
 # =========================
 [cmd_duration]
@@ -75,5 +90,5 @@ style = "bold green"
 
 [character]
 success_symbol = "[❯](green)"
-error_symbol   = "[❯](red)"
-vicmd_symbol   = "[❮](blue)"
+error_symbol = "[❯](red)"
+vicmd_symbol = "[❮](blue)"
