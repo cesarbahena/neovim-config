@@ -23,7 +23,7 @@ data
 *~
 
 # Plugin manager directories
-lazy-lock.json
+
 packer_compiled.lua
 
 # LSP and debugging
