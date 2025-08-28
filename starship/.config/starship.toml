@@ -18,25 +18,106 @@ style = "yellow"
 [custom.nodejs]
 detect_files = ["package.json", "*.js", "*.ts"]
 detect_folders = ["node_modules"]
-format = "[$symbol$output]($style) "
+format = "[$symbol$output]($style)"
 symbol = " "
 style = "green bold"
 command = '''
 version=""
-# Check Dockerfile first
-if [ -f "Dockerfile" ]; then
-    version=$(grep -E '^FROM node:[0-9.]+' Dockerfile 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
-fi
-# Check .nvmrc file
+constraint=""
+mismatch="false"
+
+# Get version
+for dockerfile in Dockerfile dockerfile Dockerfile.node; do
+    if [ -f "$dockerfile" ]; then
+        version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
+        [ -n "$version" ] && break
+    fi
+done
 if [ -z "$version" ] && [ -f ".nvmrc" ]; then
-    version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//')
+    version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//' | grep -oE '[0-9]+(\.[0-9]+)*')
 fi
-# Check system Node as fallback
 if [ -z "$version" ] && command -v node >/dev/null 2>&1; then
     version=$(node -v 2>/dev/null | sed 's/^v//')
 fi
-# Output with formatting
-if [ -n "$version" ]; then
+
+# Check for mismatch
+if [ -f "package.json" ] && [ -n "$version" ]; then
+    if command -v jq >/dev/null 2>&1; then
+        constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
+    else
+        constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]*"' package.json 2>/dev/null | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
+    fi
+    
+    if [ -n "$constraint" ]; then
+        actual_major=$(echo "$version" | cut -d'.' -f1)
+        case "$constraint" in
+            ">=18"*|"^18"*|"~18"*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
+            ">=20"*|"^20"*|"~20"*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
+            ">=16"*|"^16"*|"~16"*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
+            ">=14"*|"^14"*|"~14"*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
+            *">="*)
+                required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1)
+                [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true"
+                ;;
+        esac
+    fi
+fi
+
+# Output: only if no mismatch
+if [ -n "$version" ] && [ "$mismatch" = "false" ]; then
+    echo "$version" | to-subscript 2>/dev/null || echo "$version"
+fi
+'''
+
+[custom.nodejs_warning]
+detect_files = ["package.json", "*.js", "*.ts", "*.mjs"]
+detect_folders = ["node_modules"]
+format = "[$output]($style)"
+style = "red bold"
+command = '''
+version=""
+constraint=""
+mismatch="false"
+
+# Get version (same logic)
+for dockerfile in Dockerfile dockerfile Dockerfile.node; do
+    if [ -f "$dockerfile" ]; then
+        version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
+        [ -n "$version" ] && break
+    fi
+done
+if [ -z "$version" ] && [ -f ".nvmrc" ]; then
+    version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//' | grep -oE '[0-9]+(\.[0-9]+)*')
+fi
+if [ -z "$version" ] && command -v node >/dev/null 2>&1; then
+    version=$(node -v 2>/dev/null | sed 's/^v//')
+fi
+
+# Check for mismatch (same logic)
+if [ -f "package.json" ] && [ -n "$version" ]; then
+    if command -v jq >/dev/null 2>&1; then
+        constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
+    else
+        constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]*"' package.json 2>/dev/null | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
+    fi
+    
+    if [ -n "$constraint" ]; then
+        actual_major=$(echo "$version" | cut -d'.' -f1)
+        case "$constraint" in
+            ">=18"*|"^18"*|"~18"*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
+            ">=20"*|"^20"*|"~20"*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
+            ">=16"*|"^16"*|"~16"*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
+            ">=14"*|"^14"*|"~14"*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
+            *">="*)
+                required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1)
+                [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true"
+                ;;
+        esac
+    fi
+fi
+
+# Output: only if there IS a mismatch
+if [ -n "$version" ] && [ "$mismatch" = "true" ]; then
     echo "$version" | to-subscript 2>/dev/null || echo "$version"
 fi
 '''
