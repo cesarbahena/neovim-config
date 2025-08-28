@@ -1,50 +1,75 @@
-# ~/.config/starship.toml
-
-# Two-line prompt
+# =========================
+# Global settings
+# =========================
 add_newline = true
+format = "$directory$git_branch$git_state$character"   # left prompt
+right_format = "$custom"         # right prompt
 
 # =========================
-# Left line: project info
+# Directory module
 # =========================
 [directory]
 style = "bold blue"
 read_only = " "
 truncation_length = 3
 
+# =========================
+# Git branch
+# =========================
 [git_branch]
 symbol = " "
 style = "bold magenta"
 
+# =========================
+# Git state (staged/modified files)
+# =========================
 [git_state]
 format = "[$all_statuses]($style)"
 style = "yellow"
 
-[python]
+# =========================
+# Python module
+# =========================
+[custom.python]
+command = 'python3 --version | awk "{print \$2}" | to-subscript'
+detect_files = ["pyproject.toml", "setup.py", "requirements.txt"]
 symbol = "🐍 "
-format = "$symbol$version"
 style = "yellow"
-disabled = false
 
-[nodejs]
-symbol = "⬢ "
-format = "$symbol$version"
+# =========================
+# Node.js module
+# =========================
+[custom.nodejs]
+command = """
+if test -f Dockerfile; then
+  grep -E '^FROM node:[0-9]+' Dockerfile* | head -n1 | sed -E 's/FROM node:([0-9]+).*/\\1/' | to-subscript
+else
+  node -v | sed 's/^v//' | to-subscript
+fi
+"""
+detect_files = ["package.json"]
+symbol = " "
 style = "green"
-disabled = false
 
-# Docker: no native module, use [custom]
+# =========================
+# Docker module
+# =========================
 [custom.docker]
-command = "test -f Dockerfile && echo '🐳'"
-when = "test -f Dockerfile"
+command = "echo '🐳'"
+when = "test -f Dockerfile || test -f Dockerfile.dev"
 style = "cyan"
 
 # =========================
-# Second line: shell prompt + command duration
+# Command duration (second line)
 # =========================
 [cmd_duration]
-min_time = 2
+min_time = 1
 format = "[$duration]($style)"
 style = "bold red"
 
+# =========================
+# Exit status symbols
+# =========================
 [status]
 style = "bold green"
 

@@ -80,7 +80,9 @@
     "<F11>": "zen mode",
     "<F1>": "find help",
     "~": "lowercase",
-    "<tab>": "escape to normal mode",
+    "vk": "escape to normal mode",
+    "kv": "escape to normal mode also",
+    "<tab>": "escape to normal mode again",
     ";": [
       "command line mode",
       "execute command",
