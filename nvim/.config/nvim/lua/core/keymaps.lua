@@ -8,6 +8,8 @@ keymap {
   motion { 'move left', 'h' },
   motion { 'move right', 'l' },
   motion { 'repeat', '.' },
+  motion { 'eOl', '$' },
+  motion { 'beginning of line', '^' },
   key { 'Quit!', cmd 'q!' },
   key { 'Replace', 'r' },
   key { 'Delete one', [["_x]], details = '(no yank)' },
