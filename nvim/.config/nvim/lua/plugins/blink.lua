@@ -26,28 +26,17 @@ return {
       -- C-k: Toggle signature help (if signature.enabled = true)
       --
       -- See :h blink-cmp-config-keymap for defining your own keymap
-      keymap = {
-        -- Enter confirms the currently selected item (AI included if it's in the menu),
-        -- otherwise falls back to newline
-        ['<CR>'] = { 'accept', 'fallback' },
-
-        -- Tab cycles forward, or snippet jump, or fallback to literal tab
-        ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
-
-        -- Shift-Tab cycles backward, or snippet backjump
-        ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
-      },
+      keymap = {},
 
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono',
+        nerd_font_variant = 'normal',
       },
 
       -- (Default) Only show the documentation popup when manually triggered
       completion = {
         documentation = { auto_show = false },
-        ghost_text = { enabled = true },
       },
 
       -- Default list of enabled providers defined so that you can extend it

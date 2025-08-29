@@ -1,27 +1,15 @@
 return {
-  {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    build = ':Copilot auth',
-    event = 'BufReadPost',
-    opts = {},
-  },
-  {
-    'saghen/blink.cmp',
-    optional = true,
-    dependencies = { 'giuxtaposition/blink-cmp-copilot' },
-    opts = {
-      sources = {
-        default = { 'copilot' },
-        providers = {
-          copilot = {
-            name = 'copilot',
-            module = 'blink-cmp-copilot',
-            kind = 'Copilot',
-            score_offset = 100,
-            async = true,
-          },
-        },
+  'zbirenbaum/copilot.lua',
+  cmd = 'Copilot',
+  event = 'InsertEnter',
+  opts = {
+    suggestion = {
+      enabled = true,
+      auto_trigger = true,
+      hide_during_completion = true,
+      keymap = {
+        accept = '<tab>',
+        dismiss = '<C-e>',
       },
     },
   },

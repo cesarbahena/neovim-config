@@ -4,14 +4,6 @@ return {
     build = ':TSUpdate',
     event = 'VeryLazy',
     dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
-    keys = {
-      {
-        desc = 'Move outside syntactical region',
-        '<C-o>',
-        '<Esc><cmd>normal vvv<cr>A',
-        mode = 'i',
-      },
-    },
     config = function(_, opts) require('nvim-treesitter.configs').setup(opts) end,
     opts = {
       indent = { enable = true },
@@ -23,8 +15,8 @@ return {
         enable = true,
         keymaps = {
           init_selection = false,
-          node_incremental = "v",
-          node_decremental = "u",
+          node_incremental = 'v',
+          node_decremental = 'u',
           scope_incremental = false,
         },
       },

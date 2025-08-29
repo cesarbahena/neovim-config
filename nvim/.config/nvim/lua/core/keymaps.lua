@@ -61,7 +61,7 @@ keymap {
   insert { 'Dot with auto undo breakpoints', '.<C-g>u' },
   insert { 'escape to normal mode', fn 'actions.treesitter.clean_exit' },
   insert { 'escape to normal mode also', fn 'actions.treesitter.clean_exit' },
-  insert { 'escape to normal mode again', fn 'actions.treesitter.clean_exit' },
+  insert { 'one of', '<c-o>' },
 
   -- control
   key { 'Undo jump', '<C-t>' },
