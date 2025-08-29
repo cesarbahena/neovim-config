@@ -62,6 +62,7 @@
     "u": "Undo jump"
   },
   "keys": {
+    "<tab>": "last window",
     "*": "grep selection or word",
     ",": ["repeat", "Comma with auto undo breakpoints"],
     ",,": "Insert comma at the end",

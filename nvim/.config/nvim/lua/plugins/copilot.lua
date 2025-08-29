@@ -31,6 +31,7 @@ return {
     keys = {
       { '<c-u>', '<cr>', ft = 'copilot-chat', desc = 'Submit Prompt', remap = true, mode = 'n' },
       { '<c-u>', '<c-o><cr>', ft = 'copilot-chat', desc = 'Submit Prompt', remap = true, mode = 'i' },
+      { '<c-i>', '<esc><c-w>p', ft = 'copilot-chat', desc = 'last window', mode = 'i' },
       {
         '?',
         desc = 'Toggle (CopilotChat)',

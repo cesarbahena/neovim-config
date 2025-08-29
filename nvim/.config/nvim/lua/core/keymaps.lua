@@ -46,6 +46,14 @@ keymap {
   key { 'add Line above', 'O<esc>' },
   key { 'Toggle macro recording', fn 'actions.toggle_macro_recording' },
   key { 'Repeat macro', '@q' },
+  auto_select {
+    'last window',
+    fn {
+      { vim.cmd, 'CopilotChatOpen' },
+      when = fn('utils.is_win_open', 'copilot-chat'),
+      or_else = { vim.cmd, 'wincmd p' },
+    },
+  },
 
   on_selection { 'Yank', 'y`>' },
   on_selection { 'Paste', 'P' },

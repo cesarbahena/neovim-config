@@ -23,6 +23,7 @@ return {
           'proc',
           'cmd',
           'bang',
+          'feed',
           'global',
           'Snacks',
         },

@@ -14,6 +14,7 @@ return {
     },
     picker = {
       enabled = true,
+      show_hidden = true,
       actions = {
         trouble_open = fn 'trouble.sources.snacks::actions.trouble_open.action',
       },
@@ -146,22 +147,29 @@ return {
     },
     key {
       'find git files',
-      fn('snacks.picker.git_files', {
-        actions = {
-          find_files = function(picker)
-            local current_prompt = picker.input:get()
-            picker:close()
-            require('snacks').picker.files { pattern = current_prompt }
-          end,
-        },
-        win = {
-          input = {
-            keys = {
-              ['<F3>'] = { 'find_files', mode = 'i' },
+      fn {
+        {
+          'snacks.picker.git_files',
+          {
+            actions = {
+              find_files = function(picker)
+                local current_prompt = picker.input:get()
+                picker:close()
+                require('snacks').picker.files { pattern = current_prompt }
+              end,
+            },
+            win = {
+              input = {
+                keys = {
+                  ['<F3>'] = { 'find_files', mode = 'i' },
+                },
+              },
             },
           },
         },
-      }),
+        when = function() return vim.fn.finddir('.git', '.;') ~= '' end,
+        or_else = 'snacks.picker.files',
+      },
     },
     key { 'find projects', fn 'snacks.picker.projects' },
     -- git
