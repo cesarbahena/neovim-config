@@ -89,7 +89,7 @@
     "<F8>": "Insert semicolon at the end",
     "<F9>": "notification history",
     "=": "increment",
-    "?": "find Files",
+    "?": "AI agent chat",
     "O": "eOl",
     "D": "Delete line",
     "E": "End of word",
@@ -138,7 +138,7 @@
     "gs": "Stage hunk",
     "gu": "Undo stage hunk",
     "g|": "diff this ~",
-    "g~": ["swapcase", "uppercase"],
+    "`": ["swapcase", "uppercase"],
     "h": "next page",
     "i": "Insert mode",
     "ih": "inner Hunk",
@@ -158,6 +158,6 @@
     "y": "Yank",
     "yp": "Copy down",
     "|": "diff this",
-    "`": "lowercase"
+    "~": "lowercase"
   }
 }

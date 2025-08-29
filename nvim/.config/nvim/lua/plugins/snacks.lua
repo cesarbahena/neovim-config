@@ -144,7 +144,6 @@ return {
         }
       end,
     },
-    key { 'find Files', fn 'snacks.picker.files' },
     key {
       'find git files',
       fn('snacks.picker.git_files', {
