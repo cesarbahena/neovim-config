@@ -27,7 +27,7 @@ return {
             ['<m-o>'] = '@parameter.inner',
           },
           swap_previous = {
-            ['<m-h>'] = '@parameter.inner',
+            ['<m-k>'] = '@parameter.inner',
           },
         },
         lsp_interop = {
