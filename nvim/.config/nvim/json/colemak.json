@@ -52,13 +52,13 @@
     "|": "Move window to rightmost side"
   },
   "control": {
+    "e": ["escape to normal mode", "top window"],
     "<F1>": "Signature",
-    "d": "Deindent",
-    "e": "top window",
+    ">": "Deindent",
     "k": "left window",
     "n": "bottom window",
     "o": ["one of", "right window"],
-    "t": "indenT",
+    "<": "indenT",
     "u": "Undo jump"
   },
   "keys": {
@@ -143,7 +143,6 @@
     "i": "Insert mode",
     "ih": "inner Hunk",
     "k": "Move left",
-    "kv": "escape to normal mode also",
     "l": "Open Line below",
     "m": "prEv page",
     "n": "Next line",
@@ -155,11 +154,10 @@
     "ss": "Replace",
     "t": "To",
     "v": "Visual mode",
-    "vk": "escape to normal mode",
     "x": "next dx",
     "y": "Yank",
     "yp": "Copy down",
     "|": "diff this",
-    "~": "lowercase"
+    "`": "lowercase"
   }
 }

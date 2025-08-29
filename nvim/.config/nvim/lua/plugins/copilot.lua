@@ -8,8 +8,7 @@ return {
       auto_trigger = true,
       hide_during_completion = true,
       keymap = {
-        accept = '<tab>',
-        dismiss = '<C-e>',
+        accept = '<c-u>',
       },
     },
   },
