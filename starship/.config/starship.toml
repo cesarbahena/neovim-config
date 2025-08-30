@@ -1,4 +1,4 @@
-add_newline = true
+add_newline = false
 format = "$directory$git_branch$git_state$character" # left prompt
 right_format = "$custom$docker_context"              # right prompt
 

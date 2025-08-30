@@ -46,11 +46,12 @@ keymap {
   key { 'add Line above', 'O<esc>' },
   key { 'Toggle macro recording', fn 'actions.toggle_macro_recording' },
   key { 'Repeat macro', '@q' },
+  motion { 'visual block mode', '<c-v>' },
   auto_select {
     'last window',
     fn {
       { vim.cmd, 'CopilotChatOpen' },
-      when = fn('utils.is_win_open', 'copilot-chat'),
+      when = function() return fn('utils.is_win_open', 'copilot-chat')() and vim.bo.ft ~= 'copilot-chat' end,
       or_else = { vim.cmd, 'wincmd p' },
     },
   },
@@ -72,10 +73,7 @@ keymap {
   insert { 'escape to normal mode', fn 'actions.treesitter.clean_exit' },
   insert { 'one of', '<c-o>' },
 
-  -- control
   key { 'Undo jump', '<C-t>' },
-
-  -- alt
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
 }
@@ -88,10 +86,13 @@ local mappings_to_disable = {
     'u',
     'U',
   },
+  i = {
+    '<C-u>',
+  },
 }
 
 for mode, keys in pairs(mappings_to_disable) do
   for _, key in ipairs(keys) do
-    pcall(vim.keymap.del, mode, key)
+    vim.keymap.set(mode, key, '<nop>')
   end
 end
