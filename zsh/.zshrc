@@ -12,11 +12,6 @@ setopt SHARE_HISTORY         # share history across sessions
 export EDITOR="nvim"
 
 # ============================================================
-# Prompt handled by Starship
-# ============================================================
-eval "$(starship init zsh)"
-
-# ============================================================
 # Aliases
 # ============================================================
 alias ls='ls --color=auto'
@@ -69,6 +64,11 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
 # opencode
 export PATH=/home/cesar/.opencode/bin:$PATH
+
+# ============================================================
+# Prompt handled by Starship
+# ============================================================
+eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.toml)"
 
 # ============================================================
 # tmux auto attach
