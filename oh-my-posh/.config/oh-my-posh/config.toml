@@ -1,17 +1,159 @@
 "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
-final_space = true
 version = 3
+final_space = true
 
+# ───────────────────────── Right prompt (equivale a right_format) ─────────────────────────
+[[blocks]]
+type = "rprompt"
+alignment = "right"
+newline = false
+
+# NodeJS (muestra versión si NO hay mismatch con package.json/.nvmrc/Dockerfile)
+[[blocks.segments]]
+type = "command"
+style = "plain"
+foreground = "green"
+template = "  {{ .Output }}"
+[blocks.segments.properties]
+shell = "bash"
+command = '''
+version=""; constraint=""; mismatch="false"
+for dockerfile in Dockerfile dockerfile Dockerfile.node; do
+  [ -f "$dockerfile" ] && version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/') && break
+done
+[ -z "$version" ] && [ -f ".nvmrc" ] && version=$(head -n1 .nvmrc | sed 's/^v//;s/[^0-9.].*$//')
+[ -z "$version" ] && command -v node >/dev/null 2>&1 && version=$(node -v | sed 's/^v//')
+
+if [ -f "package.json" ] && [ -n "$version" ]; then
+  if command -v jq >/dev/null 2>&1; then
+    constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
+  else
+    constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]+"' package.json | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+  fi
+  if [ -n "$constraint" ]; then
+    actual_major=$(echo "$version" | cut -d'.' -f1)
+    case "$constraint" in
+      ">=20"|^20|~20*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
+      ">=18"|^18|~18*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
+      ">=16"|^16|~16*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
+      ">=14"|^14|~14*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
+      ">="*) required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1); [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true" ;;
+    esac
+  fi
+fi
+
+[ -n "$version" ] && [ "$mismatch" = "false" ] && echo "$version"
+'''
+
+# NodeJS warning (solo aparece si HAY mismatch)
+[[blocks.segments]]
+type = "command"
+style = "plain"
+foreground = "red"
+template = " {{ .Output }}" # muestra la versión en rojo si no cumple constraint
+[blocks.segments.properties]
+shell = "bash"
+command = '''
+# mismo script pero imprimiendo SOLO cuando mismatch=true
+version=""; constraint=""; mismatch="false"
+for dockerfile in Dockerfile dockerfile Dockerfile.node; do
+  [ -f "$dockerfile" ] && version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/') && break
+done
+[ -z "$version" ] && [ -f ".nvmrc" ] && version=$(head -n1 .nvmrc | sed 's/^v//;s/[^0-9.].*$//')
+[ -z "$version" ] && command -v node >/dev/null 2>&1 && version=$(node -v | sed 's/^v//')
+
+if [ -f "package.json" ] && [ -n "$version" ]; then
+  if command -v jq >/dev/null 2>&1; then
+    constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
+  else
+    constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]+"' package.json | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+  fi
+  if [ -n "$constraint" ]; then
+    actual_major=$(echo "$version" | cut -d'.' -f1)
+    case "$constraint" in
+      ">=20"|^20|~20*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
+      ">=18"|^18|~18*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
+      ">=16"|^16|~16*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
+      ">=14"|^14|~14*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
+      ">="*) required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1); [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true" ;;
+    esac
+  fi
+fi
+
+[ -n "$version" ] && [ "$mismatch" = "true" ] && echo "$version"
+'''
+
+# PHP (lee Dockerfile o php -v)
+[[blocks.segments]]
+type = "command"
+style = "plain"
+foreground = "blue"
+template = "  {{ .Output }}"
+[blocks.segments.properties]
+shell = "bash"
+command = '''
+version=""
+[ -f "Dockerfile" ] && version=$(grep -E '^FROM php:[0-9.]+' Dockerfile | head -n1 | sed -E 's/FROM php:([0-9.]+).*/\1/')
+[ -z "$version" ] && command -v php >/dev/null 2>&1 && version=$(php -v 2>/dev/null | head -n1 | awk '{print $2}' | cut -d'-' -f1)
+[ -n "$version" ] && echo "$version"
+'''
+
+# Docker context (igual que starship docker_context)
+[[blocks.segments]]
+type = "docker"
+style = "plain"
+template = "  {{ .Context }} "
+# display_mode = "context" es el default
+
+# ───────────────────────── Left prompt (equivale a format) ─────────────────────────
 [[blocks]]
 type = "prompt"
 alignment = "left"
+newline = false
 
+# Directorio (truncado a 3 niveles y muestra candado si es read-only)
 [[blocks.segments]]
 type = "path"
-style = "powerline"
-powerline_symbol = ""
-foreground = "#ffffff"
-background = "#61AFEF"
-
+style = "plain"
+foreground = "blue"
+template = " {{ .Path }}{{ if not .Writable }} {{ end }} "
 [blocks.segments.properties]
-style = "folder"
+style = "agnoster_short"
+max_depth = 3
+
+# Git (branch + remoto + status con tus símbolos)
+[[blocks.segments]]
+type = "git"
+style = "plain"
+foreground = "yellow"
+template = """ {{ if not .UpstreamGone }}on {{ .HEAD }}:{{ .Upstream }}{{ else }}on {{ .HEAD }}{{ end }} \
+{{- if or (.Working.Changed) (.Staging.Changed) (gt .StashCount 0) (gt .Ahead 0) (gt .Behind 0) -}}
+[{{ if gt .StashCount 0 }} {{ .StashCount }} {{ end -}}
+{{- if and (gt .Ahead 0) (gt .Behind 0) }}󰧠 {{ .Ahead }}/{{ .Behind }} {{ else -}}
+{{- if gt .Ahead 0 }}󰭾 {{ .Ahead }} {{ end -}}
+{{- if gt .Behind 0 }}󰭽 {{ .Behind }} {{ end -}}
+{{- end -}}
+{{- if gt .Working.Untracked 0 }}󰘓 {{ .Working.Untracked }} {{ end -}}
+{{- if gt .Staging.Added 0 }}󰸩 {{ .Staging.Added }} {{ end -}}
+{{- if gt .Working.Modified 0 }}󱇨 {{ .Working.Modified }} {{ end -}}
+{{- if gt .Working.Deleted 0 }}󱀷 {{ .Working.Deleted }} {{ end -}}]]{{ end }} """
+[blocks.segments.properties]
+fetch_status = true
+fetch_upstream_icon = true
+
+# Duración de comando (como cmd_duration, umbral = 1ms)
+[[blocks.segments]]
+type = "executiontime"
+style = "plain"
+foreground = "red"
+template = " {{ .FormattedMs }} "
+[blocks.segments.properties]
+threshold = 1
+style = "austin"
+
+# Character / prompt symbol
+[[blocks.segments]]
+type = "text"
+style = "plain"
+foreground = "white"
+template = " ❯ "
