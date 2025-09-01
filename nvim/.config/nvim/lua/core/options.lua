@@ -42,6 +42,9 @@ local opts = {
   foldmethod = 'expr',
   foldexpr = 'nvim_treesitter#foldexpr()',
   foldenable = false,
+
+  -- Undo
+  swapfile = false,
 }
 
 for k, v in pairs(opts) do

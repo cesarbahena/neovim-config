@@ -69,13 +69,14 @@ export PATH=/home/cesar/.opencode/bin:$PATH
 # Prompt handled by Starship
 # ============================================================
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/config.toml)"
+# eval "$(starship init zsh)"
 
 # ============================================================
 # tmux auto attach
 # ============================================================
-if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-  tmux attach -t default || tmux new -s default
-fi
+# if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+#   tmux attach -t default || tmux new -s default
+# fi
 
 # ============================================================
 # zoxide + fzf
