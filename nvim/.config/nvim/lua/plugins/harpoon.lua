@@ -2,6 +2,7 @@ return {
   'ThePrimeagen/harpoon',
   branch = 'harpoon2',
   dependencies = { 'nvim-lua/plenary.nvim' },
+  lazy = false,
   config = function() require('harpoon'):setup() end,
   keys = {
     motion { 'Harpoon 1', function() require('harpoon'):list():select(1) end },
