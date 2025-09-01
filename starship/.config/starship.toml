@@ -1,19 +1,28 @@
 add_newline = false
-format = "$directory$git_branch$git_state$character" # left prompt
-right_format = "$custom$docker_context"              # right prompt
+format = "$directory$git_branch$git_status$git_commit$character" # left prompt
+right_format = "$custom$docker_context"                          # right prompt
 
 [directory]
 style = "bold blue"
 read_only = " "
 truncation_length = 3
+truncate_to_repo = false
 
 [git_branch]
-symbol = " "
-style = "bold magenta"
+symbol = " "
+format = "[on $branch(:$remote_branch)]($style) "
 
-[git_state]
-format = "[$all_statuses]($style)"
-style = "yellow"
+[git_status]
+style = "bold red"
+stashed = "󱊖 "
+ahead = "󰶣 "
+behind = "󰶡 "
+diverged = " "
+untracked = "󰘓 "
+staged = "󰈖 "
+modified = "󰷉 "
+renamed = "󱇧 "
+deleted = "󰗩 "
 
 [custom.nodejs]
 detect_files = ["package.json", "*.js", "*.ts"]
@@ -160,11 +169,3 @@ style = "blue bold"
 min_time = 1
 format = "[$duration]($style)"
 style = "bold red"
-
-[status]
-style = "bold green"
-
-[character]
-success_symbol = "[❯](green)"
-error_symbol = "[❯](red)"
-vicmd_symbol = "[❮](blue)"
