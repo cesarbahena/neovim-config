@@ -35,6 +35,10 @@ return {
           color = { fg = '#7FB4CA' },
           padding = { left = 0 },
         },
+        {
+          fn 'components.file_info.git_status',
+          color = { fg = '#E6C384', gui = 'bold' },
+        },
       },
       lualine_z = {},
     },
