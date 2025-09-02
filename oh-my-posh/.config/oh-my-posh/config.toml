@@ -21,12 +21,10 @@ red = "#C34043"
 white = "#C8C093"
 yellow = "#C0A36E"
 
-# ───────────────────────── Left prompt (equivale a format) ─────────────────────────
 [[blocks]]
 type = "prompt"
 alignment = "left"
 
-# Directorio (truncado a 3 niveles y muestra candado si es read-only)
 [[blocks.segments]]
 type = "path"
 style = "plain"
@@ -36,7 +34,6 @@ template = "{{ .Path }}{{ if not .Writable }} {{ end }}"
 style = "agnoster_short"
 max_depth = 3
 
-# Git (branch + remoto + status con tus símbolos)
 [[blocks.segments]]
 type = "git"
 style = "plain"
@@ -74,16 +71,14 @@ fetch_upstream_icon = true
 [[blocks.segments]]
 type = "text"
 style = "plain"
-foreground = "white"
-template = " ❯ "
+foreground = "p:brightGreen"
+template = "❯ "
 
-# ───────────────────────── Right prompt (equivale a right_format) ─────────────────────────
 [[blocks]]
 type = "rprompt"
 alignment = "right"
 newline = false
 
-# NodeJS (muestra versión si NO hay mismatch con package.json/.nvmrc/Dockerfile)
 [[blocks.segments]]
 type = "command"
 style = "plain"
