@@ -26,7 +26,10 @@ return {
       -- C-k: Toggle signature help (if signature.enabled = true)
       --
       -- See :h blink-cmp-config-keymap for defining your own keymap
-      keymap = {},
+      keymap = {
+        ['<c-e>'] = false,
+        ['<c-c>'] = { 'cancel', 'fallback' },
+      },
 
       appearance = {
         -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
