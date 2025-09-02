@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# to-subscript
 
 # Map digits to subscript (including subscript dot)
 declare -A sub=(
@@ -7,17 +6,53 @@ declare -A sub=(
   ["5"]="₅" ["6"]="₆" ["7"]="₇" ["8"]="₈" ["9"]="₉" ["." ]="·"
 )
 
-# Read version: first argument or stdin
-if [ -n "$1" ]; then
-  input="$1"
-else
-  read -r input
-fi
+# Read input from stdin
+read -r input
 
-output=""
-for (( i=0; i<${#input}; i++ )); do
-  char="${input:i:1}"
-  output+="${sub[$char]:-$char}"   # leave other chars unchanged
-done
+# Function to convert a version string to subscript
+to_subscript() {
+  local version="$1"
+  local output=""
+  for (( i=0; i<${#version}; i++ )); do
+    char="${version:i:1}"
+    output+="${sub[$char]:-$char}"
+  done
+  echo "$output"
+}
+
+# Extract clean text (without ANSI codes) for pattern matching
+clean_text=$(echo "$input" | sed 's/\x1b\[[0-9;]*m//g')
+
+# Find ALL version patterns and get the last one
+version_pattern='[0-9]+(\.[0-9]+)*'
+if [[ $clean_text =~ $version_pattern ]]; then
+  # Find all matches and get the last one
+  temp_text="$clean_text"
+  last_version=""
+  while [[ $temp_text =~ ([0-9]+(\.[0-9]+)*) ]]; do
+    last_version="${BASH_REMATCH[1]}"
+    # Remove this match and continue searching
+    temp_text="${temp_text/${BASH_REMATCH[1]}/}"
+  done
+  
+  if [[ -n "$last_version" ]]; then
+    # Convert to subscript
+    subscript_version=$(to_subscript "$last_version")
+    
+    # Replace the last occurrence in the original input (with colors)
+    # Use a more specific replacement to avoid replacing earlier occurrences
+    output="${input%$last_version*}${subscript_version}${input##*$last_version}"
+    
+    # Check if replacement actually happened
+    if [[ "$output" == "$input" ]]; then
+      # Fallback: direct replacement
+      output="${input/$last_version/$subscript_version}"
+    fi
+  else
+    output="$input"
+  fi
+else
+  output="$input"
+fi
 
 echo "$output"
