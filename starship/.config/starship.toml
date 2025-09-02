@@ -1,10 +1,10 @@
 add_newline = false
-format = "$directory$git_branch$git_status$git_commit$git_state$character" # left prompt
-right_format = "$all"                                                      # right prompt
+format = "$directory$git_branch$git_status$git_commit$git_state$character"
+right_format = "$all"
 
 [directory]
 style = "bold blue"
-read_only = " "
+read_only = " 󰌾"
 truncation_length = 3
 truncate_to_repo = false
 
@@ -24,159 +24,201 @@ modified = "󱇨 "
 renamed = "󱀱 "
 deleted = "󱀷 "
 
-[python]
-format = "[$symbol$version]($style)"
-version_format = "$raw"
-symbol = " "
-style = "yellow bold"
+[custom.docker]
+symbol = " "
+style = "blue bold"
+when = "test -f Dockerfile || test -f Dockerfile.dev"
+format = "[$symbol]($style)"
+
+[aws]
+symbol = "  "
+
+[buf]
+symbol = " "
+
+[bun]
+symbol = " "
+
+[c]
+symbol = " "
+
+[cpp]
+symbol = " "
+
+[cmake]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[crystal]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[deno]
+symbol = " "
+
+[docker_context]
+format = " [$context]($style)"
+
+[elixir]
+symbol = " "
+
+[elm]
+symbol = " "
+
+[fennel]
+symbol = " "
+
+[fossil_branch]
+symbol = " "
+
+[gcloud]
+symbol = "  "
+
+[git_commit]
+tag_symbol = '  '
+
+[golang]
+symbol = " "
+
+[guix_shell]
+symbol = " "
+
+[haskell]
+symbol = " "
+
+[haxe]
+symbol = " "
+
+[hg_branch]
+symbol = " "
+
+[hostname]
+ssh_symbol = " "
+
+[java]
+symbol = " "
+
+[julia]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[memory_usage]
+symbol = "󰍛 "
+
+[meson]
+symbol = "󰔷 "
+
+[nim]
+symbol = "󰆥 "
+
+[nix_shell]
+symbol = " "
 
 [nodejs]
-format = "[$symbol$version]($style)"
+symbol = " "
+format = " [$symbol$version]($style)"
 version_format = "$raw"
-style = "bold green"
 
-# [custom.nodejs]
-# detect_files = ["package.json", "*.js", "*.ts"]
-# detect_folders = ["node_modules"]
-# format = "[$symbol$output]($style)"
-# symbol = " "
-# style = "green bold"
-# command = '''
-# version=""
-# constraint=""
-# mismatch="false"
-#
-# # Get version
-# for dockerfile in Dockerfile dockerfile Dockerfile.node; do
-#     if [ -f "$dockerfile" ]; then
-#         version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
-#         [ -n "$version" ] && break
-#     fi
-# done
-# if [ -z "$version" ] && [ -f ".nvmrc" ]; then
-#     version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//' | grep -oE '[0-9]+(\.[0-9]+)*')
-# fi
-# if [ -z "$version" ] && command -v node >/dev/null 2>&1; then
-#     version=$(node -v 2>/dev/null | sed 's/^v//')
-# fi
-#
-# # Check for mismatch
-# if [ -f "package.json" ] && [ -n "$version" ]; then
-#     if command -v jq >/dev/null 2>&1; then
-#         constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
-#     else
-#         constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]*"' package.json 2>/dev/null | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
-#     fi
-#
-#     if [ -n "$constraint" ]; then
-#         actual_major=$(echo "$version" | cut -d'.' -f1)
-#         case "$constraint" in
-#             ">=18"*|"^18"*|"~18"*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
-#             ">=20"*|"^20"*|"~20"*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
-#             ">=16"*|"^16"*|"~16"*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
-#             ">=14"*|"^14"*|"~14"*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
-#             *">="*)
-#                 required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1)
-#                 [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true"
-#                 ;;
-#         esac
-#     fi
-# fi
-#
-# # Output: only if no mismatch
-# if [ -n "$version" ] && [ "$mismatch" = "false" ]; then
-#     echo "$version" | to-subscript 2>/dev/null || echo "$version"
-# fi
-# '''
-#
-# [custom.nodejs_warning]
-# detect_files = ["package.json", "*.js", "*.ts", "*.mjs"]
-# detect_folders = ["node_modules"]
-# format = "[$output]($style)"
-# style = "red bold"
-# command = '''
-# version=""
-# constraint=""
-# mismatch="false"
-#
-# # Get version (same logic)
-# for dockerfile in Dockerfile dockerfile Dockerfile.node; do
-#     if [ -f "$dockerfile" ]; then
-#         version=$(grep -E '^FROM node:[0-9.]+' "$dockerfile" 2>/dev/null | head -n1 | sed -E 's/FROM node:([0-9.]+).*/\1/')
-#         [ -n "$version" ] && break
-#     fi
-# done
-# if [ -z "$version" ] && [ -f ".nvmrc" ]; then
-#     version=$(head -n1 .nvmrc 2>/dev/null | sed 's/^v//' | grep -oE '[0-9]+(\.[0-9]+)*')
-# fi
-# if [ -z "$version" ] && command -v node >/dev/null 2>&1; then
-#     version=$(node -v 2>/dev/null | sed 's/^v//')
-# fi
-#
-# # Check for mismatch (same logic)
-# if [ -f "package.json" ] && [ -n "$version" ]; then
-#     if command -v jq >/dev/null 2>&1; then
-#         constraint=$(jq -r '.engines.node // empty' package.json 2>/dev/null)
-#     else
-#         constraint=$(grep -E '"node"[[:space:]]*:[[:space:]]*"[^"]*"' package.json 2>/dev/null | sed -E 's/.*"node"[[:space:]]*:[[:space:]]*"([^"]*)".*/\1/')
-#     fi
-#
-#     if [ -n "$constraint" ]; then
-#         actual_major=$(echo "$version" | cut -d'.' -f1)
-#         case "$constraint" in
-#             ">=18"*|"^18"*|"~18"*) [ "$actual_major" -lt 18 ] && mismatch="true" ;;
-#             ">=20"*|"^20"*|"~20"*) [ "$actual_major" -lt 20 ] && mismatch="true" ;;
-#             ">=16"*|"^16"*|"~16"*) [ "$actual_major" -lt 16 ] && mismatch="true" ;;
-#             ">=14"*|"^14"*|"~14"*) [ "$actual_major" -lt 14 ] && mismatch="true" ;;
-#             *">="*)
-#                 required_major=$(echo "$constraint" | grep -oE '[0-9]+' | head -n1)
-#                 [ -n "$required_major" ] && [ "$actual_major" -lt "$required_major" ] && mismatch="true"
-#                 ;;
-#         esac
-#     fi
-# fi
-#
-# # Output: only if there IS a mismatch
-# if [ -n "$version" ] && [ "$mismatch" = "true" ]; then
-#     echo "$version" | to-subscript 2>/dev/null || echo "$version"
-# fi
-# '''
-#
-# [custom.php]
-# detect_files = ["composer.json", "index.php", "*.php"]
-# format = "[$symbol$output]($style) "
-# symbol = " "
-# style = "blue bold"
-# command = '''
-# version=""
-#
-# # Check Dockerfile first
-# if [ -f "Dockerfile" ]; then
-#     version=$(grep -E '^FROM php:[0-9.]+' Dockerfile 2>/dev/null | head -n1 | sed -E 's/FROM php:([0-9.]+).*/\1/')
-# fi
-#
-# # Check system PHP as fallback
-# if [ -z "$version" ] && command -v php >/dev/null 2>&1; then
-#     version=$(php -v 2>/dev/null | head -n1 | awk '{print $2}' | cut -d'-' -f1)
-# fi
-#
-# # Output: try to-subscript first, fallback to normal numbers
-# if [ -n "$version" ]; then
-#     echo "$version" | to-subscript 2>/dev/null || echo "$version"
-# fi
-# '''
-#
-# [docker_context]
-# format = "[$context]($style)"
-# style = "blue bold"
-#
-# [custom.docker]
-# when = "test -f Dockerfile || test -f Dockerfile.dev"
-# format = "[$symbol]($style)"
-# symbol = " "
-# style = "blue bold"
-#
-# [cmd_duration]
-# min_time = 1
-# format = "[$duration]($style)"
-# style = "bold red"
+[ocaml]
+symbol = " "
+
+[os.symbols]
+Alpaquita = " "
+Alpine = " "
+AlmaLinux = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Artix = " "
+CachyOS = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "󰛓 "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = "󰈸 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+Nobara = " "
+OpenBSD = "󰈺 "
+openSUSE = " "
+OracleLinux = "󰌷 "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+RockyLinux = " "
+Redox = "󰀘 "
+Solus = "󰠳 "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Void = " "
+Windows = "󰍲 "
+
+[package]
+symbol = "󰏗 "
+format = " [$symbol$version]($style)"
+version_format = "$raw"
+
+[perl]
+symbol = " "
+
+[php]
+symbol = " "
+format = " [$symbol$version]($style)"
+version_format = "$raw"
+
+[pijul_channel]
+symbol = " "
+
+[pixi]
+symbol = "󰏗 "
+
+[python]
+symbol = " "
+format = " [$symbol$version]($style)"
+version_format = "$raw"
+
+[rlang]
+symbol = "󰟔 "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = "󱘗 "
+
+[scala]
+symbol = " "
+
+[swift]
+symbol = " "
+
+[zig]
+symbol = " "
+
+[gradle]
+symbol = " "
