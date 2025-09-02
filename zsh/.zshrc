@@ -68,16 +68,11 @@ export PATH=/home/cesar/.opencode/bin:$PATH
 # ============================================================
 # Prompt handled by Starship
 # ============================================================
-# eval "$(starship init zsh)"
-# precmd() {
-#   PROMPT="$(starship prompt --status=$? --jobs=${(%):-%j} 2>/dev/null | to-subscript)"
-# }
-# precmd() {
-#     PROMPT="$(starship prompt --status=$? --jobs=${(%):-%j} 2>/dev/null | hello)"
-# }
+eval "$(starship init zsh)"
 precmd() {
-    PROMPT="$(starship prompt --status=$? --jobs=${(%):-%j} 2>/dev/null | to-subscript)"
+  RPROMPT="$(starship prompt --right 2>/dev/null | to-subscript)"
 }
+
 # ============================================================
 # tmux auto attach
 # ============================================================

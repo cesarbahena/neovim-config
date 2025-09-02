@@ -1,9 +1,6 @@
 add_newline = false
-# format = "$directory$git_branch$git_status$git_commit$git_state$character" # left prompt
-# right_format = "$custom$docker_context$all"                                # right prompt
-format = "$all$fill$php$line_break$character"
-[fill]
-symbol = " "
+format = "$directory$git_branch$git_status$git_commit$git_state$character" # left prompt
+right_format = "$all"                                                      # right prompt
 
 [directory]
 style = "bold blue"
@@ -26,6 +23,17 @@ staged = "󰸩 "
 modified = "󱇨 "
 renamed = "󱀱 "
 deleted = "󱀷 "
+
+[python]
+format = "[$symbol$version]($style)"
+version_format = "$raw"
+symbol = " "
+style = "yellow bold"
+
+[nodejs]
+format = "[$symbol$version]($style)"
+version_format = "$raw"
+style = "bold green"
 
 # [custom.nodejs]
 # detect_files = ["package.json", "*.js", "*.ts"]
