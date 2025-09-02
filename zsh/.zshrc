@@ -69,8 +69,46 @@ export PATH=/home/cesar/.opencode/bin:$PATH
 # Prompt handled by Starship
 # ============================================================
 eval "$(starship init zsh)"
+
 precmd() {
-  RPROMPT="$(starship prompt --right 2>/dev/null | to-subscript)"
+    local input="$(starship prompt --right 2>/dev/null)"
+    local output=""
+    local in_escape=0
+    local i
+    
+    for (( i=0; i<${#input}; i++ )); do
+        local char="${input:$i:1}"
+        
+        # Check if we're entering an ANSI escape sequence
+        if [[ "$char" == $'\033' ]]; then
+            in_escape=1
+            output+="$char"
+        # Check if we're ending an ANSI escape sequence
+        elif [[ $in_escape -eq 1 && "$char" == "m" ]]; then
+            in_escape=0
+            output+="$char"
+        # If we're inside escape sequence, just copy
+        elif [[ $in_escape -eq 1 ]]; then
+            output+="$char"
+        # If we're outside escape sequence, convert digits
+        else
+            case "$char" in
+                0) output+="₀" ;;
+                1) output+="₁" ;;
+                2) output+="₂" ;;
+                3) output+="₃" ;;
+                4) output+="₄" ;;
+                5) output+="₅" ;;
+                6) output+="₆" ;;
+                7) output+="₇" ;;
+                8) output+="₈" ;;
+                9) output+="₉" ;;
+                *) output+="$char" ;;
+            esac
+        fi
+    done
+    
+    RPROMPT="$output"
 }
 
 # ============================================================

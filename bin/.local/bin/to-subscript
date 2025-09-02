@@ -1,50 +1,23 @@
-#!/usr/bin/env python3
-import sys
-import re
+#!/usr/bin/env bash
+# to-subscript
 
-# Map digits to subscript
-sub = {
-    '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
-    '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉',
-}
+# Map digits to subscript (including subscript dot)
+declare -A sub=(
+  ["0"]="₀" ["1"]="₁" ["2"]="₂" ["3"]="₃" ["4"]="₄"
+  ["5"]="₅" ["6"]="₆" ["7"]="₇" ["8"]="₈" ["9"]="₉" ["." ]="·"
+)
 
-def to_subscript(version):
-    return ''.join(sub.get(char, char) for char in version)
+# Read version: first argument or stdin
+if [ -n "$1" ]; then
+  input="$1"
+else
+  read -r input
+fi
 
-# Read from stdin
-input_text = sys.stdin.read().rstrip('\n')
+output=""
+for (( i=0; i<${#input}; i++ )); do
+  char="${input:i:1}"
+  output+="${sub[$char]:-$char}"   # leave other chars unchanged
+done
 
-# Remove ANSI codes for pattern matching only
-clean_text = re.sub(r'\x1b\[[0-9;]*m', '', input_text)
-
-# Find all version patterns
-version_matches = list(re.finditer(r'\b\d+(?:\.\d+)*\b', clean_text))
-
-if version_matches:
-    # Get the last match
-    last_match = version_matches[-1]
-    last_version = last_match.group()
-    
-    # Convert to subscript
-    subscript_version = to_subscript(last_version)
-    
-    # Find the position in the original text (accounting for ANSI codes)
-    # We'll work backwards from the end to find the last occurrence
-    original_reversed = input_text[::-1]
-    version_reversed = last_version[::-1]
-    
-    # Find last occurrence by searching in reversed string
-    reverse_pos = original_reversed.find(version_reversed)
-    if reverse_pos != -1:
-        # Convert back to normal position
-        start_pos = len(input_text) - reverse_pos - len(last_version)
-        end_pos = start_pos + len(last_version)
-        
-        # Replace in original text
-        output = input_text[:start_pos] + subscript_version + input_text[end_pos:]
-    else:
-        output = input_text
-else:
-    output = input_text
-
-print(output, end='')
+echo "$output"
