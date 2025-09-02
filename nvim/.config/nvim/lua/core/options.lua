@@ -45,6 +45,7 @@ local opts = {
 
   -- Undo
   swapfile = false,
+  undofile = true,
 }
 
 for k, v in pairs(opts) do
