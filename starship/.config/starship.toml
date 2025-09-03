@@ -83,6 +83,8 @@ tag_symbol = '  '
 
 [golang]
 symbol = " "
+format = " [$symbol$version]($style)"
+version_format = "$raw"
 
 [guix_shell]
 symbol = " "

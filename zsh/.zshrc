@@ -41,23 +41,23 @@ compinit
 # ============================================================
 # Environment paths
 # ============================================================
+export COMPOSE_BAKE=true
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/.npm-global/bin:$PATH
-export PATH=$HOME/.fzf/bin:$PATH
-
-# pnpm
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-export COMPOSE_BAKE=true
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.npm-global/bin:$PATH
+export PATH=$HOME/.fzf/bin:$PATH
+export PATH=/usr/local/go/bin:$PATH
+
+
 
 # Cargo
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
@@ -114,9 +114,9 @@ precmd() {
 # ============================================================
 # tmux auto attach
 # ============================================================
-# if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
-#   tmux attach -t default || tmux new -s default
-# fi
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+  tmux attach -t default || tmux new -s default
+fi
 
 # ============================================================
 # zoxide + fzf
