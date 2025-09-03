@@ -25,7 +25,7 @@ renamed = "󱀱 "
 deleted = "󱀷 "
 
 [custom.docker]
-symbol = " "
+symbol = "  "
 style = "blue bold"
 when = "test -f Dockerfile || test -f Dockerfile.dev"
 format = "[$symbol]($style)"
