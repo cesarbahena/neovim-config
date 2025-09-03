@@ -36,6 +36,12 @@ return {
           padding = { left = 0 },
         },
         {
+          'branch',
+          icon = 'on',
+          color = { fg = '#938AA9' },
+          padding = { left = 1, right = 0 },
+        },
+        {
           fn 'components.file_info.git_status',
           color = { fg = '#E6C384', gui = 'bold' },
         },
