@@ -45,8 +45,11 @@ return {
           fn 'components.file_info.git_status',
           color = { fg = '#E6C384', gui = 'bold' },
         },
+        'buffers',
       },
-      lualine_z = {},
+      lualine_z = {
+        'lsp_status',
+      },
     },
     sections = {},
   },

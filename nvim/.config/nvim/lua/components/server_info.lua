@@ -27,26 +27,13 @@ if mini_icons_available then
 end
 
 for i = 1, 5, 1 do
-  M['lsp_' .. i] = {
-    function()
-      local server = vim.lsp.get_active_clients()[i]
-      local icon = lsp_icons[server.name]
-      if icon then return icon .. '  ' .. server.name end
-      return '  ' .. server.name
-    end,
-
-    cond = function()
-      local server = vim.lsp.get_active_clients()[i]
-      if not server then return end
-
-      if server.name == 'null-ls' then return end
-
-      local buffer = vim.api.nvim_get_current_buf()
-      return server.attached_buffers[buffer]
-    end,
-
-    color = { fg = 'white', gui = 'bold' },
-  }
+  M['lsp_' .. i] = function()
+    local server = vim.lsp.get_active_clients()[i]
+    if server == nil then return '' end
+    local icon = lsp_icons[server.name]
+    if icon then return icon .. '  ' .. server.name end
+    return '  ' .. server.name
+  end
 end
 
 M.lsp_error = {
