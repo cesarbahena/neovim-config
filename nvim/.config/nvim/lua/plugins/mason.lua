@@ -14,6 +14,7 @@ return {
         'jsonls',
         'yamlls',
         'taplo',
+        'marksman',
       },
     },
   },

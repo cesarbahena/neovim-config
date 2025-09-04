@@ -24,6 +24,7 @@ local servers = {
   'jsonls',
   'yamlls',
   'taplo',
+  'marksman',
 }
 
 for _, server in ipairs(servers) do

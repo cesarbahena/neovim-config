@@ -7,31 +7,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a personal dotfiles repository using GNU Stow structure for managing configurations. Contains Neovim configuration with sophisticated error handling and backup mechanisms, plus tmux configuration.
 
 ### Managed Configurations
+
 - **nvim**: Neovim configuration at `nvim/.config/nvim/`
 - **tmux**: Tmux configuration at `tmux/.config/tmux/`
 
 ## Key Commands
 
 ### Testing
+
 - `make test` - Run all tests with plenary.nvim
 - `make test-verbose` - Run tests with verbose output
 - `make test-file` - Run a specific test file
 - `make dev-test` - Interactive testing (run `:PlenaryBustedDirectory tests/` in nvim)
 
-### Stow Management  
+### Stow Management
+
 - `stow <package>` - Create symlinks for a package (e.g., `stow nvim`, `stow tmux`)
 - `stow -D <package>` - Remove symlinks for a package
 
 ### Backup and Sync
+
 - `./sync-nvim-backup.sh` - Sync nvim config to backup location (complete replacement)
 
 ### Environment Variables
+
 - `NVIM_BACKUP_PATH` - Path to backup configuration (default: `~/.config/nvim_backup`)
 - `NVIM_SAFE_MODE` - Set to '1' to load backup config immediately without waiting for errors
 
 ## Architecture
 
 ### Core Error Handling System
+
 The configuration is built around a sophisticated error handling system using a custom `try` API:
 
 - **Safe Execution**: All module loading uses `try()` wrapper for error resilience
@@ -40,6 +46,7 @@ The configuration is built around a sophisticated error handling system using a 
 - **Retry Mechanism**: Failed modules can be retried before package manager initialization
 
 ### Directory Structure
+
 ```
 nvim/.config/nvim/
 ├── init.lua              # Entry point with backup/safe mode logic
@@ -61,18 +68,30 @@ nvim/.config/nvim/
 ```
 
 ### Try API
+
 The `try` function provides multiple execution patterns:
+
 - Simple calls: `try(function, args...)`
 - Single operations: `try { function, args..., options }`
 - Batch operations: `try { {func1, args...}, {func2, args...}, options }`
 - Multi-call: `try { function, {args1...}, {args2...}, options }`
 
 ### Package Management
+
 Uses lazy.nvim with:
-- Lockfile at `json/lazy-lock.json` 
+
+- Lockfile at `json/lazy-lock.json`
 - Plugin specs imported from `plugins/` directory
 - Performance optimizations with disabled default plugins
 - Automatic plugin checking enabled
+
+### LSP Configuration
+
+Language servers are configured in `lsp/` directory with automatic loading:
+
+- Individual server configs: `lsp/<server_name>.lua`
+- Mason auto-installs configured servers
+- When adding LSP support: also add formatter to `conform.lua` formatters_by_ft
 
 ## Git Commit Preferences
 

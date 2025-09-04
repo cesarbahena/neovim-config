@@ -12,7 +12,7 @@ return function(_, bufnr)
     -- Actions (using existing keys)
     key { 'code rename', vim.lsp.buf.rename },
     key { 'Code Suggestions', vim.lsp.buf.code_action },
-    key { 'Code Format', vim.lsp.buf.format },
+    key { 'Code Format', function() require('conform').format({ async = true, lsp_fallback = true }) end },
 
     -- Hover and signature
     -- key { 'hover', fn(vim.lsp.buf.hover, { border = 'rounded', focusable = false }) },
