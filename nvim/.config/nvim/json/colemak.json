@@ -70,7 +70,7 @@
     "<F1>": "find help",
     "F": "next match",
     "X": "Prev dx",
-    ".": ["parent directory", "Dot with auto undo breakpoints"],
+    ".": ["file explorer", "Dot with auto undo breakpoints"],
     "bq": "delete buffer",
     "U": "Unundo",
     "cD": "Code Declaration",
