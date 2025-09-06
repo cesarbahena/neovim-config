@@ -1,5 +1,7 @@
 {
   "keys": {
+    "<": "indenT",
+    ">": "Deindent",
     "gH": "last Hunk",
     "gJ": "Join/Merge lines (raw)",
     "t": "To",
@@ -22,7 +24,7 @@
     "4": "harpoon 4",
     "ih": "inner Hunk",
     "*": "grep selection or word",
-    "<": "Repeat macro",
+    "R": "Repeat macro",
     "q": "clean",
     "<tab>": "last window",
     "Y": "Yank line",
@@ -68,7 +70,6 @@
     "<F1>": "find help",
     "F": "next match",
     "X": "Prev dx",
-    "`n": "botom window",
     ".": ["parent directory", "Dot with auto undo breakpoints"],
     "bq": "delete buffer",
     "U": "Unundo",
@@ -153,9 +154,7 @@
     "gg": "LazyGit"
   },
   "control": {
-    "<": "indenT",
     "o": ["one of", "right window"],
-    ">": "Deindent",
     "<F1>": "Signature",
     "u": "Undo jump",
     "k": "left window",

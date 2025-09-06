@@ -5,7 +5,7 @@ return {
       motion { 'left window', fn 'tmux.move_left' },
       motion { 'right window', fn 'tmux.move_right' },
       motion { 'top window', fn 'tmux.move_top' },
-      motion { 'botom window', fn 'tmux.move_bottom' },
+      motion { 'bottom window', fn 'tmux.move_bottom' },
       motion { 'resize left', fn 'tmux.resize_left' },
       motion { 'resize right', fn 'tmux.resize_right' },
       motion { 'resize top', fn 'tmux.resize_top' },
