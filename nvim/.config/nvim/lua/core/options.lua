@@ -46,6 +46,8 @@ local opts = {
   -- Undo
   swapfile = false,
   undofile = true,
+
+  conceallevel = 2, -- Hide * markup for bold and italic
 }
 
 for k, v in pairs(opts) do
