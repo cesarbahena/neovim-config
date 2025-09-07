@@ -76,10 +76,21 @@ keymap {
   key { 'Undo jump', '<C-t>' },
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
+
+  motion { '1', '1' },
+  motion { '2', '2' },
+  motion { '3', '3' },
+  motion { '4', '4' },
+  motion { '5', '5' },
+  motion { '6', '6' },
+  motion { '7', '7' },
+  motion { '8', '8' },
+  motion { '9', '9' },
+  motion { '0', '0' },
 }
 
 -- Setup numeric keymaps
-require('utils.numeric_keymaps').setup()
+-- require('utils.numeric_keymaps').setup()
 
 local mappings_to_disable = {
   x = {
@@ -96,3 +107,6 @@ for mode, keys in pairs(mappings_to_disable) do
     vim.keymap.set(mode, key, '<nop>')
   end
 end
+
+-- Map Alt+O to 0 (beginning of line)
+vim.keymap.set('n', '<M-o>', '0')

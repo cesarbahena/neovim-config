@@ -1,7 +1,5 @@
 {
   "keys": {
-    "<": "indenT",
-    ">": "Deindent",
     "gH": "last Hunk",
     "gJ": "Join/Merge lines (raw)",
     "t": "To",
@@ -101,19 +99,28 @@
     "gB": "Blame buffer",
     "cr": "Code Rename"
   },
-  "meta": { "tens": [1, 2, 3] },
+  "meta": { "tens": [] },
   "alt": {
+    "h": "1",
+    ",": "2",
+    ".": "3",
+    "n": "4",
+    "e": "5",
+    "i": "6",
+    "l": "7",
+    "u": "8",
+    "y": "9",
+    "o": "0",
     "right": "resize right",
     "down": "resize botom",
     "up": "resize top",
     "left": "resize left",
-    "n": "move line down",
-    "e": "move line up"
+    "x": "move line down",
+    "a": "move line up"
   },
   "leader": {
     "B": "grep buffers",
     "gS": "Git Stash",
-    "t": "4",
     "gb": "Git Branches",
     "gf": "Git log File",
     ",": "Toggle macro recording",
@@ -122,12 +129,8 @@
     "gs": "Git Status",
     "h": "harpoon menu",
     "l": "add Line below",
-    "m": "6",
-    "r": "2",
     "un": "Dismiss All Notifications",
-    "g": "5",
     "'": "find jumps",
-    "a": "1",
     "f": "grep lines",
     "|": "Move window to rightmost side",
     "_": "Move window to bottom",
@@ -140,13 +143,8 @@
     "/": "find projects",
     "x": "find diagnostics",
     "L": "add Line above",
-    "s": "3",
     "U": "find in undo history",
     "<leader>": "resume picker",
-    "i": "9",
-    "n": "7",
-    "o": "0",
-    "e": "8",
     "cx": "find in quickfix list",
     "X": "find diagnostics in buffer",
     "gL": "Git Log line",
@@ -159,6 +157,8 @@
     "u": "Undo jump",
     "k": "left window",
     "n": "bottom window",
-    "e": ["escape to normal mode", "top window"]
+    "e": ["escape to normal mode", "top window"],
+    "t": "indenT",
+    "d": "Deindent"
   }
 }

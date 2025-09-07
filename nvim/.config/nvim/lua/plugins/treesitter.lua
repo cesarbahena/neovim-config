@@ -24,10 +24,10 @@ return {
         swap = {
           enable = true,
           swap_next = {
-            ['<m-o>'] = '@parameter.inner',
+            ['<leader>ao'] = '@parameter.inner',
           },
           swap_previous = {
-            ['<m-k>'] = '@parameter.inner',
+            ['<leader>ak'] = '@parameter.inner',
           },
         },
         lsp_interop = {
