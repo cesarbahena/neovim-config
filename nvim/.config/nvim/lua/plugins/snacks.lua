@@ -174,11 +174,11 @@ return {
     key { 'find projects', fn 'snacks.picker.projects' },
     -- git
     key { 'Git Branches', fn 'snacks.picker.git_branches' },
-    key { 'Git Browse', fn 'snacks.picker.gitbrowse' },
+    key { 'Git Browse', fn 'snacks.gitbrowse' },
     key { 'LazyGit', fn 'snacks.lazygit' },
     key { 'Git Log', fn 'snacks.picker.git_log' },
     key { 'Git Log line', fn 'snacks.picker.git_log_line' },
-    key { 'Git Status', fn 'snacks.picker.git_status' },
+    key { 'find in Git Status', fn 'snacks.picker.git_status' },
     key { 'Git Stash', fn 'snacks.picker.git_stash' },
     key { 'Git Hunks', fn 'snacks.picker.git_diff' },
     key { 'Git log File', fn 'snacks.picker.git_log_file' },

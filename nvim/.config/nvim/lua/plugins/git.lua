@@ -6,6 +6,9 @@ return {
       'sindrets/diffview.nvim', -- optional - Diff integration
       'folke/snacks.nvim', -- optional
     },
+    keys = {
+      key { 'Git Status', cmd 'Neogit' },
+    },
   },
   {
     'lewis6991/gitsigns.nvim',
@@ -25,13 +28,8 @@ return {
         topdelete = { text = '' },
         changedelete = { text = '▎' },
       },
-      current_line_blame = true,
       preview_config = {
         border = 'rounded',
-        style = 'minimal',
-        relative = 'cursor',
-        row = 0,
-        col = 1,
       },
       on_attach = function(buffer)
         keymap {
@@ -44,9 +42,9 @@ return {
           key { 'first Hunk', fn('gitsigns.nav_hunk', 'first') },
 
           -- Stage/Reset operations
-          auto_select { 'Stage hunk', cmd 'Gitsigns stage_hunk' },
+          auto_select { 'Git Add hunk', cmd 'Gitsigns stage_hunk' },
           auto_select { 'Reset hunk', cmd 'Gitsigns reset_hunk' },
-          key { 'Stage buffer', fn 'gitsigns.stage_buffer' },
+          key { 'Git Add buffer', fn 'gitsigns.stage_buffer' },
           key { 'Reset buffer', fn 'gitsigns.reset_buffer' },
           key { 'Undo stage hunk', fn 'gitsigns.undo_stage_hunk' },
 

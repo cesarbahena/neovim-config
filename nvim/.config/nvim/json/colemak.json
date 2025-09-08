@@ -1,5 +1,6 @@
 {
   "keys": {
+    "gs": "Git Status",
     "gH": "last Hunk",
     "gJ": "Join/Merge lines (raw)",
     "t": "To",
@@ -10,7 +11,7 @@
     "k": "Move left",
     "gh": "next Hunk",
     "gk": "prev hunK",
-    "gs": "Stage hunk",
+    "ga": "git add hunk",
     "gl": "Git Log",
     "h": "next page",
     "gp": "Preview hunk inline",
@@ -59,7 +60,7 @@
     "gu": "Undo stage hunk",
     "gb": "Blame line",
     "T": "back To",
-    "gS": "Stage buffer",
+    "gA": "git add buffer",
     "E": "End of word",
     "2": "harpoon 2",
     "W": "prev Word",
@@ -126,7 +127,7 @@
     ",": "Toggle macro recording",
     "k": "harpoon add",
     "gh": "Git  Hunks",
-    "gs": "Git Status",
+    "gs": "find in Git Status",
     "h": "harpoon menu",
     "l": "add Line below",
     "un": "Dismiss All Notifications",
