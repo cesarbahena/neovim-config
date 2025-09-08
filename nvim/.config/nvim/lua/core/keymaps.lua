@@ -113,21 +113,21 @@ vim.keymap.set('n', '<M-o>', '0')
 
 -- Function to check if gitsigns blame popup is open
 local function is_gitsigns_blame_open()
+  local utils = require 'utils'
+  -- Check if any window has gitsigns_preview == 'blame'
   for _, winid in ipairs(vim.api.nvim_list_wins()) do
     if vim.w[winid].gitsigns_preview == 'blame' then return winid end
   end
   return nil
 end
 
--- Conditional keymap that acts differently when blame popup is open
-vim.keymap.set('n', '<leader>g1', function()
-  local blame_win = is_gitsigns_blame_open()
-  if blame_win then
-    -- Focus the blame popup if it exists
-    require('gitsigns').blame()
-    vim.api.nvim_win_close(blame_win, true)
-  else
-    -- Call the original blame function
-    require('gitsigns').blame_line { full = true }
-  end
-end)
+-- Conditional keymap using fn forEach
+vim.keymap.set(
+  'n',
+  '<leader>g1',
+  fn {
+    'gitsigns.blame',
+    when = { "vim.w[winid].gitsigns_preview == 'blame'", forEach = 'windows' },
+    or_else = { 'gitsigns.blame_line', { full = true } },
+  }
+)

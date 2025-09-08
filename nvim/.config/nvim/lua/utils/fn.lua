@@ -105,11 +105,82 @@ local function merge_function_args(fn_def, extra_args)
   return fn_args
 end
 
----Evaluate a condition (string, function, or boolean)
+---Evaluate a condition (string, function, boolean, or options table)
 ---@param condition any The condition to evaluate
----@return boolean result The evaluation result
+---@return boolean|any result The evaluation result
 local function evaluate_condition(condition)
-  if type(condition) == 'string' then
+  if type(condition) == 'table' then
+    local base_condition = condition[1] -- The actual condition (string or function)
+    local options = condition
+    
+    -- Handle forEach option
+    if options.forEach then
+      local iterable = options.forEach
+      local is_windows = false
+      
+      if type(iterable) == 'string' and iterable == 'windows' then
+        iterable = vim.api.nvim_list_wins()
+        is_windows = true
+      elseif type(iterable) == 'function' then
+        iterable = iterable()
+      end
+      
+      for _, item in ipairs(iterable) do
+        local context = { item = item, vim = vim }
+        
+        -- For windows, add winid and buf to context
+        if is_windows then
+          context.winid = item
+          context.buf = vim.api.nvim_win_get_buf(item)
+        end
+        
+        local check_result
+        if type(base_condition) == 'string' then
+          local func = load('return ' .. base_condition, nil, 't', context)
+          check_result = func and func() or false
+        elseif type(base_condition) == 'function' then
+          check_result = base_condition(item)
+        end
+        
+        if check_result then
+          return item -- Early return with the matching item
+        end
+      end
+      return false -- No match found
+    end
+    
+    -- Evaluate base condition
+    local result
+    if type(base_condition) == 'string' then
+      local func = load('return ' .. base_condition)
+      if not func then return false end
+      local success, val = pcall(func)
+      result = success and val or false
+    elseif type(base_condition) == 'function' then
+      local success, val = pcall(base_condition)
+      result = success and val or false
+    else
+      result = base_condition
+    end
+    
+    -- Apply comparison operators
+    if options.eq ~= nil then
+      return result == options.eq
+    elseif options.ne ~= nil then
+      return result ~= options.ne
+    elseif options.gt ~= nil then
+      return result > options.gt
+    elseif options.lt ~= nil then
+      return result < options.lt
+    elseif options.gte ~= nil then
+      return result >= options.gte
+    elseif options.lte ~= nil then
+      return result <= options.lte
+    end
+    
+    -- Default: return truthy value of result
+    return not not result
+  elseif type(condition) == 'string' then
     -- Lazy evaluation: execute the string as Lua code
     local func, err = load('return ' .. condition)
     if not func then return false end
