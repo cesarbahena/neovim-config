@@ -129,15 +129,9 @@ local function evaluate_condition(condition)
         vim_table = vim.g
       elseif scope == 'option' then
         vim_table = vim.o
-      elseif scope == 'wo' then
-        vim_table = vim.wo
-      elseif scope == 'bo' then
-        vim_table = vim.bo
-      elseif scope == 'go' then
-        vim_table = vim.go
       elseif scope == 'env' then
         vim_table = vim.env
-      elseif scope == 'v' then
+      elseif scope == 'state' then
         vim_table = vim.v
       else
         return false -- Invalid scope
@@ -158,6 +152,9 @@ local function evaluate_condition(condition)
           if not result then
             result = vim.bo[base_condition]
           end
+        elseif scope == 'global' then
+          -- Check both vim.g and vim.go
+          result = vim_table[base_condition] or vim.go[base_condition]
         else
           -- Evaluate as property access on vim table
           result = vim_table[base_condition]
@@ -167,6 +164,8 @@ local function evaluate_condition(condition)
           result = base_condition(vim_table, vim.wo)
         elseif scope == 'buffer' then
           result = base_condition(vim_table, vim.bo)
+        elseif scope == 'global' then
+          result = base_condition(vim_table, vim.go)
         else
           result = base_condition(vim_table)
         end
@@ -559,33 +558,7 @@ end
 
 ---Create a lazy function wrapper with conditional execution, error handling, and notifications
 ---
----## Usage Patterns:
----
----### 1. Conditional Execution
----```lua
----fn { when = condition, main_function, or_else = fallback_function }
----```
----
----### 2. Try/Notify with Error Handling
----```lua
----fn { main_function, or_else = fallback, notify = 'main'|'fallback'|'both' }
----```
----
----### 3. Direct Function Call
----```lua
----fn(function_reference, arg1, arg2, ...)
----```
----
----### 4. Module Path Call
----```lua
----fn('module.function_name', arg1, arg2, ...)
----```
----
----## Notify Options:
----
----• **'main'**: Only notify errors from the main function, or_else errors propagate
----• **'fallback'** (default): Only notify errors from the fallback function, main errors are silent
----• **'both'**: Notify errors from both main and fallback functions
+---See docs/fn_api.md for comprehensive documentation and examples.
 ---
 ---@param fn_or_module_path function|string|table The function, module path, or specification table
 ---@param ... any Arguments to pass to the function

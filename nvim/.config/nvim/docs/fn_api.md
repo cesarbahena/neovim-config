@@ -6,6 +6,7 @@ The `fn` API provides a powerful, lazy function wrapper system with conditional 
 
 - [Basic Concepts](#basic-concepts)
 - [Usage Patterns](#usage-patterns)
+- [Enhanced Condition Evaluation](#enhanced-condition-evaluation)
 - [Notify Options](#notify-options)
 - [Examples](#examples)
 - [API Reference](#api-reference)
@@ -59,6 +60,139 @@ Call a function from a module by string path:
 
 ```lua
 local module_fn = fn('module.function_name', arg1, arg2, ...)
+```
+
+## Enhanced Condition Evaluation
+
+The `when` condition in `fn` supports advanced evaluation patterns for vim variables, options, and custom iteration.
+
+### Basic Condition Types
+
+```lua
+-- String expression (lazy evaluation)
+when = 'vim.bo.filetype == "lua"'
+
+-- Function (lazy evaluation)  
+when = function() return vim.bo.filetype == "lua" end
+
+-- Boolean (immediate evaluation)
+when = true
+```
+
+### Vim Variable/Option Access
+
+Access vim variables and options with clean, readable syntax:
+
+```lua
+-- Current buffer filetype
+when = { 'filetype', eq = 'lua', in_this = 'buffer' }
+
+-- Any window with gitsigns blame open
+when = { 'gitsigns_preview', eq = 'blame', in_any = 'window' }
+
+-- Global plugin loaded
+when = { 'loaded_telescope', in_this = 'global' }
+
+-- Vim state (count prefix > 0)
+when = { 'count', gt = 0, in_this = 'state' }
+
+-- Environment variable
+when = { 'TERM', eq = 'xterm-256color', in_this = 'env' }
+```
+
+### Scope Options
+
+#### Merged Scopes (check both variables and options)
+
+| Scope | Variables | Options | Description |
+|-------|-----------|---------|-------------|
+| `window` | `vim.w` | `vim.wo` | Window variables + options |
+| `buffer` | `vim.b` | `vim.bo` | Buffer variables + options |
+| `global` | `vim.g` | `vim.go` | Global variables + options |
+
+#### Single Scopes
+
+| Scope | Access | Description |
+|-------|--------|-------------|
+| `tab` | `vim.t` | Tab-local variables |
+| `option` | `vim.o` | Global options |
+| `env` | `vim.env` | Environment variables |
+| `state` | `vim.v` | Vim internal state (count, version, register, etc.) |
+
+### Iteration Options
+
+```lua
+-- Check current context only
+in_this = 'buffer'   -- vim.b[key] or vim.bo[key]
+
+-- Iterate through all items, return ID of first match  
+in_any = 'window'    -- Check all windows, return winid
+
+-- Custom iteration
+forEach = { 1, 2, 3, 4, 5 }           -- Iterate array
+forEach = 'windows'                   -- Shortcut for vim.api.nvim_list_wins()
+forEach = function() return my_list() end  -- Dynamic iteration
+```
+
+### Comparison Operators
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `eq` | Equal to | `{ 'filetype', eq = 'lua' }` |
+| `ne` | Not equal to | `{ 'filetype', ne = 'help' }` |
+| `gt` | Greater than | `{ 'count', gt = 0 }` |
+| `lt` | Less than | `{ 'line_count', lt = 100 }` |
+| `gte` | Greater than or equal | `{ 'version', gte = 801 }` |
+| `lte` | Less than or equal | `{ 'tabstop', lte = 4 }` |
+
+### Advanced Examples
+
+#### Multiple Windows with TypeScript Files
+```lua
+local typescript_keymap = fn {
+  'typescript.organize_imports',
+  when = { 'filetype', eq = 'typescript', in_any = 'buffer' },
+  or_else = function() print('No TypeScript files open') end
+}
+```
+
+#### Conditional Behavior Based on Vim State
+```lua
+local smart_motion = fn {
+  when = { 'count', gt = 1, in_this = 'state' },
+  function() vim.cmd('normal! ' .. vim.v.count .. 'j') end,
+  or_else = function() vim.cmd('normal! gj') end -- Visual line movement
+}
+```
+
+#### Environment-Aware Configuration
+```lua
+local dev_tools = fn {
+  when = { 'NODE_ENV', eq = 'development', in_this = 'env' },
+  function() require('dev_tools').setup() end,
+  or_else = function() print('Production mode - dev tools disabled') end
+}
+```
+
+#### Complex Window State Detection
+```lua
+local close_floating_windows = fn {
+  when = { 
+    function(w_table, wo_table, winid) 
+      return wo_table.winblend > 0  -- Check if window is floating/transparent
+    end,
+    in_any = 'window'
+  },
+  function() 
+    -- Close all floating windows
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+      if vim.wo[winid].winblend > 0 then
+        vim.api.nvim_win_close(winid, true)
+      end
+    end
+  end,
+  or_else = function() print('No floating windows found') end
+}
 ```
 
 ## Notify Options
