@@ -186,6 +186,13 @@ local function evaluate_condition(condition)
         return result >= options.gte
       elseif options.lte ~= nil then
         return result <= options.lte
+      elseif options.contains ~= nil then
+        if type(result) == 'table' then
+          return result[options.contains] ~= nil
+        elseif type(result) == 'string' then
+          return result:find(options.contains) ~= nil
+        end
+        return false
       end
 
       return not not result
@@ -265,6 +272,14 @@ local function evaluate_condition(condition)
           matches = result >= options.gte
         elseif options.lte ~= nil then
           matches = result <= options.lte
+        elseif options.contains ~= nil then
+          if type(result) == 'table' then
+            matches = result[options.contains] ~= nil
+          elseif type(result) == 'string' then
+            matches = result:find(options.contains) ~= nil
+          else
+            matches = false
+          end
         else
           matches = not not result
         end
@@ -321,6 +336,14 @@ local function evaluate_condition(condition)
           matches = result >= options.gte
         elseif options.lte ~= nil then
           matches = result <= options.lte
+        elseif options.contains ~= nil then
+          if type(result) == 'table' then
+            matches = result[options.contains] ~= nil
+          elseif type(result) == 'string' then
+            matches = result:find(options.contains) ~= nil
+          else
+            matches = false
+          end
         else
           matches = not not result
         end
@@ -359,6 +382,13 @@ local function evaluate_condition(condition)
       return result >= options.gte
     elseif options.lte ~= nil then
       return result <= options.lte
+    elseif options.contains ~= nil then
+      if type(result) == 'table' then
+        return result[options.contains] ~= nil
+      elseif type(result) == 'string' then
+        return result:find(options.contains) ~= nil
+      end
+      return false
     end
 
     -- Default: return truthy value of result

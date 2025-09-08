@@ -137,11 +137,10 @@ vim.keymap.set(
 
 vim.keymap.set(
   'n',
-  '<leader>g0',
+  'g0',
   fn {
-    'gitsigns.blame',
-    when = { 'ft', eq = 'typescript', in_any = 'buffer' },
+    'gitsigns.preview_hunk_inline',
+    when = { fn 'gitsigns.get_actions', contains = 'stage_hunk' },
     or_else = { 'gitsigns.blame_line', { full = true } },
-  },
-  { desc = 'Check if JS file is open' }
+  }
 )
