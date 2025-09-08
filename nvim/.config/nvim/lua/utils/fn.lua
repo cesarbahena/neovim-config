@@ -10,19 +10,23 @@ local M = {}
 ---@return string|nil error_msg Error message if parsing fails
 local function parse_module_path(module_path)
   -- Check for :: syntax for nested properties
-  if module_path:find('::') then
-    local module_name, property_path = module_path:match('^(.-)::(.+)$')
+  if module_path:find '::' then
+    local module_name, property_path = module_path:match '^(.-)::(.+)$'
     if module_name and property_path then
       return module_name, property_path, nil
     else
       return nil, nil, 'Invalid :: syntax in: "' .. module_path .. '"'
     end
   end
-  
+
   -- Legacy single-level syntax (only last dot)
   local last_dot = module_path:match '.*()%.'
   if not last_dot then
-    return nil, nil, 'Module path must include function name: "module.function" or "module::nested.property", got "' .. module_path .. '"'
+    return nil,
+      nil,
+      'Module path must include function name: "module.function" or "module::nested.property", got "'
+        .. module_path
+        .. '"'
   end
 
   local module_name = module_path:sub(1, last_dot - 1)
@@ -42,21 +46,19 @@ local function resolve_module_function(module_path)
   if not success then return nil, 'Module not found: ' .. module_name end
 
   -- Handle nested property access for :: syntax
-  if module_path:find('::') then
+  if module_path:find '::' then
     local current = module
     local properties = vim.split(function_name, '.', { plain = true })
-    
+
     for i, property in ipairs(properties) do
       if current == nil then
         return nil, 'Property path broken at step ' .. i .. ' (' .. property .. ') in ' .. module_path
       end
       current = current[property]
     end
-    
-    if current == nil then
-      return nil, 'Property ' .. function_name .. ' not found in module ' .. module_name
-    end
-    
+
+    if current == nil then return nil, 'Property ' .. function_name .. ' not found in module ' .. module_name end
+
     return current, nil
   else
     -- Legacy single-level access (last dot only)
@@ -112,38 +114,84 @@ local function evaluate_condition(condition)
   if type(condition) == 'table' then
     local base_condition = condition[1] -- The actual condition (string or function)
     local options = condition
-    
-    -- Handle forEach option
-    if options.forEach then
-      local iterable = options.forEach
-      local is_windows = false
-      
-      if type(iterable) == 'string' and iterable == 'windows' then
-        iterable = vim.api.nvim_list_wins()
-        is_windows = true
-      elseif type(iterable) == 'function' then
-        iterable = iterable()
+
+    -- Handle in_this option (single scope evaluation)
+    if options.in_this then
+      local scope = options.in_this
+      local vim_table
+      if scope == 'window' then
+        vim_table = vim.w
+      elseif scope == 'buffer' then
+        vim_table = vim.b
+      elseif scope == 'tab' then
+        vim_table = vim.t
+      elseif scope == 'global' then
+        vim_table = vim.g
+      elseif scope == 'option' then
+        vim_table = vim.o
+      else
+        return false -- Invalid scope
       end
-      
-      for _, item in ipairs(iterable) do
-        local context = { item = item, vim = vim }
-        
-        -- For windows, add winid and buf to context
-        if is_windows then
-          context.winid = item
-          context.buf = vim.api.nvim_win_get_buf(item)
+
+      local result
+      if type(base_condition) == 'string' then
+        -- Evaluate as property access on vim table
+        result = vim_table[base_condition]
+      elseif type(base_condition) == 'function' then
+        result = base_condition(vim_table)
+      else
+        result = base_condition
+      end
+
+      -- Apply comparison operators
+      if options.eq ~= nil then
+        return result == options.eq
+      elseif options.ne ~= nil then
+        return result ~= options.ne
+      elseif options.gt ~= nil then
+        return result > options.gt
+      elseif options.lt ~= nil then
+        return result < options.lt
+      elseif options.gte ~= nil then
+        return result >= options.gte
+      elseif options.lte ~= nil then
+        return result <= options.lte
+      end
+
+      return not not result
+    end
+
+    -- Handle in_any option (iterate over multiple scopes)
+    if options.in_any then
+      local scope = options.in_any
+      local vim_tables = {}
+
+      if scope == 'window' then
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+          table.insert(vim_tables, { table = vim.w[winid], id = winid })
         end
-        
+      elseif scope == 'buffer' then
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+          table.insert(vim_tables, { table = vim.b[bufnr], id = bufnr })
+        end
+      elseif scope == 'tab' then
+        for _, tabnr in ipairs(vim.api.nvim_list_tabpages()) do
+          table.insert(vim_tables, { table = vim.t[tabnr], id = tabnr })
+        end
+      else
+        return false -- Invalid scope
+      end
+
+      for _, entry in ipairs(vim_tables) do
         local result
         if type(base_condition) == 'string' then
-          local func = load('return ' .. base_condition, nil, 't', context)
-          result = func and func() or false
+          result = entry.table[base_condition]
         elseif type(base_condition) == 'function' then
-          result = base_condition(item)
+          result = base_condition(entry.table, entry.id)
         else
           result = base_condition
         end
-        
+
         -- Apply comparison if specified, otherwise check truthiness
         local matches = false
         if options.eq ~= nil then
@@ -161,14 +209,70 @@ local function evaluate_condition(condition)
         else
           matches = not not result
         end
-        
+
+        if matches then
+          return entry.id -- Return the matching ID
+        end
+      end
+      return false -- No match found
+    end
+
+    -- Handle forEach option
+    if options.forEach then
+      local iterable = options.forEach
+      local is_windows = false
+
+      if type(iterable) == 'string' and iterable == 'windows' then
+        iterable = vim.api.nvim_list_wins()
+        is_windows = true
+      elseif type(iterable) == 'function' then
+        iterable = iterable()
+      end
+
+      for _, item in ipairs(iterable) do
+        local context = { item = item, vim = vim }
+
+        -- For windows, add winid and buf to context
+        if is_windows then
+          context.winid = item
+          context.buf = vim.api.nvim_win_get_buf(item)
+        end
+
+        local result
+        if type(base_condition) == 'string' then
+          local func = load('return ' .. base_condition, nil, 't', context)
+          result = func and func() or false
+        elseif type(base_condition) == 'function' then
+          result = base_condition(item)
+        else
+          result = base_condition
+        end
+
+        -- Apply comparison if specified, otherwise check truthiness
+        local matches = false
+        if options.eq ~= nil then
+          matches = result == options.eq
+        elseif options.ne ~= nil then
+          matches = result ~= options.ne
+        elseif options.gt ~= nil then
+          matches = result > options.gt
+        elseif options.lt ~= nil then
+          matches = result < options.lt
+        elseif options.gte ~= nil then
+          matches = result >= options.gte
+        elseif options.lte ~= nil then
+          matches = result <= options.lte
+        else
+          matches = not not result
+        end
+
         if matches then
           return item -- Early return with the matching item
         end
       end
       return false -- No match found
     end
-    
+
     -- Evaluate base condition
     local result
     if type(base_condition) == 'string' then
@@ -182,7 +286,7 @@ local function evaluate_condition(condition)
     else
       result = base_condition
     end
-    
+
     -- Apply comparison operators
     if options.eq ~= nil then
       return result == options.eq
@@ -197,7 +301,7 @@ local function evaluate_condition(condition)
     elseif options.lte ~= nil then
       return result <= options.lte
     end
-    
+
     -- Default: return truthy value of result
     return not not result
   elseif type(condition) == 'string' then
@@ -455,4 +559,3 @@ function M.fn(fn_or_module_path, ...)
 end
 
 return M
-

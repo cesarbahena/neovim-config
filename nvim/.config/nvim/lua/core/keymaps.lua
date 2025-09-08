@@ -121,16 +121,26 @@ local function is_gitsigns_blame_open()
   return nil
 end
 
--- Conditional keymap using fn forEach
+-- Conditional keymap using fn in_any
 vim.keymap.set(
   'n',
   '<leader>g1',
   fn {
     'gitsigns.blame',
-    when = { 'vim.w[winid].gitsigns_preview', eq = 'blame', forEach = 'windows' },
+    when = { 'gitsigns_preview', eq = 'blame', in_any = 'window' },
     or_else = proc {
       fn { 'gitsigns.blame_line', { full = true } },
       fn { vim.cmd, 'wincmd p' },
     },
+  }
+)
+
+vim.keymap.set(
+  'n',
+  '<leader>g0',
+  fn {
+    { vim.notify, 'JS is open' },
+    when = { 'ft', eq = 'javascript', in_any = 'buffer' },
+    or_else = { vim.notify, 'JS is not open' },
   }
 )
