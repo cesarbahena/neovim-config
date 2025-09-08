@@ -127,7 +127,10 @@ vim.keymap.set(
   '<leader>g1',
   fn {
     'gitsigns.blame',
-    when = { "vim.w[winid].gitsigns_preview == 'blame'", forEach = 'windows' },
-    or_else = { 'gitsigns.blame_line', { full = true } },
+    when = { 'vim.w[winid].gitsigns_preview', eq = 'blame', forEach = 'windows' },
+    or_else = proc {
+      fn { 'gitsigns.blame_line', { full = true } },
+      fn { vim.cmd, 'wincmd p' },
+    },
   }
 )

@@ -134,15 +134,35 @@ local function evaluate_condition(condition)
           context.buf = vim.api.nvim_win_get_buf(item)
         end
         
-        local check_result
+        local result
         if type(base_condition) == 'string' then
           local func = load('return ' .. base_condition, nil, 't', context)
-          check_result = func and func() or false
+          result = func and func() or false
         elseif type(base_condition) == 'function' then
-          check_result = base_condition(item)
+          result = base_condition(item)
+        else
+          result = base_condition
         end
         
-        if check_result then
+        -- Apply comparison if specified, otherwise check truthiness
+        local matches = false
+        if options.eq ~= nil then
+          matches = result == options.eq
+        elseif options.ne ~= nil then
+          matches = result ~= options.ne
+        elseif options.gt ~= nil then
+          matches = result > options.gt
+        elseif options.lt ~= nil then
+          matches = result < options.lt
+        elseif options.gte ~= nil then
+          matches = result >= options.gte
+        elseif options.lte ~= nil then
+          matches = result <= options.lte
+        else
+          matches = not not result
+        end
+        
+        if matches then
           return item -- Early return with the matching item
         end
       end
