@@ -129,6 +129,16 @@ local function evaluate_condition(condition)
         vim_table = vim.g
       elseif scope == 'option' then
         vim_table = vim.o
+      elseif scope == 'wo' then
+        vim_table = vim.wo
+      elseif scope == 'bo' then
+        vim_table = vim.bo
+      elseif scope == 'go' then
+        vim_table = vim.go
+      elseif scope == 'env' then
+        vim_table = vim.env
+      elseif scope == 'v' then
+        vim_table = vim.v
       else
         return false -- Invalid scope
       end
@@ -178,8 +188,16 @@ local function evaluate_condition(condition)
         for _, tabnr in ipairs(vim.api.nvim_list_tabpages()) do
           table.insert(vim_tables, { table = vim.t[tabnr], id = tabnr })
         end
+      elseif scope == 'wo' then
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+          table.insert(vim_tables, { table = vim.wo[winid], id = winid })
+        end
+      elseif scope == 'bo' then
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+          table.insert(vim_tables, { table = vim.bo[bufnr], id = bufnr })
+        end
       else
-        return false -- Invalid scope
+        return false -- Invalid scope (global scopes don't iterate)
       end
 
       for _, entry in ipairs(vim_tables) do
