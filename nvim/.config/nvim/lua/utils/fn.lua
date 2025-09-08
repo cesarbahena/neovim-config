@@ -145,10 +145,31 @@ local function evaluate_condition(condition)
 
       local result
       if type(base_condition) == 'string' then
-        -- Evaluate as property access on vim table
-        result = vim_table[base_condition]
+        if scope == 'window' then
+          -- Check both vim.w and vim.wo
+          result = vim_table[base_condition] -- vim.w[key]
+          if not result then
+            local success, val = pcall(function() return vim.wo[base_condition] end)
+            result = success and val or nil
+          end
+        elseif scope == 'buffer' then
+          -- Check both vim.b and vim.bo
+          result = vim_table[base_condition] -- vim.b[key]
+          if not result then
+            result = vim.bo[base_condition]
+          end
+        else
+          -- Evaluate as property access on vim table
+          result = vim_table[base_condition]
+        end
       elseif type(base_condition) == 'function' then
-        result = base_condition(vim_table)
+        if scope == 'window' then
+          result = base_condition(vim_table, vim.wo)
+        elseif scope == 'buffer' then
+          result = base_condition(vim_table, vim.bo)
+        else
+          result = base_condition(vim_table)
+        end
       else
         result = base_condition
       end
@@ -203,9 +224,30 @@ local function evaluate_condition(condition)
       for _, entry in ipairs(vim_tables) do
         local result
         if type(base_condition) == 'string' then
-          result = entry.table[base_condition]
+          if scope == 'window' then
+            -- Check both vim.w[winid] and vim.wo[winid]
+            result = entry.table[base_condition] -- vim.w[winid][key]
+            if not result then
+              local success, val = pcall(function() return vim.wo[entry.id][base_condition] end)
+              result = success and val or nil
+            end
+          elseif scope == 'buffer' then
+            -- Check both vim.b[bufnr] and vim.bo[bufnr]
+            result = entry.table[base_condition] -- vim.b[bufnr][key]
+            if not result then
+              result = vim.bo[entry.id][base_condition]
+            end
+          else
+            result = entry.table[base_condition]
+          end
         elseif type(base_condition) == 'function' then
-          result = base_condition(entry.table, entry.id)
+          if scope == 'window' then
+            result = base_condition(entry.table, vim.wo[entry.id], entry.id)
+          elseif scope == 'buffer' then
+            result = base_condition(entry.table, vim.bo[entry.id], entry.id)
+          else
+            result = base_condition(entry.table, entry.id)
+          end
         else
           result = base_condition
         end

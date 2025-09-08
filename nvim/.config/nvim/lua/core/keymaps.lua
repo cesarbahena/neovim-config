@@ -139,8 +139,9 @@ vim.keymap.set(
   'n',
   '<leader>g0',
   fn {
-    { vim.notify, 'JS is open' },
-    when = { 'ft', eq = 'javascript', in_any = 'buffer' },
-    or_else = { vim.notify, 'JS is not open' },
-  }
+    'gitsigns.blame',
+    when = { 'ft', eq = 'typescript', in_any = 'buffer' },
+    or_else = { 'gitsigns.blame_line', { full = true } },
+  },
+  { desc = 'Check if JS file is open' }
 )
