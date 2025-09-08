@@ -175,7 +175,6 @@ return {
     -- git
     key { 'Git Branches', fn 'snacks.picker.git_branches' },
     key { 'Git Browse', fn 'snacks.gitbrowse' },
-    key { 'LazyGit', fn 'snacks.lazygit' },
     key { 'Git Log', fn 'snacks.picker.git_log' },
     key { 'Git Log line', fn 'snacks.picker.git_log_line' },
     key { 'find in Git Status', fn 'snacks.picker.git_status' },

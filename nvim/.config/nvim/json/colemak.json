@@ -122,7 +122,7 @@
   "leader": {
     "B": "grep buffers",
     "gS": "Git Stash",
-    "gb": "Git Branches",
+    "gy": "Git Branches",
     "gf": "Git log File",
     ",": "Toggle macro recording",
     "k": "harpoon add",
