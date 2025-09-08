@@ -25,6 +25,14 @@ return {
         topdelete = { text = '' },
         changedelete = { text = '▎' },
       },
+      current_line_blame = true,
+      preview_config = {
+        border = 'rounded',
+        style = 'minimal',
+        relative = 'cursor',
+        row = 0,
+        col = 1,
+      },
       on_attach = function(buffer)
         keymap {
           buffer = buffer,
