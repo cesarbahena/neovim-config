@@ -155,10 +155,10 @@ Access nested properties from function results using the `::` syntax:
 when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' }
 
 -- Access nested properties 
-when = { 'vim.lsp.get_clients::1::name', eq = 'tailwindcss' }
+when = { 'vim.lsp.get_clients::1.name', eq = 'tailwindcss' }
 
 -- Get buffer info properties
-when = { 'vim.fn.getbufinfo::1::changed', eq = 1 }
+when = { 'vim.fn.getbufinfo::1.changed', eq = 1 }
 ```
 
 #### Syntax Rules
@@ -228,7 +228,7 @@ local smart_undo = fn {
 ```lua
 local tailwind_action = fn {
   'show_tailwind_values',
-  when = { 'vim.lsp.get_clients::1::name', eq = 'tailwindcss' },
+  when = { 'vim.lsp.get_clients::1.name', eq = 'tailwindcss' },
   or_else = function() print('Tailwind LSP not active') end
 }
 ```

@@ -371,10 +371,15 @@ local function evaluate_condition(condition)
             if type(current) == 'function' then
               current = current()
             end
-            -- Navigate through property path
+            -- Navigate through property path using normal dot notation
             local props = vim.split(property_path, '.', { plain = true })
             for _, prop in ipairs(props) do
-              current = current[prop]
+              -- Handle array indices
+              if prop:match '^%d+$' then
+                current = current[tonumber(prop)]
+              else
+                current = current[prop]
+              end
             end
             return current
           end)
@@ -415,10 +420,15 @@ local function evaluate_condition(condition)
             if type(current) == 'function' then
               current = current()
             end
-            -- Navigate through property path
+            -- Navigate through property path using normal dot notation
             local props = vim.split(property_path, '.', { plain = true })
             for _, prop in ipairs(props) do
-              current = current[prop]
+              -- Handle array indices
+              if prop:match '^%d+$' then
+                current = current[tonumber(prop)]
+              else
+                current = current[prop]
+              end
             end
             return current
           end)
