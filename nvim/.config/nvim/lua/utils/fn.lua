@@ -358,10 +358,39 @@ local function evaluate_condition(condition)
     -- Evaluate base condition
     local result
     if type(base_condition) == 'string' then
-      local func = load('return ' .. base_condition)
-      if not func then return false end
-      local success, val = pcall(func)
-      result = success and val or false
+      -- Check for :: syntax for nested property access
+      if base_condition:find '::' then
+        local module_name, property_path = base_condition:match '^(.-)::(.+)$'
+        if module_name and property_path then
+          local success, module_result = pcall(function()
+            local parts = vim.split(module_name, '.', { plain = true })
+            local current = _G
+            for _, part in ipairs(parts) do
+              current = current[part]
+            end
+            if type(current) == 'function' then
+              current = current()
+            end
+            -- Navigate through property path
+            local props = vim.split(property_path, '.', { plain = true })
+            for _, prop in ipairs(props) do
+              current = current[prop]
+            end
+            return current
+          end)
+          result = success and module_result or false
+        else
+          local func = load('return ' .. base_condition)
+          if not func then return false end
+          local success, val = pcall(func)
+          result = success and val or false
+        end
+      else
+        local func = load('return ' .. base_condition)
+        if not func then return false end
+        local success, val = pcall(func)
+        result = success and val or false
+      end
     elseif type(base_condition) == 'function' then
       local success, val = pcall(base_condition)
       result = success and val or false
@@ -369,19 +398,55 @@ local function evaluate_condition(condition)
       result = base_condition
     end
 
+    -- Helper function to evaluate comparison values
+    local function eval_comparison_value(value)
+      if type(value) == 'function' then
+        local success, val = pcall(value)
+        return success and val or nil
+      elseif type(value) == 'string' and value:find '::' then
+        local module_name, property_path = value:match '^(.-)::(.+)$'
+        if module_name and property_path then
+          local success, module_result = pcall(function()
+            local parts = vim.split(module_name, '.', { plain = true })
+            local current = _G
+            for _, part in ipairs(parts) do
+              current = current[part]
+            end
+            if type(current) == 'function' then
+              current = current()
+            end
+            -- Navigate through property path
+            local props = vim.split(property_path, '.', { plain = true })
+            for _, prop in ipairs(props) do
+              current = current[prop]
+            end
+            return current
+          end)
+          return success and module_result or nil
+        end
+      end
+      return value
+    end
+
     -- Apply comparison operators
     if options.eq ~= nil then
-      return result == options.eq
+      local compare_val = eval_comparison_value(options.eq)
+      return result == compare_val
     elseif options.ne ~= nil then
-      return result ~= options.ne
+      local compare_val = eval_comparison_value(options.ne)
+      return result ~= compare_val
     elseif options.gt ~= nil then
-      return result > options.gt
+      local compare_val = eval_comparison_value(options.gt)
+      return result > compare_val
     elseif options.lt ~= nil then
-      return result < options.lt
+      local compare_val = eval_comparison_value(options.lt)
+      return result < compare_val
     elseif options.gte ~= nil then
-      return result >= options.gte
+      local compare_val = eval_comparison_value(options.gte)
+      return result >= compare_val
     elseif options.lte ~= nil then
-      return result <= options.lte
+      local compare_val = eval_comparison_value(options.lte)
+      return result <= compare_val
     elseif options.contains ~= nil then
       if type(result) == 'table' then
         return result[options.contains] ~= nil

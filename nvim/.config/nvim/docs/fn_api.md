@@ -144,6 +144,47 @@ forEach = function() return my_list() end  -- Dynamic iteration
 | `lt` | Less than | `{ 'line_count', lt = 100 }` |
 | `gte` | Greater than or equal | `{ 'version', gte = 801 }` |
 | `lte` | Less than or equal | `{ 'tabstop', lte = 4 }` |
+| `contains` | Contains key/substring | `{ result, contains = 'stage_hunk' }` |
+
+### Property Access Syntax
+
+Access nested properties from function results using the `::` syntax:
+
+```lua
+-- Compare values from state tables
+when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' }
+
+-- Access nested properties 
+when = { 'vim.lsp.get_clients::1::name', eq = 'tailwindcss' }
+
+-- Get buffer info properties
+when = { 'vim.fn.getbufinfo::1::changed', eq = 1 }
+```
+
+#### Syntax Rules
+
+- `module.function::property.path` - Call function, then access nested properties
+- Automatically calls functions that return tables
+- Supports deep property access with dot notation
+- Works in both conditions and comparison values
+
+### Function-Aware Comparisons
+
+Comparison operators can now accept functions or property access syntax:
+
+```lua
+-- Compare function results
+when = { 
+  function() return vim.fn.line('.') end,
+  lt = function() return vim.fn.line('$') end 
+}
+
+-- Mix literal values with function results  
+when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' }
+
+-- Use in any comparison operator
+when = { 'vim.lsp.get_clients', contains = function() return get_target_client() end }
+```
 
 ### Advanced Examples
 
@@ -171,6 +212,24 @@ local dev_tools = fn {
   when = { 'NODE_ENV', eq = 'development', in_this = 'env' },
   function() require('dev_tools').setup() end,
   or_else = function() print('Production mode - dev tools disabled') end
+}
+```
+
+#### Smart Undo/Redo with State Tables
+```lua
+local smart_undo = fn {
+  feed('<c-r>'),  -- Redo by default
+  when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' },
+  or_else = { feed('.') }  -- Repeat last action if at latest change
+}
+```
+
+#### LSP Client State Detection  
+```lua
+local tailwind_action = fn {
+  'show_tailwind_values',
+  when = { 'vim.lsp.get_clients::1::name', eq = 'tailwindcss' },
+  or_else = function() print('Tailwind LSP not active') end
 }
 ```
 
