@@ -148,23 +148,23 @@ forEach = function() return my_list() end  -- Dynamic iteration
 
 ### Property Access Syntax
 
-Access nested properties from function results using the `::` syntax:
+Access nested properties from function results using the `()` syntax:
 
 ```lua
 -- Compare values from state tables
-when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' }
+when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' }
 
 -- Access nested properties 
-when = { 'vim.lsp.get_clients::1.name', eq = 'tailwindcss' }
+when = { 'vim.lsp.get_clients().1.name', eq = 'tailwindcss' }
 
 -- Get buffer info properties
-when = { 'vim.fn.getbufinfo::1.changed', eq = 1 }
+when = { 'vim.fn.getbufinfo().1.changed', eq = 1 }
 ```
 
 #### Syntax Rules
 
-- `module.function::property.path` - Call function, then access nested properties
-- Automatically calls functions that return tables
+- `module.function().property.path` - Call function, then access nested properties
+- Looks like natural Lua syntax for function calls and property access
 - Supports deep property access with dot notation
 - Works in both conditions and comparison values
 
@@ -180,7 +180,7 @@ when = {
 }
 
 -- Mix literal values with function results  
-when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' }
+when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' }
 
 -- Use in any comparison operator
 when = { 'vim.lsp.get_clients', contains = function() return get_target_client() end }
@@ -219,7 +219,7 @@ local dev_tools = fn {
 ```lua
 local smart_undo = fn {
   feed('<c-r>'),  -- Redo by default
-  when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' },
+  when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' },
   or_else = { feed('.') }  -- Repeat last action if at latest change
 }
 ```
@@ -228,7 +228,7 @@ local smart_undo = fn {
 ```lua
 local tailwind_action = fn {
   'show_tailwind_values',
-  when = { 'vim.lsp.get_clients::1.name', eq = 'tailwindcss' },
+  when = { 'vim.lsp.get_clients().1.name', eq = 'tailwindcss' },
   or_else = function() print('Tailwind LSP not active') end
 }
 ```

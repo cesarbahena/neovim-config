@@ -358,9 +358,9 @@ local function evaluate_condition(condition)
     -- Evaluate base condition
     local result
     if type(base_condition) == 'string' then
-      -- Check for :: syntax for nested property access
-      if base_condition:find '::' then
-        local module_name, property_path = base_condition:match '^(.-)::(.+)$'
+      -- Check for () syntax for nested property access
+      if base_condition:find '%(%)[%.%d]' then
+        local module_name, property_path = base_condition:match '^(.-)%(%)%.(.+)$'
         if module_name and property_path then
           local success, module_result = pcall(function()
             local parts = vim.split(module_name, '.', { plain = true })
@@ -408,8 +408,8 @@ local function evaluate_condition(condition)
       if type(value) == 'function' then
         local success, val = pcall(value)
         return success and val or nil
-      elseif type(value) == 'string' and value:find '::' then
-        local module_name, property_path = value:match '^(.-)::(.+)$'
+      elseif type(value) == 'string' and value:find '%(%)[%.%d]' then
+        local module_name, property_path = value:match '^(.-)%(%)%.(.+)$'
         if module_name and property_path then
           local success, module_result = pcall(function()
             local parts = vim.split(module_name, '.', { plain = true })

@@ -28,7 +28,7 @@ keymap {
     'Unundo',
     fn {
       feed '<c-r>',
-      when = { 'vim.fn.undotree::seq_cur', lt = 'vim.fn.undotree::seq_last' },
+      when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' },
       or_else = { feed '.' },
     },
   },
