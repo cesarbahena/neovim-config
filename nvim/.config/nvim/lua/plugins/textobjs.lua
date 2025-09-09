@@ -1,63 +1,176 @@
 local VTO = [[<cmd>lua require("various-textobjs").%s<cr>]]
 
 local textobjs = {
-  d = {
-    desc = 'Function Definition',
-    treesitter = true,
-    { a = '@function.outer', i = '@function.inner' },
+  f = {
+    desc = 'Function definition',
+    provider = 'treesitter',
+    'function',
   },
-  o = {
-    desc = 'Loop',
-    treesitter = true,
-    { a = '@loop.outer', i = '@loop.inner' },
-  },
-  y = {
-    desc = 'Conditional',
-    treesitter = true,
-    { a = '@conditional.outer', i = '@conditional.inner' },
+  c = {
+    desc = 'Class',
+    provider = 'treesitter',
+    'class',
   },
   b = {
     desc = 'Block',
-    treesitter = true,
-    { a = '@block.outer', i = '@block.inner' },
-  },
-  ['='] = {
-    desc = 'Number',
-    treesitter = true,
-    { a = '@number.inner', i = '@number.inner' },
+    provider = 'treesitter',
+    'block',
+    'conditional',
+    'loop',
   },
   ['\\'] = {
     desc = 'Regex',
-    treesitter = true,
-    { a = '@regex.outer', i = '@regex.inner' },
+    provider = 'treesitter',
+    'regex',
   },
   k = {
     desc = 'Bracket',
-    { { '%b()', '%b[]', '%b{}' }, '^.().*().$' },
+    provider = 'mini.ai',
+    { '%b()', '%b[]', '%b{}' },
+    '^.().*().$',
   },
   ['/'] = {
     desc = 'Date',
-    { '()%d+[/%-]%w+[/%-]%d+()' },
+    provider = 'mini.ai',
+    '()%d+[/%-]%w+[/%-]%d+()',
   },
   D = {
     desc = 'Double bracket string',
-    { '()%[%[().-()%]%]()' },
+    provider = 'mini.ai',
+    '()%[%[().-()%]%]()',
   },
   x = {
-    desc = 'XML/HTML attribute',
-    { ' ()%w+=["{]().-()["}]()' },
+    desc = 'XML attribute',
+    provider = 'mini.ai',
+    '()%w+=["{]().-()["}]()',
   },
   N = {
     desc = 'Subword',
+    provider = 'mini.ai',
     {
-      {
-        '%u[%l%d]+%f[^%l%d]',
-        '%f[%S][%l%d]+%f[^%l%d]',
-        '%f[%P][%l%d]+%f[^%l%d]',
-        '^[%l%d]+%f[^%l%d]',
-      },
-      '^().*()$',
+      '%u[%l%d]+%f[^%l%d]',
+      '%f[%S][%l%d]+%f[^%l%d]',
+      '%f[%P][%l%d]+%f[^%l%d]',
+      '^[%l%d]+%f[^%l%d]',
     },
+    '^().*()$',
+  },
+  K = {
+    desc = 'To next closing bracket',
+    provider = 'various-textobjs',
+    args = false,
+    'toNextClosingBracket',
+  },
+  -- {
+  --   desc = 'Near EoL',
+  --   provider = 'various-textobjs',
+  --   args = false,
+  --   'nearEoL',
+  -- },
+  Q = {
+    desc = 'To next quotation mark',
+    provider = 'various-textobjs',
+    args = false,
+    'toNextQuotationMark',
+  },
+  P = {
+    desc = 'Paragraph',
+    provider = 'various-textobjs',
+    args = false,
+    'restOfParagraph',
+  },
+  gG = {
+    desc = 'Entire buffer',
+    provider = 'various-textobjs',
+    custom_keymap = true,
+    args = false,
+    'entireBuffer',
+  },
+  ['_'] = {
+    desc = 'Line characterwise',
+    provider = 'various-textobjs',
+    'lineCharacterwise',
+  },
+  ['<c-v>'] = {
+    desc = 'Column',
+    provider = 'various-textobjs',
+    'column',
+  },
+  v = {
+    desc = 'Value',
+    provider = 'various-textobjs',
+    'value',
+  },
+  V = {
+    desc = 'Variable assignment',
+    provider = 'various-textobjs',
+    'key',
+  },
+  L = {
+    desc = 'URL',
+    provider = 'various-textobjs',
+    args = false,
+    'url',
+  },
+  ['!'] = {
+    desc = 'Diagnostic',
+    provider = 'various-textobjs',
+    args = false,
+    'diagnostic',
+  },
+  m = {
+    desc = 'Chain member',
+    provider = 'various-textobjs',
+    'chainMember',
+  },
+  gw = {
+    desc = 'Visible in window',
+    provider = 'various-textobjs',
+    args = false,
+    'visibleInWindow',
+  },
+  gW = {
+    desc = 'Rest of window',
+    provider = 'various-textobjs',
+    args = false,
+    'restOfWindow',
+  },
+  ['<c-e>'] = {
+    desc = 'Last change',
+    provider = 'various-textobjs',
+    args = false,
+    'lastChange',
+  },
+  ['.'] = {
+    desc = 'Emoji',
+    provider = 'various-textobjs',
+    args = false,
+    'emoji',
+  },
+  ['<c-a>'] = {
+    desc = { 'Number', i = 'natural', a = 'real' },
+    provider = 'various-textobjs',
+    'number',
+  },
+  F = {
+    desc = 'Filepath',
+    provider = 'various-textobjs',
+    'filepath',
+  },
+  ['#'] = {
+    desc = { 'Color', with = '#' },
+    provider = 'various-textobjs',
+    'color',
+  },
+  S = {
+    desc = { 'css Selector', with = 'trailing comma and space' },
+    provider = 'various-textobjs',
+    'cssSelector',
+  },
+  ['|'] = {
+    desc = { 'shell pipe', with = '|' },
+    provider = 'various-textobjs',
+    'shellPipe',
   },
 }
 
@@ -65,17 +178,45 @@ return {
   {
     'echasnovski/mini.ai',
     event = 'VeryLazy',
-    opts = function(self)
-      local ts = require(self.name).gen_spec.treesitter
+    opts = function()
       local custom_textobjects = {}
-
       for key, spec in pairs(textobjs) do
-        if not spec[1] then break end
+        if #key > 1 or not spec[1] then break end
 
-        if spec.treesitter then
-          custom_textobjects[key] = ts(spec[1])
-        else
-          custom_textobjects[key] = spec[1]
+        if spec.provider == 'treesitter' then
+          if spec.args == false then
+            vim.notify(
+              ('Textobj %s: args = false is not supported for treesitter provider'):format(key),
+              vim.log.levels.WARN,
+              { title = 'textobjs' }
+            )
+            break
+          end
+          local args = vim.tbl_deep_extend('force', {
+            i = 'inner',
+            a = 'outer',
+          }, spec.args or {})
+
+          local ts_spec = { i = {}, a = {} }
+          if spec[2] == nil then
+            ts_spec.i = '@' .. spec[1] .. '.' .. args.i
+            ts_spec.a = '@' .. spec[1] .. '.' .. args.a
+          else
+            for _, node in ipairs(spec) do
+              ts_spec.i[#ts_spec.i + 1] = '@' .. node .. '.' .. args.i
+              ts_spec.a[#ts_spec.a + 1] = '@' .. node .. '.' .. args.a
+            end
+          end
+
+          custom_textobjects[key] = fn('mini.ai::gen_spec.treesitter', ts_spec)()
+        end
+
+        if spec.provider == 'mini.ai' then
+          mini_spec = {}
+          for _, pattern in ipairs(spec) do
+            mini_spec[#mini_spec + 1] = pattern
+          end
+          custom_textobjects[key] = mini_spec
         end
       end
 

@@ -1,5 +1,6 @@
 {
   "keys": {
+    "z": "prev whitespace",
     "gs": "Git Status",
     "gH": "last Hunk",
     "gJ": "Join/Merge lines (raw)",
@@ -7,7 +8,7 @@
     "gK": "first hunK",
     "1": "harpoon 1",
     "gR": "Reset buffer",
-    ",": ["repeat", "Comma with auto undo breakpoints"],
+    ",": ["next whiteSPACE", "Comma with auto undo breakpoints"],
     "k": "Move left",
     "gh": "next Hunk",
     "gk": "prev hunK",

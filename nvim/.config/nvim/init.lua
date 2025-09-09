@@ -1,5 +1,5 @@
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ';'
+vim.g.maplocalleader = '\\'
 
 -- Environment variable configuration:
 -- NVIM_BACKUP_PATH: Path to backup configuration (default: ~/.config/nvim_backup)
