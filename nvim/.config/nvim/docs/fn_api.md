@@ -146,26 +146,26 @@ forEach = function() return my_list() end  -- Dynamic iteration
 | `lte` | Less than or equal | `{ 'tabstop', lte = 4 }` |
 | `contains` | Contains key/substring | `{ result, contains = 'stage_hunk' }` |
 
-### Property Access Syntax
+### Lua Expression Evaluation
 
-Access nested properties from function results using the `()` syntax:
+Conditions can be any valid Lua expression as a string:
 
 ```lua
 -- Compare values from state tables
 when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' }
 
 -- Access nested properties 
-when = { 'vim.lsp.get_clients().1.name', eq = 'tailwindcss' }
+when = { 'vim.lsp.get_clients()[1].name', eq = 'tailwindcss' }
 
--- Get buffer info properties
-when = { 'vim.fn.getbufinfo().1.changed', eq = 1 }
+-- Complex expressions
+when = { 'vim.fn.line(".") < vim.fn.line("$") - 5' }
 ```
 
 #### Syntax Rules
 
-- `module.function().property.path` - Call function, then access nested properties
-- Looks like natural Lua syntax for function calls and property access
-- Supports deep property access with dot notation
+- Any valid Lua expression that returns a value
+- Function calls, property access, arithmetic, comparisons
+- Evaluated safely with pcall for error handling
 - Works in both conditions and comparison values
 
 ### Function-Aware Comparisons

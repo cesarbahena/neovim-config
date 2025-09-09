@@ -358,44 +358,10 @@ local function evaluate_condition(condition)
     -- Evaluate base condition
     local result
     if type(base_condition) == 'string' then
-      -- Check for () syntax for nested property access
-      if base_condition:find '%(%)[%.%d]' then
-        local module_name, property_path = base_condition:match '^(.-)%(%)%.(.+)$'
-        if module_name and property_path then
-          local success, module_result = pcall(function()
-            local parts = vim.split(module_name, '.', { plain = true })
-            local current = _G
-            for _, part in ipairs(parts) do
-              current = current[part]
-            end
-            if type(current) == 'function' then
-              current = current()
-            end
-            -- Navigate through property path using normal dot notation
-            local props = vim.split(property_path, '.', { plain = true })
-            for _, prop in ipairs(props) do
-              -- Handle array indices
-              if prop:match '^%d+$' then
-                current = current[tonumber(prop)]
-              else
-                current = current[prop]
-              end
-            end
-            return current
-          end)
-          result = success and module_result or false
-        else
-          local func = load('return ' .. base_condition)
-          if not func then return false end
-          local success, val = pcall(func)
-          result = success and val or false
-        end
-      else
-        local func = load('return ' .. base_condition)
-        if not func then return false end
-        local success, val = pcall(func)
-        result = success and val or false
-      end
+      local func = load('return ' .. base_condition)
+      if not func then return false end
+      local success, val = pcall(func)
+      result = success and val or false
     elseif type(base_condition) == 'function' then
       local success, val = pcall(base_condition)
       result = success and val or false
@@ -408,31 +374,11 @@ local function evaluate_condition(condition)
       if type(value) == 'function' then
         local success, val = pcall(value)
         return success and val or nil
-      elseif type(value) == 'string' and value:find '%(%)[%.%d]' then
-        local module_name, property_path = value:match '^(.-)%(%)%.(.+)$'
-        if module_name and property_path then
-          local success, module_result = pcall(function()
-            local parts = vim.split(module_name, '.', { plain = true })
-            local current = _G
-            for _, part in ipairs(parts) do
-              current = current[part]
-            end
-            if type(current) == 'function' then
-              current = current()
-            end
-            -- Navigate through property path using normal dot notation
-            local props = vim.split(property_path, '.', { plain = true })
-            for _, prop in ipairs(props) do
-              -- Handle array indices
-              if prop:match '^%d+$' then
-                current = current[tonumber(prop)]
-              else
-                current = current[prop]
-              end
-            end
-            return current
-          end)
-          return success and module_result or nil
+      elseif type(value) == 'string' then
+        local func = load('return ' .. value)
+        if func then
+          local success, val = pcall(func)
+          return success and val or nil
         end
       end
       return value
