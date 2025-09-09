@@ -45,6 +45,24 @@ The configuration is built around a sophisticated error handling system using a 
 - **Backup Fallback**: Automatic fallback to backup configuration when modules fail
 - **Retry Mechanism**: Failed modules can be retried before package manager initialization
 
+### Enhanced Function Utilities
+
+The configuration includes advanced utility functions for cleaner, more maintainable code:
+
+#### `fn` API (Lazy Function Wrapper)
+- **Conditional Execution**: Execute different functions based on runtime conditions
+- **Enhanced Condition Evaluation**: Vim-aware condition checking with scope-based variable/option access
+- **Error Handling**: Graceful fallback with configurable notification strategies
+- **Module Path Resolution**: Call functions from modules by string path
+
+**Key Features:**
+- **Merged Scopes**: `window`/`buffer`/`global` automatically check both variables (`vim.w`/`vim.b`/`vim.g`) and options (`vim.wo`/`vim.bo`/`vim.go`)
+- **Iteration Options**: `in_this` (current context) and `in_any` (iterate with early return)
+- **Comparison Operators**: `eq`, `ne`, `gt`, `lt`, `gte`, `lte` for precise matching
+- **Custom Iteration**: `forEach` support for arrays and functions
+
+See `docs/fn_api.md` for comprehensive documentation and examples.
+
 ### Directory Structure
 
 ```

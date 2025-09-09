@@ -155,7 +155,7 @@ Access properties from function results using the `at` option:
 when = { vim.fn.undotree, at = 'seq_cur', lt = { vim.fn.undotree, at = 'seq_last' } }
 
 -- Access nested properties from LSP clients
-when = { vim.lsp.get_clients, at = 1, lt = 3 }  -- Check if first client exists
+when = { vim.lsp.get_clients, at = '1.name', eq = 'tailwindcss' }  -- Check first client name
 
 -- Mix function calls with literals
 when = { vim.fn.line, eq = 5 }  -- Current line is 5
@@ -230,7 +230,7 @@ local smart_undo = fn {
 ```lua
 local tailwind_action = fn {
   'show_tailwind_values',
-  when = { vim.lsp.get_clients, at = 1, contains = 'tailwindcss' },
+  when = { vim.lsp.get_clients, at = '1.name', eq = 'tailwindcss' },
   or_else = function() print('Tailwind LSP not active') end
 }
 ```

@@ -369,7 +369,30 @@ local function evaluate_condition(condition)
     
     -- Handle 'at' option for property access
     if options.at and type(result) == 'table' then
-      result = result[options.at]
+      if type(options.at) == 'string' and options.at:find '%.' then
+        -- Handle dot notation: '1.name' -> result[1].name
+        local props = vim.split(options.at, '.', { plain = true })
+        for _, prop in ipairs(props) do
+          if type(result) == 'table' then
+            -- Handle array indices
+            if prop:match '^%d+$' then
+              result = result[tonumber(prop)]
+            else
+              result = result[prop]
+            end
+          else
+            result = nil
+            break
+          end
+        end
+      else
+        -- Single property access
+        if type(options.at) == 'string' and options.at:match '^%d+$' then
+          result = result[tonumber(options.at)]
+        else
+          result = result[options.at]
+        end
+      end
     end
 
     -- Helper function to evaluate comparison values
@@ -380,7 +403,31 @@ local function evaluate_condition(condition)
         if type(func) == 'function' then
           local success, val = pcall(func)
           if success and val and value.at then
-            return val[value.at]
+            if type(value.at) == 'string' and value.at:find '%.' then
+              -- Handle dot notation: '1.name' -> val[1].name
+              local props = vim.split(value.at, '.', { plain = true })
+              for _, prop in ipairs(props) do
+                if type(val) == 'table' then
+                  -- Handle array indices
+                  if prop:match '^%d+$' then
+                    val = val[tonumber(prop)]
+                  else
+                    val = val[prop]
+                  end
+                else
+                  val = nil
+                  break
+                end
+              end
+            else
+              -- Single property access
+              if type(value.at) == 'string' and value.at:match '^%d+$' then
+                val = val[tonumber(value.at)]
+              else
+                val = val[value.at]
+              end
+            end
+            return val
           end
           return success and val or nil
         end
