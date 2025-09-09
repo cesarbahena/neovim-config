@@ -7,7 +7,6 @@ keymap {
   motion { 'end of word', 'e' },
   motion { 'move left', 'h' },
   motion { 'move right', 'l' },
-  motion { 'repeat', '.' },
   motion { 'eOl', '$' },
   motion { 'beginning of line', '^' },
   key { 'Quit!', cmd 'q!' },
@@ -25,7 +24,17 @@ keymap {
 
   key { 'Yank line', 'yy' },
   key { 'copy down', 'Yp' },
-  key { 'Unundo', '<C-r>' },
+  key {
+    'Unundo',
+    fn {
+      feed '<c-r>',
+      when = function()
+        local ut = vim.fn.undotree()
+        return ut.seq_cur < ut.seq_last
+      end,
+      or_else = { feed '.' },
+    },
+  },
   -- key { "Insert comma at the end", "mzA,<Esc>`z" },
   -- key { "Insert semicolon at the end", "mzA;<Esc>`z" },
   -- key { "Delete comma or semicolon at the end", "mz$x`z" },
@@ -76,6 +85,7 @@ keymap {
   key { 'Undo jump', '<C-t>' },
   key { 'Move line down', cmd [[execute 'move .+' . v:count1]] .. '==' },
   key { 'Move line up', cmd [[execute 'move .-' . (v:count1 + 1)]] .. '==' },
+  key { 'hover', fn 'actions.hover_overload.hover_handler' },
 
   motion { '1', '1' },
   motion { '2', '2' },
@@ -106,19 +116,6 @@ for mode, keys in pairs(mappings_to_disable) do
   for _, key in ipairs(keys) do
     vim.keymap.set(mode, key, '<nop>')
   end
-end
-
--- Map Alt+O to 0 (beginning of line)
-vim.keymap.set('n', '<M-o>', '0')
-
--- Function to check if gitsigns blame popup is open
-local function is_gitsigns_blame_open()
-  local utils = require 'utils'
-  -- Check if any window has gitsigns_preview == 'blame'
-  for _, winid in ipairs(vim.api.nvim_list_wins()) do
-    if vim.w[winid].gitsigns_preview == 'blame' then return winid end
-  end
-  return nil
 end
 
 -- Conditional keymap using fn in_any
