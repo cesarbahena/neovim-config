@@ -25,6 +25,7 @@ local servers = {
   'yamlls',
   'taplo',
   'marksman',
+  'tailwindcss',
 }
 
 for _, server in ipairs(servers) do

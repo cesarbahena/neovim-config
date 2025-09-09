@@ -16,7 +16,7 @@ return function(_, bufnr)
 
     -- Hover and signature
     -- key { 'hover', fn(vim.lsp.buf.hover, { border = 'rounded', focusable = false }) },
-    key { 'hover', fn 'actions.hover_overload.hover_handler' },
+    -- key { 'hover', fn 'actions.hover_overload.hover_handler' },
     key { 'signature', fn(vim.lsp.buf.signature_help, { border = 'rounded' }) },
     insert { 'signature', fn(vim.lsp.buf.signature_help, { border = 'rounded' }) },
   }

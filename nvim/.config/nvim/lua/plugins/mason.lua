@@ -15,6 +15,7 @@ return {
         'yamlls',
         'taplo',
         'marksman',
+        'tailwindcss',
       },
     },
   },

@@ -1,43 +1,5 @@
 local M = {}
 
-local function should_tw_values(ft)
-  ft = ft or vim.bo.filetype
-  if not vim.tbl_contains({
-    'typescript',
-    'vue',
-    'html',
-    'templ',
-  }, ft) then return false end
-  local clients = vim.lsp.get_clients { name = 'tailwindcss' }
-  if not clients[1] then return false end
-  local ft_query = [[
-    (attribute
-      (attribute_name) @attr_name
-        (quoted_attribute_value (attribute_value) @attr_val)
-        (#match? @attr_name "class")
-    )
-    ]]
-  local ok, query = pcall(vim.treesitter.query.parse, ft, ft_query)
-  if not ok or not query then return end
-  local bufnr = vim.api.nvim_get_current_buf()
-  local cursor = vim.treesitter.get_node {
-    bufnr = bufnr,
-    ignore_injections = false,
-  }
-  if cursor == nil then return false end
-  local parent = cursor:parent()
-  if not parent then return false end
-  local isclass_attr = vim.treesitter.get_node_text(cursor, bufnr) == 'class'
-  for id, _ in query:iter_captures(parent, bufnr, 0, -1) do
-    return isclass_attr and #query.captures[id] > 0
-  end
-  parent = parent:parent()
-  if not parent then return false end
-  isclass_attr = vim.treesitter.get_node_text(parent, bufnr):match '^class='
-  for id, _ in query:iter_captures(parent, bufnr, 0, -1) do
-    return isclass_attr and #query.captures[id] > 0
-  end
-end
 
 local function is_diag_for_cur_pos()
   local diagnostics = vim.diagnostic.get(0)
@@ -67,11 +29,9 @@ function M.hover_handler()
   end
   local ft = vim.bo.filetype
   if vim.tbl_contains({ 'vim', 'help' }, ft) then
-    vim.cmd('silent! h ' .. fn.expand '<cword>')
-  elseif should_tw_values(ft) then
-    vim.cmd 'TWValues'
+    vim.cmd('silent! h ' .. vim.fn.expand '<cword>')
   elseif vim.tbl_contains({ 'man' }, ft) then
-    vim.cmd('silent! Man ' .. fn.expand '<cword>')
+    vim.cmd('silent! Man ' .. vim.fn.expand '<cword>')
   elseif is_diag_for_cur_pos() then
     if is_diag_neotest() then
       local nt_ok, nt = pcall(require, 'neotest')

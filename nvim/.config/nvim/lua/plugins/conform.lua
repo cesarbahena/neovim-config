@@ -11,6 +11,10 @@ return {
       yaml = { 'prettier' },
       toml = { 'taplo' },
       markdown = { 'prettier' },
+      html = { 'prettier' },
+      css = { 'prettier' },
+      scss = { 'prettier' },
+      vue = { 'prettier' },
     },
     format_on_save = {
       timeout_ms = 500,
