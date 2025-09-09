@@ -358,28 +358,36 @@ local function evaluate_condition(condition)
     -- Evaluate base condition
     local result
     if type(base_condition) == 'string' then
-      local func = load('return ' .. base_condition)
-      if not func then return false end
-      local success, val = pcall(func)
-      result = success and val or false
+      -- Keep strings as literals (no evaluation)
+      result = base_condition
     elseif type(base_condition) == 'function' then
       local success, val = pcall(base_condition)
       result = success and val or false
     else
       result = base_condition
     end
+    
+    -- Handle 'at' option for property access
+    if options.at and type(result) == 'table' then
+      result = result[options.at]
+    end
 
     -- Helper function to evaluate comparison values
     local function eval_comparison_value(value)
-      if type(value) == 'function' then
-        local success, val = pcall(value)
-        return success and val or nil
-      elseif type(value) == 'string' then
-        local func = load('return ' .. value)
-        if func then
+      if type(value) == 'table' and value[1] then
+        -- Handle { function, at = 'property' } format
+        local func = value[1]
+        if type(func) == 'function' then
           local success, val = pcall(func)
+          if success and val and value.at then
+            return val[value.at]
+          end
           return success and val or nil
         end
+        return value
+      elseif type(value) == 'function' then
+        local success, val = pcall(value)
+        return success and val or nil
       end
       return value
     end

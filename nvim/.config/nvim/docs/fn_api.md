@@ -146,27 +146,29 @@ forEach = function() return my_list() end  -- Dynamic iteration
 | `lte` | Less than or equal | `{ 'tabstop', lte = 4 }` |
 | `contains` | Contains key/substring | `{ result, contains = 'stage_hunk' }` |
 
-### Lua Expression Evaluation
+### Property Access with `at` Option
 
-Conditions can be any valid Lua expression as a string:
+Access properties from function results using the `at` option:
 
 ```lua
 -- Compare values from state tables
-when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' }
+when = { vim.fn.undotree, at = 'seq_cur', lt = { vim.fn.undotree, at = 'seq_last' } }
 
--- Access nested properties 
-when = { 'vim.lsp.get_clients()[1].name', eq = 'tailwindcss' }
+-- Access nested properties from LSP clients
+when = { vim.lsp.get_clients, at = 1, lt = 3 }  -- Check if first client exists
 
--- Complex expressions
-when = { 'vim.fn.line(".") < vim.fn.line("$") - 5' }
+-- Mix function calls with literals
+when = { vim.fn.line, eq = 5 }  -- Current line is 5
+when = { 'vim.bo.filetype', eq = 'lua' }  -- Literal string comparison
 ```
 
 #### Syntax Rules
 
-- Any valid Lua expression that returns a value
-- Function calls, property access, arithmetic, comparisons
-- Evaluated safely with pcall for error handling
-- Works in both conditions and comparison values
+- **Functions**: Direct function references (type-safe, no string evaluation)
+- **`at` option**: Access properties/indices from function results
+- **Literal strings**: Kept as-is, no dangerous evaluation
+- **Safe evaluation**: Functions called with pcall for error handling
+- **Works everywhere**: Both conditions and comparison values support `at`
 
 ### Function-Aware Comparisons
 
@@ -180,7 +182,7 @@ when = {
 }
 
 -- Mix literal values with function results  
-when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' }
+when = { vim.fn.undotree, at = 'seq_cur', lt = { vim.fn.undotree, at = 'seq_last' } }
 
 -- Use in any comparison operator
 when = { 'vim.lsp.get_clients', contains = function() return get_target_client() end }
@@ -219,7 +221,7 @@ local dev_tools = fn {
 ```lua
 local smart_undo = fn {
   feed('<c-r>'),  -- Redo by default
-  when = { 'vim.fn.undotree().seq_cur', lt = 'vim.fn.undotree().seq_last' },
+  when = { vim.fn.undotree, at = 'seq_cur', lt = { vim.fn.undotree, at = 'seq_last' } },
   or_else = { feed('.') }  -- Repeat last action if at latest change
 }
 ```
@@ -228,7 +230,7 @@ local smart_undo = fn {
 ```lua
 local tailwind_action = fn {
   'show_tailwind_values',
-  when = { 'vim.lsp.get_clients().1.name', eq = 'tailwindcss' },
+  when = { vim.lsp.get_clients, at = 1, contains = 'tailwindcss' },
   or_else = function() print('Tailwind LSP not active') end
 }
 ```
