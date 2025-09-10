@@ -1,14 +1,15 @@
 local VTO = [[<cmd>lua require("various-textobjs").%s<cr>]]
 
 local textobjs = {
-  y = {
+  d = {
     desc = 'Function definition',
     provider = 'treesitter',
-    'function',
+    'function_def',
   },
   l = {
     desc = 'Class',
     provider = 'treesitter',
+    args = { i = 'outer' },
     'class',
   },
   t = {
@@ -187,8 +188,6 @@ return {
     opts = function()
       local custom_textobjects = {}
       for key, spec in pairs(textobjs) do
-        if #key > 1 or not spec[1] then break end
-
         if spec.provider == 'treesitter' then
           if spec.args == false then
             vim.notify(
@@ -218,7 +217,7 @@ return {
         end
 
         if spec.provider == 'mini.ai' then
-          mini_spec = {}
+          local mini_spec = {}
           for _, pattern in ipairs(spec) do
             mini_spec[#mini_spec + 1] = pattern
           end
@@ -230,10 +229,10 @@ return {
         custom_textobjects = vim.tbl_deep_extend('force', custom_textobjects, {
           u = fn 'mini.ai::gen_spec.function_call',
           U = fn('mini.ai::gen_spec.function_call', { name_pattern = '[%w_]' }),
-          d = require('mini.ai').gen_spec.treesitter {
-            a = '@function_def.outer',
-            i = '@function_def.inner',
-          },
+          -- d = require('mini.ai').gen_spec.treesitter {
+          --   a = '@function_def.outer',
+          --   i = '@function_def.inner',
+          -- },
         }),
         mappings = {
           goto_left = '', -- custom behavior defined in keys
