@@ -1,15 +1,21 @@
 local VTO = [[<cmd>lua require("various-textobjs").%s<cr>]]
 
 local textobjs = {
-  f = {
+  y = {
     desc = 'Function definition',
     provider = 'treesitter',
     'function',
   },
-  c = {
+  l = {
     desc = 'Class',
     provider = 'treesitter',
     'class',
+  },
+  t = {
+    desc = 'Tag',
+    provider = 'mini.ai',
+    '<([%p%w]-)%f[^<%w][^<>]->.-</%1>',
+    '^<.->().*()</[^/]->$',
   },
   b = {
     desc = 'Block',
@@ -221,31 +227,55 @@ return {
       end
 
       return {
-        custom_textobjects = custom_textobjects,
+        custom_textobjects = vim.tbl_deep_extend('force', custom_textobjects, {
+          u = fn 'mini.ai::gen_spec.function_call',
+          U = fn('mini.ai::gen_spec.function_call', { name_pattern = '[%w_]' }),
+          d = require('mini.ai').gen_spec.treesitter {
+            a = '@function_def.outer',
+            i = '@function_def.inner',
+          },
+        }),
+        mappings = {
+          goto_left = '', -- custom behavior defined in keys
+          goto_right = '}',
+          around_next = ']a',
+          inside_next = ']i',
+          around_last = '[a',
+          inside_last = '[i',
+        },
       }
     end,
 
-    -- keys = function()
-    --   local keys = {}
-    --
-    --   for key, spec in pairs(textobjs) do
-    --     table.insert(keys, {
-    --       (']%s'):format(key),
-    --       ('van%s<Esc>'):format(key),
-    --       desc = ('Next %s'):format(spec.desc),
-    --       remap = true,
-    --     })
-    --
-    --     table.insert(keys, {
-    --       ('[%s'):format(key),
-    --       ('val%s<Esc>'):format(key),
-    --       desc = ('Previous %s'):format(spec.desc),
-    --       remap = true,
-    --     })
-    --   end
-    --
-    --   return keys
-    -- end,
+    keys = function()
+      local keys = {}
+
+      for key, spec in pairs(textobjs) do
+        if spec.provider == 'treesitter' or spec.provider == 'mini.ai' then
+          local desc = spec.desc
+          if type(desc) == 'table' then desc = desc[1] end
+
+          table.insert(keys, {
+            (']%s'):format(key),
+            fn('mini.ai.move_cursor', 'left', 'a', key, { search_method = 'next' }),
+            desc = ('next %s start'):format(desc),
+          })
+
+          table.insert(keys, {
+            ('[%s'):format(key),
+            fn('mini.ai.move_cursor', 'left', 'a', key, { search_method = 'cover_or_prev' }),
+            desc = ('this or previous %s start'):format(desc),
+          })
+
+          table.insert(keys, {
+            ('{%s'):format(key),
+            fn('mini.ai.move_cursor', 'right', 'a', key, { search_method = 'prev' }),
+            desc = ('previous %s end'):format(desc),
+          })
+        end
+      end
+
+      return keys
+    end,
   },
 
   {
