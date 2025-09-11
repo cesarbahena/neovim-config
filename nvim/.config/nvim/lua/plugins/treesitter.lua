@@ -21,6 +21,8 @@ return {
         },
       },
       textobjects = {
+        select = { enable = false },
+        lsp_interop = { enable = false },
         swap = {
           enable = true,
           swap_next = {
@@ -28,16 +30,6 @@ return {
           },
           swap_previous = {
             ['<leader>ak'] = '@parameter.inner',
-          },
-        },
-        lsp_interop = {
-          enable = true,
-          floating_preview_opts = {
-            border = 'rounded',
-          },
-          peek_definition_code = {
-            --[[ ["<C-f>"] = "@function.outer",
-            ["<leader>dc"] = "@class.outer", ]]
           },
         },
       },
