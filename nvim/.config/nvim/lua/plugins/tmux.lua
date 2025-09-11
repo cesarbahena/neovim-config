@@ -2,14 +2,14 @@ return {
   {
     'aserowy/tmux.nvim',
     keys = {
-      motion { 'left window', fn 'tmux.move_left' },
-      motion { 'right window', fn 'tmux.move_right' },
-      motion { 'top window', fn 'tmux.move_top' },
-      motion { 'bottom window', fn 'tmux.move_bottom' },
-      motion { 'resize left', fn 'tmux.resize_left' },
-      motion { 'resize right', fn 'tmux.resize_right' },
-      motion { 'resize top', fn 'tmux.resize_top' },
-      motion { 'resize botom', fn 'tmux.resize_bottom' },
+      key { 'left window', fn 'tmux.move_left' },
+      key { 'right window', fn 'tmux.move_right' },
+      key { 'top window', fn 'tmux.move_top' },
+      key { 'bottom window', fn 'tmux.move_bottom' },
+      key { 'resize left', fn 'tmux.resize_left' },
+      key { 'resize right', fn 'tmux.resize_right' },
+      key { 'resize top', fn 'tmux.resize_top' },
+      key { 'resize botom', fn 'tmux.resize_bottom' },
     },
     opts = {
       copy_sync = {

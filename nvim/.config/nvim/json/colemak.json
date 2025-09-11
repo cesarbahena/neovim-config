@@ -25,7 +25,6 @@
     "ih": "inner Hunk",
     "*": "grep selection or word",
     "R": "Repeat macro",
-    "q": "clean",
     "<tab>": "last window",
     "Y": "Yank line",
     "ss": "Replace",
@@ -159,7 +158,7 @@
     "u": "Undo jump",
     "k": "left window",
     "n": "bottom window",
-    "e": ["escape to normal mode", "top window"],
+    "e": ["escape to normal mode", "clean", "top window"],
     "t": "indenT",
     "d": "Deindent"
   }
