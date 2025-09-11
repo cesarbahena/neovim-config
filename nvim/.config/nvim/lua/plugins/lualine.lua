@@ -14,6 +14,10 @@ local minimal_theme = {
 minimal_theme.normal.StatuslineError = { fg = '#f38ba8', gui = 'bold' }
 minimal_theme.inactive.StatuslineError = { fg = '#f38ba8' }
 
+-- Harpoon highlight groups
+vim.api.nvim_set_hl(0, 'StatuslineHarpoonActive', { fg = '#FFFFFF', bold = true })
+vim.api.nvim_set_hl(0, 'StatuslineHarpoonInactive', { fg = '#434852' })
+
 return {
   'nvim-lualine/lualine.nvim',
   lazy = false,
@@ -48,6 +52,28 @@ return {
         'buffers',
       },
       lualine_z = {
+        {
+          function()
+            local harpoon = require 'harpoon'
+            local marks = harpoon:list().items
+            local current_file_path = vim.fn.expand '%:p:.'
+            local result = {}
+            
+            for id, item in ipairs(marks) do
+              if item.value == current_file_path then
+                table.insert(result, '%#StatuslineHarpoonActive#' .. id .. '%*')
+              else
+                table.insert(result, '%#StatuslineHarpoonInactive#' .. id .. '%*')
+              end
+            end
+            
+            if #result > 0 then
+              return '󰛢 ' .. table.concat(result, ' ')
+            end
+            return ''
+          end,
+          color = { fg = '#61AfEf' },
+        },
         'lsp_status',
       },
     },
