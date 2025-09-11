@@ -3,11 +3,11 @@ return {
   -- No need to copy this inside `setup()`. Will be used automatically.
   opts = {
     mappings = {
-      close = 'q',
+      close = '.',
       go_in = 'o',
       go_in_plus = '<cr>',
       go_out = 'k',
-      go_out_plus = '.',
+      go_out_plus = '',
       mark_goto = "'",
       mark_set = 'm',
       reset = '<BS>',
@@ -24,6 +24,9 @@ return {
     },
   },
   keys = {
-    key { 'file explorer', '<cmd>lua MiniFiles.open(vim.fn.getcwd())<cr>' },
+    key {
+      'file explorer',
+      function() fn('mini.files.open', vim.fn.expand '%:p:h', true)() end,
+    },
   },
 }
