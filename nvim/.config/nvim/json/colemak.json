@@ -83,7 +83,6 @@
       "semicolon with auto undo breakpoints"
     ],
     "e": "prEv line",
-    "=": "increment",
     "cf": "Code Format",
     "M": "prev subword",
     "do": "Delete one",
@@ -95,7 +94,6 @@
     "\\;": "literal ;",
     "cy": "Code References",
     "cx": "quiCkfiX list",
-    "-": "decrement",
     "D": "Delete line",
     "gB": "Blame buffer",
     "cr": "Code Rename",
@@ -154,8 +152,10 @@
     "gg": "LazyGit"
   },
   "control": {
+    "a": "increment",
+    "x": "decrement",
     "o": ["one of", "right window"],
-    "<F1>": "Signature",
+    "h": "Signature",
     "u": "Undo jump",
     "k": "left window",
     "n": "bottom window",

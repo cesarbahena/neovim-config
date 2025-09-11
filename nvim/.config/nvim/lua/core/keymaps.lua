@@ -125,8 +125,8 @@ vim.keymap.set(
     'gitsigns.blame',
     when = { 'gitsigns_preview', eq = 'blame', in_any = 'window' },
     or_else = proc {
-      fn { 'gitsigns.blame_line', { full = true } },
-      fn { vim.cmd, 'wincmd p' },
+      fn('gitsigns.blame_line', { full = true }),
+      fn(vim.cmd, 'wincmd p'),
     },
   }
 )
