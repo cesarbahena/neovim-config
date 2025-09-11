@@ -98,7 +98,8 @@
     "-": "decrement",
     "D": "Delete line",
     "gB": "Blame buffer",
-    "cr": "Code Rename"
+    "cr": "Code Rename",
+    "ai": "Indentation with line above"
   },
   "meta": { "tens": [] },
   "alt": {

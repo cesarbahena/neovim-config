@@ -1,4 +1,21 @@
-local VTO = [[<cmd>lua require("various-textobjs").%s<cr>]]
+local function format_desc(desc, mode, spec)
+  if type(desc) == 'string' then return desc end
+
+  if type(desc) == 'table' then
+    -- Use mode-specific description if available, otherwise fall back to [1]
+    local base_desc = desc[mode] or desc[1] or ''
+
+    -- Add "with" modifier to 'a' mode
+    if mode == 'a' and desc.with then base_desc = base_desc .. ' with ' .. desc.with end
+
+    -- Add "only" modifier to 'i' mode
+    if mode == 'i' and desc.only then base_desc = base_desc .. ' (only ' .. desc.only .. ')' end
+
+    return base_desc
+  end
+
+  return ''
+end
 
 local textobjs = {
   d = {
@@ -164,7 +181,7 @@ local textobjs = {
     'filepath',
   },
   ['#'] = {
-    desc = { 'Color', with = '#' },
+    desc = { 'Color', only = 'value' },
     provider = 'various-textobjs',
     'color',
   },
@@ -178,6 +195,20 @@ local textobjs = {
     provider = 'various-textobjs',
     'shellPipe',
   },
+  i = {
+    desc = { 'Indentation', with = 'lines above/below' },
+    provider = 'various-textobjs',
+    'indentation',
+    args = { i = { 'inner', 'inner' }, a = { 'outer', 'outer' } },
+  },
+  I = {
+    desc = { i = 'Rest of indentation', a = 'Greedy outer indentation' },
+    provider = 'various-textobjs',
+    { i = 'restOfIndentation', a = 'greedyOuterIndentation' },
+    args = { i = false, a = 'inner' },
+  },
+  --   { desc = 'Rest of indentation', 'iI', VTO:format [[restOfIndentation()]], mode = { 'o', 'x' } },
+  --   { desc = 'Greedy outer indentation', 'aI', VTO:format [[outerIndentation 'inner']], mode = { 'o', 'x' } },
 }
 
 return {
@@ -245,8 +276,7 @@ return {
 
       for key, spec in pairs(textobjs) do
         if spec.provider == 'treesitter' or spec.provider == 'mini.ai' then
-          local desc = spec.desc
-          if type(desc) == 'table' then desc = desc[1] end
+          local desc = format_desc(spec.desc, 'a', spec)
 
           table.insert(keys, {
             (']%s'):format(key),
@@ -303,8 +333,15 @@ return {
           if type(args.a) == 'string' then vto_spec.a = "'" .. args.a .. "'" end
 
           if spec[2] == nil then
-            vto_spec.i = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1], vto_spec.i)
-            vto_spec.a = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1], vto_spec.a)
+            -- Handle multiple functions case with { i = 'func1', a = 'func2' }
+            if type(spec[1]) == 'table' and spec[1].i and spec[1].a then
+              vto_spec.i = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1].i, vto_spec.i)
+              vto_spec.a = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1].a, vto_spec.a)
+            else
+              -- Single function case
+              vto_spec.i = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1], vto_spec.i)
+              vto_spec.a = ("<cmd>lua require 'various-textobjs'.%s(%s)<cr>"):format(spec[1], vto_spec.a)
+            end
           else
             -- TODO: handle multiple patterns
             vim.notify(
@@ -315,8 +352,7 @@ return {
           end
 
           for mode, mapping in pairs { i = vto_spec.i, a = vto_spec.a } do
-            local desc = spec.desc
-            if type(desc) == 'table' then desc = desc[mode] or desc[1] end
+            local desc = format_desc(spec.desc, mode, spec)
 
             table.insert(keys, {
               (mode .. key),
@@ -331,18 +367,6 @@ return {
       return keys
     end,
     -- keys = {
-    --
-    --   { desc = 'Indentation', 'ii', VTO:format [[indentation('inner', 'inner')]], mode = { 'o', 'x' } },
-    --   { desc = 'Indentation', 'igi', VTO:format [[indentation('inner', 'inner')]], mode = { 'o', 'x' } },
-    --   {
-    --     desc = 'Indentation and lines above/below',
-    --     'ai',
-    --     VTO:format [[indentation('outer', 'outer')]],
-    --     mode = { 'o', 'x' },
-    --   },
-    --   { desc = 'Indentation and line above', 'agi', VTO:format [[indentation('outer', 'inner')]], mode = { 'o', 'x' } },
-    --   { desc = 'Rest of indentation', 'iI', VTO:format [[restOfIndentation()]], mode = { 'o', 'x' } },
-    --   { desc = 'Greedy outer indentation', 'aI', VTO:format [[outerIndentation 'inner']], mode = { 'o', 'x' } },
     --   { desc = 'Subword', 'iN', VTO:format [[subword 'inner']], mode = { 'o', 'x' } },
     --   { desc = 'Subword and hyphens', 'aN', VTO:format [[subword 'outer']], mode = { 'o', 'x' } },
     --
