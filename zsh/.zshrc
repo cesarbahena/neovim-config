@@ -21,6 +21,7 @@ alias l='ls -CF'
 
 alias vi=nvim
 alias vim=nvim
+alias gs='git status'
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
