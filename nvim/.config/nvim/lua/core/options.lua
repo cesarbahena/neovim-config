@@ -5,6 +5,7 @@ local opts = {
   fillchars = { eob = ' ' },
   signcolumn = 'yes',
   colorcolumn = nil,
+  statuscolumn = "%s%{v:relnum ? v:relnum : '❯'} ",
 
   -- Formatting
   tabstop = 2,

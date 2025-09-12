@@ -1,5 +1,8 @@
 local auto_register = require('utils.key_auto_register')
 
+-- Highlight groups
+vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#50a14f', bold = true })  -- Green starship prompt for current line
+
 -- Key auto-registration autocommand
 vim.api.nvim_create_autocmd('BufWritePost', {
   pattern = '*.lua',
