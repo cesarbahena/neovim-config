@@ -14,10 +14,6 @@ local minimal_theme = {
 minimal_theme.normal.StatuslineError = { fg = '#f38ba8', gui = 'bold' }
 minimal_theme.inactive.StatuslineError = { fg = '#f38ba8' }
 
--- Harpoon highlight groups - reliable foreground styling
-vim.api.nvim_set_hl(0, 'StatuslineHarpoonActive', { fg = '#61afef', bold = true })
-vim.api.nvim_set_hl(0, 'StatuslineHarpoonInactive', { fg = '#666666' })
-
 return {
   'nvim-lualine/lualine.nvim',
   lazy = false,
