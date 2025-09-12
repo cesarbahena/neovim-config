@@ -25,12 +25,8 @@ return {
         lsp_interop = { enable = false },
         swap = {
           enable = true,
-          swap_next = {
-            ['<leader>ao'] = '@parameter.inner',
-          },
-          swap_previous = {
-            ['<leader>ak'] = '@parameter.inner',
-          },
+          swap_next = { ['<leader>ao'] = '@parameter.inner' },
+          swap_previous = { ['<leader>ak'] = '@parameter.inner' },
         },
       },
     },
@@ -38,26 +34,15 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-context',
     event = 'VeryLazy',
-    opts = {
-      max_lines = 3,
-      trim_scope = 'outer',
-      mode = 'cursor',
-    },
+    opts = { separator = '¯' },
     config = function(_, opts)
       require('treesitter-context').setup(opts)
-      
-      -- Set custom highlight for dim foreground instead of background
-      vim.api.nvim_set_hl(0, 'TreesitterContext', { fg = '#666666', bg = 'NONE' })
-      vim.api.nvim_set_hl(0, 'TreesitterContextLineNumber', { fg = '#444444', bg = 'NONE' })
+      -- Make separator really dim
+      vim.api.nvim_create_autocmd('ColorScheme', {
+        callback = function() vim.api.nvim_set_hl(0, 'TreesitterContextSeparator', { fg = '#555555' }) end,
+      })
+      vim.api.nvim_set_hl(0, 'TreesitterContextSeparator', { fg = '#555555' })
     end,
-  },
-  {
-    'nvim-treesitter/playground',
-    cmd = {
-      'TSPlaygroundToggle',
-      'TSHighlightCapturesUnderCursor',
-      'TSNodeUnderCursor',
-    },
   },
   {
     'Wansmer/treesj',

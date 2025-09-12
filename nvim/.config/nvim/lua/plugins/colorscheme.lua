@@ -29,6 +29,9 @@ return {
         'DiagnosticSignWarn',
         'DiagnosticSignInfo',
         'DiagnosticSignHint',
+        'TreesitterContext',
+        'TreesitterContextLineNumber',
+        'TreesitterContextSeparator',
       },
       exclude_groups = {
         'CursorLine',
