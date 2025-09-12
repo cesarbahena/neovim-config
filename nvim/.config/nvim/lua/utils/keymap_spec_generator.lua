@@ -2,7 +2,7 @@ local M = {}
 
 -- Load key descriptions from JSON
 local function load_key_descriptions()
-  local config_path = vim.fn.stdpath('config') .. '/json/' .. _G.KeyboardLayout .. '.json'
+  local config_path = vim.fn.stdpath 'config' .. '/json/' .. _G.KeyboardLayout .. '.json'
   if vim.fn.filereadable(config_path) == 1 then
     local content = table.concat(vim.fn.readfile(config_path), '')
     return vim.json.decode(content)
@@ -14,10 +14,10 @@ local key_descriptions = load_key_descriptions()
 _G.key_descriptions = key_descriptions
 
 -- Helper function to normalize description for lookup
-local function normalize_desc(desc) 
+local function normalize_desc(desc)
   -- Convert numbers to strings first
   desc = tostring(desc)
-  return desc:lower():gsub('[%s%-_%*]', '') 
+  return desc:lower():gsub('[%s%-_%*]', '')
 end
 
 -- Helper function to build key string from category and key
@@ -40,32 +40,16 @@ local description_to_key = {}
 for category, keys in pairs(key_descriptions) do
   -- Skip meta section as it's configuration, not keybindings
   if category ~= 'meta' then
-  for key, desc_or_table in pairs(keys) do
-    local full_key = build_key(category, key)
+    for key, desc_or_table in pairs(keys) do
+      local full_key = build_key(category, key)
 
-    if type(desc_or_table) == 'string' then
-      -- Single description
-      local normalized = normalize_desc(desc_or_table)
-      if description_to_key[normalized] then
-        error(
-          'Duplicate description found: "'
-            .. desc_or_table
-            .. '" normalizes to "'
-            .. normalized
-            .. '" which conflicts with existing key "'
-            .. description_to_key[normalized]
-            .. '"'
-        )
-      end
-      description_to_key[normalized] = full_key
-    elseif type(desc_or_table) == 'table' then
-      -- Multiple descriptions - add each to lookup
-      for _, desc in pairs(desc_or_table) do
-        local normalized = normalize_desc(desc)
+      if type(desc_or_table) == 'string' then
+        -- Single description
+        local normalized = normalize_desc(desc_or_table)
         if description_to_key[normalized] then
           error(
             'Duplicate description found: "'
-              .. desc
+              .. desc_or_table
               .. '" normalizes to "'
               .. normalized
               .. '" which conflicts with existing key "'
@@ -74,9 +58,25 @@ for category, keys in pairs(key_descriptions) do
           )
         end
         description_to_key[normalized] = full_key
+      elseif type(desc_or_table) == 'table' then
+        -- Multiple descriptions - add each to lookup
+        for _, desc in pairs(desc_or_table) do
+          local normalized = normalize_desc(desc)
+          if description_to_key[normalized] then
+            error(
+              'Duplicate description found: "'
+                .. desc
+                .. '" normalizes to "'
+                .. normalized
+                .. '" which conflicts with existing key "'
+                .. description_to_key[normalized]
+                .. '"'
+            )
+          end
+          description_to_key[normalized] = full_key
+        end
       end
     end
-  end
   end -- Close the meta skip condition
 end
 
@@ -88,7 +88,7 @@ local function rebuild_lookup()
     if category ~= 'meta' then
       for key, desc_or_table in pairs(keys) do
         local full_key = build_key(category, key)
-        
+
         if type(desc_or_table) == 'string' then
           description_to_key[normalize_desc(desc_or_table)] = full_key
         elseif type(desc_or_table) == 'table' then
@@ -132,7 +132,6 @@ function M.on_selection(spec)
   return M.key(spec)
 end
 
-
 -- Mode combinations
 function M.motion(spec)
   spec.mode = { 'n', 'o', 'x' }
@@ -168,6 +167,5 @@ function M.update_key_mapping(category, old_key, new_key)
     rebuild_lookup()
   end
 end
-
 
 return M
