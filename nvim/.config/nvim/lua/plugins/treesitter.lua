@@ -38,6 +38,18 @@ return {
   {
     'nvim-treesitter/nvim-treesitter-context',
     event = 'VeryLazy',
+    opts = {
+      max_lines = 3,
+      trim_scope = 'outer',
+      mode = 'cursor',
+    },
+    config = function(_, opts)
+      require('treesitter-context').setup(opts)
+      
+      -- Set custom highlight for dim foreground instead of background
+      vim.api.nvim_set_hl(0, 'TreesitterContext', { fg = '#666666', bg = 'NONE' })
+      vim.api.nvim_set_hl(0, 'TreesitterContextLineNumber', { fg = '#444444', bg = 'NONE' })
+    end,
   },
   {
     'nvim-treesitter/playground',

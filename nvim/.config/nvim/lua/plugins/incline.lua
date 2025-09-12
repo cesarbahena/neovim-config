@@ -24,6 +24,11 @@ local function to_subscript(n)
   return tostring(n):gsub('%d', function(d) return subscripts[tonumber(d) + 1] end)
 end
 
+local function to_superscript(n)
+  local superscripts = { '⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹' }
+  return tostring(n):gsub('%d', function(d) return superscripts[tonumber(d) + 1] end)
+end
+
 local function get_git_status_color(props)
   local filepath = vim.api.nvim_buf_get_name(props.buf)
   if filepath == '' then return nil end
@@ -38,7 +43,15 @@ local function get_git_status_color(props)
   if result == '' then return nil end -- Clean file
 
   local status = result:sub(1, 2)
-  -- First character: staged, second character: unstaged
+  
+  -- Check for serious git states (red - immediate attention needed)
+  if status:match('UU') or status:match('AA') or status:match('DD') then
+    return '#f38ba8'  -- Red for merge conflicts
+  elseif status:match('AU') or status:match('UA') or status:match('UD') or status:match('DU') then
+    return '#f38ba8'  -- Red for conflict states
+  end
+  
+  -- Regular git states
   if status:match '^%?%?' then
     return '#a6e3a1' -- Green for untracked
   elseif status:match '[AM]' then
@@ -48,39 +61,15 @@ local function get_git_status_color(props)
   return nil
 end
 
-local function get_diagnostic_style(props)
-  local errors = vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity.ERROR })
-  if #errors > 0 then
-    return { color = '#f38ba8', decoration = nil } -- Red, no decoration
-  end
-
-  local warnings = vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity.WARN })
-  local info = vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity.INFO })
-  local hints = vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity.HINT })
-
-  if #warnings > 0 or #info > 0 or #hints > 0 then
-    return { color = nil, decoration = 'underline' } -- Underline, no color override
-  end
-
-  return { color = nil, decoration = nil } -- No diagnostics
-end
 
 local function get_title(props)
   local title = ' ' .. edgy_titles[vim.bo[props.buf].filetype] .. ' '
   local result = {}
-  local diag_style = get_diagnostic_style(props)
 
-  -- Build gui style for title: combine diagnostic decoration with focused bold
-  local gui_parts = {}
-  if props.focused then table.insert(gui_parts, 'bold') end
-  if diag_style.decoration then table.insert(gui_parts, diag_style.decoration) end
-  local gui_style = #gui_parts > 0 and table.concat(gui_parts, ',') or nil
-
-  -- Add title with diagnostic styling
+  -- Simple title styling
   table.insert(result, {
     title,
-    guifg = diag_style.color,
-    gui = gui_style,
+    gui = props.focused and 'bold' or nil,
     group = props.focused and 'FloatTitle' or 'Title',
   })
 
@@ -98,28 +87,24 @@ local function get_filename(props)
 
   local result = {}
   local git_color = get_git_status_color(props)
-  local diag_style = get_diagnostic_style(props)
 
-  -- Build gui style: combine diagnostic decoration and modified italic (no bold)
-  local gui_parts = {}
-  if diag_style.decoration then table.insert(gui_parts, diag_style.decoration) end
-  if vim.bo[props.buf].modified then table.insert(gui_parts, 'italic') end
-  local gui_style = #gui_parts > 0 and table.concat(gui_parts, ',') or 'none'
+  -- Simple gui style: just italic for modified files
+  local gui_style = vim.bo[props.buf].modified and 'italic' or 'none'
 
   -- Add line info for focused window only
   if props.focused then
     local current_line = vim.fn.line '.'
     local total_lines = vim.fn.line '$'
-    table.insert(result, { current_line, guifg = '#ffffff' })
+    table.insert(result, { to_superscript(current_line), guifg = '#ffffff', gui = 'bold' })
     table.insert(result, { '', guifg = '#555555' })
     table.insert(result, { to_subscript(total_lines) .. ' ', guifg = '#ffffff', gui = 'bold' })
   end
 
-  -- Add filename - diagnostic errors override git status colors
+  -- Add filename - git status colors only
   table.insert(result, { ft_icon and (ft_icon .. ' ') or '', guifg = ft_color })
   table.insert(result, {
     filename,
-    guifg = diag_style.color or git_color or '#ffffff',
+    guifg = git_color or '#ffffff',
     gui = gui_style,
   })
 
