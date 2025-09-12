@@ -14,9 +14,9 @@ local minimal_theme = {
 minimal_theme.normal.StatuslineError = { fg = '#f38ba8', gui = 'bold' }
 minimal_theme.inactive.StatuslineError = { fg = '#f38ba8' }
 
--- Harpoon highlight groups
-vim.api.nvim_set_hl(0, 'StatuslineHarpoonActive', { fg = '#FFFFFF', bold = true })
-vim.api.nvim_set_hl(0, 'StatuslineHarpoonInactive', { fg = '#434852' })
+-- Harpoon highlight groups - reliable foreground styling
+vim.api.nvim_set_hl(0, 'StatuslineHarpoonActive', { fg = '#61afef', bold = true })
+vim.api.nvim_set_hl(0, 'StatuslineHarpoonInactive', { fg = '#666666' })
 
 return {
   'nvim-lualine/lualine.nvim',
@@ -56,18 +56,19 @@ return {
             local current_file_path = vim.fn.expand '%:p:.'
             local result = {}
 
-            for id, item in ipairs(marks) do
+            for _, item in ipairs(marks) do
+              local filename = vim.fn.fnamemodify(item.value, ':t'):gsub('%..*', '')
+
               if item.value == current_file_path then
-                table.insert(result, '%#StatuslineHarpoonActive#' .. id .. '%*')
+                table.insert(result, '-t ' .. filename) -- Active: -t filename
               else
-                table.insert(result, '%#StatuslineHarpoonInactive#' .. id .. '%*')
+                table.insert(result, ' --' .. filename) -- Inactive: --filename
               end
             end
 
-            if #result > 0 then return '󰛢 ' .. table.concat(result, ' ') end
-            return ''
+            return table.concat(result, ' ')
           end,
-          color = { fg = '#61AfEf' },
+          color = { fg = '#666666' },
         },
       },
       lualine_z = {
