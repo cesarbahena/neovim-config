@@ -12,7 +12,12 @@ return {
           text = { 
             function(args)
               if args.relnum == 0 then
-                return '%#CursorLineNr# ❯%*'
+                local has_errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR }) > 0
+                
+                -- Choose color based on errors
+                local hl_group = has_errors and 'ErrorMsg' or 'CursorLineNr'
+                
+                return '%#' .. hl_group .. '# ❯%*'
               else
                 return tostring(args.relnum)
               end
