@@ -51,6 +51,29 @@ return {
         },
         {
           function()
+            local mode = vim.fn.mode()
+            local mode_map = {
+              n = 'nvim',
+              i = 'vi',
+              v = 'vim',
+              V = 'vim',
+              ['\22'] = 'vim', -- visual block
+              c = 'sh',
+              s = 'sed',
+              S = 'sed',
+              ['\19'] = 'sed', -- select block
+              R = 'nano',
+              r = 'nano',
+              ['!'] = 'bash',
+              t = 'zsh',
+            }
+            return mode_map[mode] or 'nvim'
+          end,
+          color = { fg = '#666666' },
+          padding = { left = 0, right = 0 },
+        },
+        {
+          function()
             local harpoon = require 'harpoon'
             local marks = harpoon:list().items
             local current_file_path = vim.fn.expand '%:p:.'
