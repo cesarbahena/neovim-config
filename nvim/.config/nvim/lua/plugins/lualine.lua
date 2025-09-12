@@ -49,16 +49,13 @@ return {
           fn 'components.file_info.git_status',
           color = { fg = '#E6C384', gui = 'bold' },
         },
-        'buffers',
-      },
-      lualine_z = {
         {
           function()
             local harpoon = require 'harpoon'
             local marks = harpoon:list().items
             local current_file_path = vim.fn.expand '%:p:.'
             local result = {}
-            
+
             for id, item in ipairs(marks) do
               if item.value == current_file_path then
                 table.insert(result, '%#StatuslineHarpoonActive#' .. id .. '%*')
@@ -66,17 +63,31 @@ return {
                 table.insert(result, '%#StatuslineHarpoonInactive#' .. id .. '%*')
               end
             end
-            
-            if #result > 0 then
-              return '󰛢 ' .. table.concat(result, ' ')
-            end
+
+            if #result > 0 then return '󰛢 ' .. table.concat(result, ' ') end
             return ''
           end,
           color = { fg = '#61AfEf' },
         },
+      },
+      lualine_z = {
         'lsp_status',
       },
     },
-    sections = {},
+    sections = {
+      lualine_c = {
+        '%=',
+        {
+          'diagnostics',
+          sources = { 'nvim_workspace_diagnostic' },
+          symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
+        },
+      },
+      lualine_a = {},
+      lualine_b = {},
+      lualine_x = {},
+      lualine_y = {},
+      lualine_z = {},
+    },
   },
 }
